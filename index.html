@@ -703,13 +703,15 @@ async function loadTodayLogs() {
   }
 
   window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  
   setTimeout(() => {
-    const splash = document.getElementById("splash");
     splash.classList.add("fade-out");
 
     setTimeout(() => {
       splash.style.display = "none";
-    }, 800);
+      splash.style.zIndex = "-1";
+    }, 800); 
   }, 1000);
 });
 </script>
