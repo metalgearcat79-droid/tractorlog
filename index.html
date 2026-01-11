@@ -704,7 +704,12 @@ async function loadTodayLogs() {
 
   window.addEventListener("load", () => {
   setTimeout(() => {
-    document.getElementById("splash").classList.add("fade-out");
+    const splash = document.getElementById("splash");
+    splash.classList.add("fade-out");
+
+    setTimeout(() => {
+      splash.style.display = "none";
+    }, 800);
   }, 1000);
 });
 </script>
