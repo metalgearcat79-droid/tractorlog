@@ -628,6 +628,25 @@
     });
   }
 
+  async function deleteLog(id) {
+  if (!confirm("この記録を削除しますか？")) return;
+
+  const { error } = await client
+    .from("hour_logs")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert("削除に失敗しました: " + error.message);
+    return;
+  }
+
+  loadTodayLogs(); 
+  if (typeof loadHistoryLogs === "function") {
+    loadHistoryLogs();
+  }
+}
+
 // -----------------------------
 // 本日のログ読み込み
 // -----------------------------
