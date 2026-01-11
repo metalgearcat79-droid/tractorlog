@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>和農日向 Tractor Log</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f7f4ef;
+      color: #3a3a3a;
+      font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+.hidden { display: none; }
+.fade-in { animation: fadeIn 0.3s forwards; }
+.fade-out { animation: fadeOut 0.3s forwards; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(10px); }
+}
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      position: relative;
+    }
+    .btn-main {
+      background-color: #6b8f71;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    .btn-main:active {
+      background-color: #587a5f;
+      transform: scale(0.98);
+    }
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 9998;
+  display: none;
+}
+#sideMenu {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100%;
+  background: white;
+  z-index: 9999;
+  transition: left 0.3s ease;
+  padding: 20px;
+  padding-top: 60px;
+}
+
+@media (max-width: 480px) {
+  #sideMenu {
+    width: 240px;
+  }
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 9998;
+  display: none;
+}
+
+    .view { display: none; padding: 20px; }
+    .view.active { display: block; }
+  </style>
+</head>
+
+<body class="pb-10 bg-[#f7f4ef] text-gray-800">
+
+<div id="overlay"></div>
+
+<div id="sideMenu">
+  <div class="menuContent">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="font-bold text-xl text-[#6b8f71]">メニュー</h2>
+      <button id="closeMenuBtn" style="font-size: 36px; color: #aaa; line-height: 1;">&times;</button>
+    </div>
+
+<nav class="space-y-4">
+
+  <!-- ログ入力 -->
+  <button onclick="switchView('inputView')" 
+    class="w-full text-left p-4 bg-[#f7f4ef] rounded-lg font-bold text-[#6b8f71] flex items-center">
+    <i class="fa-solid fa-pen-to-square mr-3 text-lg"></i>ログ入力
+  </button>
+
+  <!-- 本日の稼働状況 -->
+  <button onclick="switchView('todayView')" 
+    class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]">
+    <i class="fa-solid fa-calendar-day mr-3 text-lg"></i>本日の稼働状況
+  </button>
+
+  <!-- 稼働履歴・検索 -->
+  <button onclick="switchView('historyView')" 
+    class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]">
+    <i class="fa-solid fa-magnifying-glass mr-3 text-lg"></i>稼働履歴・検索
+  </button>
+
+  <!-- ダッシュボード（準備中） -->
+  <button disabled 
+    class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71] opacity-60 cursor-not-allowed">
+    <i class="fa-solid fa-chart-line mr-3 text-lg"></i>ダッシュボード（準備中）
+  </button>
+
+  <!-- メンテナンス情報（準備中） -->
+  <button disabled 
+    class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71] opacity-60 cursor-not-allowed">
+    <i class="fa-solid fa-wrench mr-3 text-lg"></i>メンテナンス情報（準備中）
+  </button>
+
+  <!-- 修理履歴（準備中） -->
+  <button disabled 
+    class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71] opacity-60 cursor-not-allowed">
+    <i class="fa-solid fa-screwdriver-wrench mr-3 text-lg"></i>修理履歴（準備中）
+  </button>
+
+</nav>
+      </button>
+    </nav>
+  </div>
+</div>
+
+  <div class="max-w-2xl mx-auto">
+    <header class="flex flex-col items-center justify-center py-10 relative">
+      <button id="menuBtn" class="absolute left-4 top-4 sm:top-8 z-50 text-3xl text-[#6b8f71] p-2 bg-transparent border-none">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      
+
+      <i class="fa-solid fa-tractor text-7xl text-[#6b8f71] mb-2"></i>
+      <h1 class="text-xl sm:text-2xl font-bold text-[#6b8f71] tracking-wider text-center">和農日向 Tractor log</h1>
+    </header>
+
+    <div id="inputView" class="view active">
+      <div class="card mb-4">
+        <label class="block text-base md:text-sm font-medium text-gray-500 mb-1">機械を選択</label>
+        <select id="machineSelect"
+  class="w-full p-3 text-base border rounded-lg bg-white outline-none focus:border-[#6b8f71]">
+        <option value="">機械を選択してください</option>
+     </select>
+      </div>
+
+      <div class="card mb-4">
+        <label class="block text-base md:text-sm font-medium text-gray-500 mb-1">作業日</label>
+        <input type="date" id="workDate" class="w-full p-3 border rounded-lg outline-none" />
+      </div>
+
+      <div class="card mb-4">
+        <label class="block text-base md:text-sm font-medium text-gray-500 mb-1">オペレーター</label>
+        <select id="operatorSelect" class="w-full p-3 border rounded-lg outline-none">
+          <option value="選択してください">選択してください</option>
+          <option value="阿曽 千一">阿曽 千一</option>
+          <option value="阿曽 右貢">阿曽 右貢</option>
+          <option value="菅原 亜美">菅原 亜美</option>
+          <option value="土井 達也">土井 達也</option>
+          <option value="阿曽 文平">阿曽 文平</option>
+          <option value="田中 武志">田中 武志</option>
+          <option value="赤塚 かおり">赤塚 かおり</option>
+          <option value="土門 元義">土門 元義</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+
+      <div class="card mb-4">
+        <label class="block text-base md:text-sm font-medium text-gray-500 mb-1">種別</label>
+        <select id="categorySelect" class="w-full p-3 border rounded-lg outline-none">
+          <option value="">選択してください</option>
+          <option value="水稲">水稲</option>
+          <option value="そば">そば</option>
+          <option value="保全会">保全会</option>
+          <option value="小規模工事">小規模工事</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+
+      <div class="card mb-4">
+        <label class="block text-base md:text-sm font-medium text-gray-500 mb-1">作業内容</label>
+        <select id="taskSelect" class="w-full p-3 border rounded-lg outline-none"></select>
+      </div>
+
+      <div class="card mb-4">
+        <div class="flex space-x-4">
+          <div class="flex-1">
+            <label class="block text-base md:text-sm font-medium text-gray-500 mb-1">稼働前メーター</label>
+            <input type="number" id="hourBefore" class="w-full p-3 border rounded-lg mt-1" step="0.1" />
+          </div>
+          <div class="flex-1">
+            <label class="block text-base md:text-sm font-medium text-gray-500 mb-1">稼働後メーター</label>
+            <input type="number" id="hourAfter" class="w-full p-3 border rounded-lg mt-1" step="0.1" />
+          </div>
+        </div>
+      </div>
+
+      <div id="hourDiffDisplay" class="text-right font-bold text-[#6b8f71] mb-6 text-lg">
+        稼働時間: 0.0 h
+      </div>
+
+      <div class="card mb-6">
+        <label class="block text-base md:text-sm font-medium text-gray-500 mb-1">メモ</label>
+        <textarea id="memoInput" class="w-full p-3 border rounded-lg outline-none" rows="3" placeholder="備考など"></textarea>
+      </div>
+
+      <button id="saveBtn" class="btn-main text-base py-3">保存する</button>
+    </div>
+
+<div id="savePopup" class="hidden fixed inset-0 flex items-center justify-center z-50">
+  <div class="px-6 py-3 rounded-lg text-white text-lg shadow-lg"
+       style="background-color: #2f5d3a;">
+    保存しました
+  </div>
+</div>
+
+
+    <div id="todayView" class="view">
+      <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
+        <h2 class="text-xl font-bold text-[#6b8f71] flex items-center">
+          <i class="fa-solid fa-calendar-day mr-2"></i>本日の稼働状況
+        </h2>
+        <button onclick="loadTodayLogs()" class="text-sm bg-white px-3 py-1 rounded-lg shadow text-gray-600 active:scale-95">
+          <i class="fa-solid fa-rotate"></i> 更新
+        </button>
+      </div>
+
+      <div id="todayLogList" class="space-y-4 mb-10"></div>
+
+      <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
+        <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>ログ入力に戻る
+      </button>
+    </div>
+
+    <div id="historyView" class="view">
+      <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
+        <h2 class="text-xl font-bold text-[#6b8f71] flex items-center">
+          <i class="fa-solid fa-magnifying-glass mr-2"></i>過去の履歴・検索
+        </h2>
+        <div id="historyTotalHours" class="text-sm font-bold bg-[#6b8f71] text-white px-3 py-1 rounded-full">
+          合計: 0.0 h
+        </div>
+      </div>
+
+      <div class="card mb-6 bg-white border border-gray-200">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+          <div>
+            <label class="text-xs font-bold text-gray-500 mb-1 block">表示月</label>
+            <input type="month" id="filterMonth" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white" />
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-gray-500 mb-1 block">日付</label>
+            <input type="date" id="filterDay" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white text-sm">
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-gray-500 mb-1 block">オペレーター</label>
+            <select id="filterOperator" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white text-sm">
+              <option value="すべて">すべて</option>
+              <option value="阿曽 千一">阿曽 千一</option>
+              <option value="阿曽 右貢">阿曽 右貢</option>
+              <option value="菅原 亜美">菅原 亜美</option>
+              <option value="土井 達也">土井 達也</option>
+              <option value="阿曽 文平">阿曽 文平</option>
+              <option value="田中 武志">田中 武志</option>
+              <option value="赤塚 かおり">赤塚 かおり</option>
+              <option value="土門 元義">土門 元義</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-gray-500 mb-1 block">機械</label>
+            <select id="filterMachine" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white text-sm"></select>
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-gray-500 mb-1 block">作業内容</label>
+            <select id="filterTask" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white text-sm">
+            <option value="すべて">すべて</option>
+         </select>
+         </div>
+
+        </div>
+      </div>
+
+      <div id="historyLogList" class="space-y-4 mb-10"></div>
+
+      <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
+        <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>ログ入力に戻る
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const menu = document.getElementById("sideMenu");
+  const overlay = document.getElementById("overlay");
+
+  // -----------------------------
+  // ページ読み込み時の処理（ログ入力ページ用）
+  // -----------------------------
+  document.addEventListener("DOMContentLoaded", () => {
+    const now = new Date();
+    now.setHours(now.getHours() + 9);
+    const today = now.toISOString().split("T")[0];
+    document.getElementById("workDate").value = today;
+
+    loadMachines();
+  });
+
+  // -----------------------------
+  // メニュー開閉ロジック
+  // -----------------------------
+  document.getElementById("menuBtn").onclick = () => {
+    menu.style.left = "0px";
+    overlay.style.display = "block";
+  };
+
+  document.getElementById("closeMenuBtn").onclick = () => {
+    menu.style.left = "-280px";
+    overlay.style.display = "none";
+  };
+
+  overlay.onclick = () => {
+    menu.style.left = "-280px";
+    overlay.style.display = "none";
+  };
+
+  // -----------------------------
+  // 画面切り替え
+  // -----------------------------
+  function switchView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    menu.style.left = "-280px";
+    overlay.style.display = "none";
+
+    if (id === 'todayView') loadTodayLogs();
+
+    if (id === 'historyView') {
+      loadTaskFilterOptions();
+      loadHistoryLogs();
+    }
+
+    window.scrollTo(0, 0);
+  }
+
+  // -----------------------------
+  // 機械マスタの読み込み
+  // -----------------------------
+  async function loadMachines() {
+    const { data } = await client.from("machines").select("*").order("name");
+    const entrySelect = document.getElementById("machineSelect");
+    const filterSelect = document.getElementById("filterMachine");
+
+    const optionsHtml =
+      '<option value="">選択してください</option>' +
+      (data || [])
+        .map(m => `<option value="${m.id}">${m.manufacturer} ${m.name}</option>`)
+        .join("");
+
+    entrySelect.innerHTML = optionsHtml;
+    filterSelect.innerHTML = optionsHtml;
+  }
+
+  // -----------------------------
+  // 種別 → 作業内容の対応表
+  // -----------------------------
+  const taskOptions = {
+    "水稲": ["あぜ塗り", "クロぶつし", "起耕", "起耕+基肥散布", "粗代", "本代", "ロール運搬", "その他"],
+    "そば": ["起耕", "起耕+基肥散布", "その他"],
+    "保全会": ["ハンマーモア(春作業)", "ハンマーモア(秋作業)", "スライドモア(春作業)", "スライドモア(秋作業)", "その他"],
+    "小規模工事": ["整地", "掘削", "埋戻し", "土砂運搬", "その他"],
+    "その他": ["自由入力"]
+  };
+
+  // -----------------------------
+  // 種別を選んだら作業内容を更新
+  // -----------------------------
+  document.getElementById("categorySelect").addEventListener("change", function () {
+    const category = this.value;
+    const taskSelect = document.getElementById("taskSelect");
+
+    taskSelect.innerHTML = "";
+    const tasks = taskOptions[category] || [];
+
+    tasks.forEach(task => {
+      const option = document.createElement("option");
+      option.value = task;
+      option.textContent = task;
+      taskSelect.appendChild(option);
+    });
+  });
+
+  // -----------------------------
+  // 機械選択 → 前回メーター読み込み
+  // -----------------------------
+  async function loadLastEndHour() {
+    const machineId = document.getElementById("machineSelect").value;
+    if (!machineId) return;
+
+    const { data, error } = await client
+      .from("hour_logs")
+      .select("end_hour")
+      .eq("machine_id", machineId)
+      .order("date", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.error("メーター取得エラー:", error);
+      return;
+    }
+
+    const hourBeforeInput = document.getElementById("hourBefore");
+    hourBeforeInput.value = data?.[0]?.end_hour || "";
+  }
+
+  document.getElementById("machineSelect").addEventListener("change", loadLastEndHour);
+
+  document.getElementById("machineSelect").addEventListener("change", async function () {
+    if (!this.value) return;
+
+    const { data } = await client
+      .from("hour_logs")
+      .select("end_hour")
+      .eq("machine_id", this.value)
+      .order("date", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    if (data && data[0]) {
+      document.getElementById("hourBefore").value = data[0].end_hour;
+      if (typeof calculate === "function") calculate();
+    }
+  });
+
+  // -----------------------------
+  // 稼働時間計算
+  // -----------------------------
+  function calculate() {
+    const before = parseFloat(document.getElementById("hourBefore").value) || 0;
+    const after = parseFloat(document.getElementById("hourAfter").value) || 0;
+
+    const diff = after - before;
+
+    const diffElement = document.getElementById("hourDiffDisplay");
+    if (diffElement) {
+      diffElement.textContent = "稼働時間: " + diff.toFixed(1) + " h";
+
+          if (diff < 0) {
+      diffElement.classList.add("text-red-500");
+    } else {
+      diffElement.classList.remove("text-red-500");
+    }
+  }
+
+  return diff;
+}
+
+
+  document.getElementById("hourAfter").addEventListener("input", calculate);
+
+    function showSavePopup() {
+    const popup = document.getElementById("savePopup");
+    popup.classList.remove("hidden");
+    popup.classList.add("fade-in");
+
+    setTimeout(() => {
+      popup.classList.remove("fade-in");
+      popup.classList.add("fade-out");
+
+      setTimeout(() => {
+        popup.classList.add("hidden");
+        popup.classList.remove("fade-out");
+      }, 300);
+    }, 1500);
+  }
+
+  // -----------------------------
+  // 保存処理
+  // -----------------------------
+  document.getElementById("saveBtn").onclick = async function () {
+    const machineId = document.getElementById("machineSelect").value;
+    const workDate = document.getElementById("workDate").value;
+    const operator = document.getElementById("operatorSelect").value;
+    const category = document.getElementById("categorySelect").value;
+    const task = document.getElementById("taskSelect").value;
+    const hBefore = parseFloat(document.getElementById("hourBefore").value);
+    const hAfter = parseFloat(document.getElementById("hourAfter").value);
+    const memo = document.getElementById("memoInput").value;
+
+    if (!machineId || !workDate || operator === "選択してください" || isNaN(hAfter)) {
+      alert("必須項目を入力してください");
+      return;
+    }
+
+    const { error } = await client.from("hour_logs").insert([
+      {
+        machine_id: machineId,
+        date: workDate,
+        operator: operator,
+        category: category,
+        task: task,
+        start_hour: hBefore,
+        end_hour: hAfter,
+        memo: memo
+      }
+    ]);
+
+    if (error) {
+      alert("保存に失敗しました: " + error.message);
+    } else {
+      showSavePopup();
+      setTimeout(() => {
+     location.reload();
+     }, 1800);
+
+    }
+  };
+
+  // -----------------------------
+  // 作業内容フィルター読み込み（★新規追加）
+  // -----------------------------
+  async function loadTaskFilterOptions() {
+    const { data, error } = await client
+      .from("hour_logs")
+      .select("task")
+      .order("task", { ascending: true });
+
+    if (error) {
+      console.error("作業内容取得エラー:", error);
+      return;
+    }
+
+    const uniqueTasks = [...new Set(data.map(item => item.task))];
+
+    const select = document.getElementById("filterTask");
+    if (!select) return;
+
+    select.innerHTML = '<option value="すべて">すべて</option>';
+
+    uniqueTasks.forEach(task => {
+      if (task) {
+        const option = document.createElement("option");
+        option.value = task;
+        option.textContent = task;
+        select.appendChild(option);
+      }
+    });
+  }
+
+  // -----------------------------
+  // ログ表示用
+  // -----------------------------
+  function renderLogs(data, elementId) {
+    const list = document.getElementById(elementId);
+    list.innerHTML = "";
+    if (!data || data.length === 0) {
+      list.innerHTML = "<p class='text-center text-gray-400'>データがありません</p>";
+      return;
+    }
+
+    data.forEach(log => {
+      const diff = (log.end_hour - log.start_hour).toFixed(1);
+      list.innerHTML += `
+        <div class="mx-2 card border-l-4 border-[#6b8f71] relative">
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-xs font-bold text-gray-400">${log.date}</span>
+            <span class="bg-[#f7f4ef] text-[#6b8f71] px-2 py-1 rounded text-xs font-bold">${diff} h</span>
+          </div>
+          <div class="font-bold text-gray-700">${log.machines?.name || '不明'} / ${log.operator}</div>
+          <div class="text-sm text-gray-500">${log.category} - ${log.task}</div>
+          ${log.memo ? `<div class="text-xs mt-2 text-gray-400 bg-gray-50 p-2 rounded">${log.memo}</div>` : ""}
+        </div>
+      `;
+    });
+  }
+
+// -----------------------------
+// 本日のログ読み込み
+// -----------------------------
+async function loadTodayLogs() {
+  const today = new Date().toISOString().split("T")[0];
+  const { data } = await client
+    .from("hour_logs")
+    .select("*, machines(name)")
+    .eq("date", today)
+    .order("created_at", { ascending: false });
+
+  const list = document.getElementById("todayLogList");
+  list.innerHTML = "";
+
+  data.forEach(log => {
+    const diff = (log.end_hour - log.start_hour).toFixed(1);
+
+    list.innerHTML += `
+      <div class="card border-l-4 border-[#6b8f71] relative">
+
+        <!-- ゴミ箱（右上） -->
+        <button 
+          onclick="deleteLog(${log.id})"
+          class="absolute top-3 right-4 text-gray-400 hover:text-red-500"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+
+        <!-- 稼働時間バッジ -->
+        <div class="flex justify-end items-start mb-2">
+          <span class="bg-[#f7f4ef] text-[#6b8f71] px-2 py-1 rounded text-xs font-bold mr-6">
+            ${diff} h
+          </span>
+        </div>
+
+        <div class="text-xs font-bold text-gray-400">${log.date}</div>
+        <div class="font-bold text-gray-700">${log.machines?.name || '不明'} / ${log.operator}</div>
+        <div class="text-sm text-gray-500">${log.category} - ${log.task}</div>
+        ${log.memo ? `<div class="text-xs mt-2 text-gray-400 bg-gray-50 p-2 rounded">${log.memo}</div>` : ""}
+      </div>
+    `;
+  });
+}
+
+  // -----------------------------
+  // 履歴読み込み（★task 条件追加済み）
+  // -----------------------------
+  async function loadHistoryLogs() {
+    let query = client.from("hour_logs").select("*, machines(name)");
+
+    const month = document.getElementById("filterMonth").value;
+    const day = document.getElementById("filterDay").value;
+    const op = document.getElementById("filterOperator").value;
+
+
+    const mach = document.getElementById("filterMachine").value;
+    const task = document.getElementById("filterTask")?.value || "すべて";
+
+    if (day) query = query.eq("date", day);
+    else if (month) query = query.gte("date", `${month}-01`).lte("date", `${month}-31`);
+
+    if (op !== "すべて") query = query.eq("operator", op);
+    if (mach) query = query.eq("machine_id", mach);
+
+    // ★ 作業内容フィルター
+    if (task !== "すべて") query = query.eq("task", task);
+
+    const { data } = await query.order("date", { ascending: false });
+    renderLogs(data, "historyLogList");
+
+    const total = (data || []).reduce((sum, log) => sum + (log.end_hour - log.start_hour), 0);
+    document.getElementById("historyTotalHours").textContent = `合計: ${total.toFixed(1)} h`;
+  }
+</script>
+</body>
+</html>
