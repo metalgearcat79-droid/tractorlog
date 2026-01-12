@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="manifest" href="manifest.json">
+
   <title>和農日向 Tractor Log</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -780,6 +783,11 @@ async function loadTodayLogs() {
 
     deleteTargetId = null;
   });
+</script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
+  }
 </script>
 </body>
 </html>
