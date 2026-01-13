@@ -593,7 +593,7 @@
   };
 
   // -----------------------------
-  // 作業内容フィルター読み込み（★新規追加）
+  // 作業内容フィルター読み込み
   // -----------------------------
   async function loadTaskFilterOptions() {
     const { data, error } = await client
@@ -732,8 +732,6 @@ async function loadTodayLogs() {
 
     if (op !== "すべて") query = query.eq("operator", op);
     if (mach) query = query.eq("machine_id", mach);
-
-    // ★ 作業内容フィルター
     if (task !== "すべて") query = query.eq("task", task);
 
     const { data } = await query.order("date", { ascending: false });
@@ -742,6 +740,81 @@ async function loadTodayLogs() {
     const total = (data || []).reduce((sum, log) => sum + (log.end_hour - log.start_hour), 0);
     document.getElementById("historyTotalHours").textContent = `合計: ${total.toFixed(1)} h`;
   }
+
+  // ▼ トラクター名（仮）
+const tractors = [
+  "トラクターA", "トラクターB", "トラクターC", "トラクターD", "トラクターE",
+  "トラクターF", "トラクターG", "トラクターH", "トラクターI", "トラクターJ"
+];
+
+// ▼ 仮の稼働時間（後で Supabase に置き換える）
+const hours = [120, 95, 80, 140, 60, 110, 75, 90, 130, 50];
+
+function loadDashboard() {
+  const grid = document.getElementById("tractorGrid");
+  grid.innerHTML = ""; // いったんリセット
+
+  tractors.forEach((name, index) => {
+    // ▼ カードを作成
+    const card = document.createElement("div");
+    card.className = "bg-white rounded-xl p-4 shadow flex flex-col items-center";
+
+    // ▼ キャンバス
+    const canvas = document.createElement("canvas");
+    canvas.id = `chart_${index}`;
+    canvas.width = 200;
+    canvas.height = 200;
+
+    // ▼ トラクター名
+    const label = document.createElement("p");
+    label.className = "mt-3 text-lg font-medium text-gray-700";
+    label.textContent = name;
+
+    // ▼ 数字（中央に重ねる）
+    const centerText = document.createElement("div");
+    centerText.className = "absolute text-xl font-semibold text-gray-700";
+    centerText.style.marginTop = "85px";
+    centerText.textContent = `${hours[index]}h`;
+
+    // ▼ ラッパー
+    const wrapper = document.createElement("div");
+    wrapper.className = "relative w-40 h-20 overflow-hidden flex justify-center";
+    wrapper.appendChild(canvas);
+    wrapper.appendChild(centerText);
+
+    card.appendChild(wrapper);
+    card.appendChild(label);
+    grid.appendChild(card);
+
+    // ▼ Chart.js セミドーナツ
+    const ctx = canvas.getContext("2d");
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+    gradient.addColorStop(0, "#81c784");
+    gradient.addColorStop(1, "#2e7d32");
+
+    new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        datasets: [{
+          data: [hours[index], 200 - hours[index]],
+          backgroundColor: [gradient, "rgba(0,0,0,0)"],
+          borderWidth: 0,
+          cutout: "70%"
+        }]
+      },
+      options: {
+        rotation: -90 * (Math.PI / 180),
+        circumference: 180 * (Math.PI / 180),
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        }
+      }
+    });
+  });
+}
+
   // -----------------------------
   // 削除モーダルの動き
   // -----------------------------
