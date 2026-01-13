@@ -734,6 +734,18 @@ async function loadTodayLogs() {
     document.getElementById("historyTotalHours").textContent = `合計: ${total.toFixed(1)} h`;
   }
 
+  window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  
+  setTimeout(() => {
+    splash.classList.add("fade-out");
+
+    setTimeout(() => {
+      splash.style.display = "none";
+      splash.style.zIndex = "-1";
+    }, 800); 
+  }, 1000);
+});
   // -----------------------------
   // 削除モーダルの動き
   // -----------------------------
