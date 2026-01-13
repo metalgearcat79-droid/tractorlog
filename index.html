@@ -127,10 +127,10 @@
     <i class="fa-solid fa-magnifying-glass mr-3 text-lg"></i>稼働履歴・検索
   </button>
 
-  <!-- ダッシュボード（準備中） -->
-  <button disabled 
-    class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71] opacity-60 cursor-not-allowed">
-    <i class="fa-solid fa-chart-line mr-3 text-lg"></i>ダッシュボード（準備中）
+  <!-- ダッシュボード -->
+  <button onclick="switchView('dashboard')"
+  class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]">
+  <i class="fa-solid fa-chart-line mr-3 text-lg"></i>ダッシュボード
   </button>
 
   <!-- メンテナンス情報（準備中） -->
@@ -322,6 +322,32 @@
       </button>
     </div>
   </div>
+
+  <div id="dashboard" class="view">
+
+  <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
+    <h2 class="text-xl font-bold text-[#6b8f71] flex items-center">
+      <i class="fa-solid fa-chart-line mr-2"></i>ダッシュボード
+    </h2>
+
+    <button onclick="loadDashboard()" 
+      class="text-sm bg-white px-3 py-1 rounded-lg shadow text-gray-600 active:scale-95">
+      <i class="fa-solid fa-rotate"></i> 更新
+    </button>
+  </div>
+
+  <!-- ▼ ダッシュボードのメイン（トラクターのミニグラフ一覧） -->
+  <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+    <!-- ここに JS で10台分のカードが自動生成される -->
+  </div>
+
+      <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
+        <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>ログ入力に戻る
+      </button>
+    </div>
+
+</div>
+
   <!-- 削除確認モーダル -->
 <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-[9999]">
   <div class="bg-white rounded-lg p-6 w-72 text-center shadow-lg">
@@ -688,7 +714,7 @@ async function loadTodayLogs() {
 }
 
   // -----------------------------
-  // 履歴読み込み（★task 条件追加済み）
+  // 履歴読み込み
   // -----------------------------
   async function loadHistoryLogs() {
     let query = client.from("hour_logs").select("*, machines(name)");
