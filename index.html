@@ -746,7 +746,7 @@ async function loadTodayLogs() {
   }
 </script>
 <script>
-  // ▼ トラクター名（仮）
+ // ▼ トラクター名（仮）
 const tractors = [
   "トラクターA", "トラクターB", "トラクターC", "トラクターD", "トラクターE",
   "トラクターF", "トラクターG", "トラクターH", "トラクターI", "トラクターJ"
@@ -762,7 +762,7 @@ function loadDashboard() {
   tractors.forEach((name, index) => {
     // ▼ カードを作成
     const card = document.createElement("div");
-    card.className = "bg-[#1a2a23] rounded-xl p-4 shadow-lg flex flex-col items-center";
+    card.className = "bg-white rounded-xl p-4 shadow flex flex-col items-center";
 
     // ▼ キャンバス
     const canvas = document.createElement("canvas");
@@ -818,6 +818,7 @@ function loadDashboard() {
       }
     });
   });
+}
 </script>
 <script>
   // -----------------------------
