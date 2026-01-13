@@ -93,27 +93,10 @@
   .view { display: none; padding: 20px; }
   .view.active { display: block; }
 
-  /* ▼ スプラッシュ画面 */
-  #splash {
-    opacity: 1;
-    transition: opacity 0.8s ease;
-  }
-  #splash.fade-out {
-    opacity: 0;
-  }
 </style>
 </head>
 
 <body class="pb-10 bg-[#f7f4ef] text-gray-800">
-
-<!-- ▼ スプラッシュ画面 ▼ -->
-<div id="splash" class="fixed inset-0 bg-[#6b8f71] flex flex-col items-center justify-center z-[99999]">
-  <i class="fa-solid fa-tractor text-5xl sm:text-7xl text-[#f7f4ef] mb-4"></i>
-  <h1 class="text-xl sm:text-3xl font-bold tracking-wider text-[#f7f4ef]">
-    和農日向 Tractor log
-  </h1>
-</div>
-<!-- ▲ スプラッシュ画面 ▲ -->
 
 <div id="overlay"></div>
 
@@ -733,19 +716,6 @@ async function loadTodayLogs() {
     const total = (data || []).reduce((sum, log) => sum + (log.end_hour - log.start_hour), 0);
     document.getElementById("historyTotalHours").textContent = `合計: ${total.toFixed(1)} h`;
   }
-
-  window.addEventListener("load", () => {
-  const splash = document.getElementById("splash");
-  
-  setTimeout(() => {
-    splash.classList.add("fade-out");
-
-    setTimeout(() => {
-      splash.style.display = "none";
-      splash.style.zIndex = "-1";
-    }, 800); 
-  }, 1000);
-});
   // -----------------------------
   // 削除モーダルの動き
   // -----------------------------
