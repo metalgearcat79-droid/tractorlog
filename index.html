@@ -359,6 +359,8 @@
   </div>
 </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
   const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
@@ -523,7 +525,7 @@
     if (diffElement) {
       diffElement.textContent = "稼働時間: " + diff.toFixed(1) + " h";
 
-          if (diff < 0) {
+    if (diff < 0) {
       diffElement.classList.add("text-red-500");
     } else {
       diffElement.classList.remove("text-red-500");
@@ -759,7 +761,7 @@ function loadDashboard() {
   tractors.forEach((name, index) => {
     // ▼ カードを作成
     const card = document.createElement("div");
-    card.className = "bg-white rounded-xl p-4 shadow flex flex-col items-center";
+    card.className = "bg-[#1a2a23] rounded-xl p-4 shadow-lg flex flex-col items-center";
 
     // ▼ キャンバス
     const canvas = document.createElement("canvas");
@@ -769,7 +771,7 @@ function loadDashboard() {
 
     // ▼ トラクター名
     const label = document.createElement("p");
-    label.className =  "bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-lg flex flex-col items-center w-36 h-48";
+    label.className = "mt-3 text-lg font-medium text-gray-700";
     label.textContent = name;
 
     // ▼ 数字（中央に重ねる）
@@ -815,7 +817,7 @@ function loadDashboard() {
       }
     });
   });
-}
+</script>
 
   // -----------------------------
   // 削除モーダルの動き
