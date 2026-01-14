@@ -3,7 +3,7 @@
   "short_name": "TractorLog",
   "icons": [
     {
-      "src": "/tractor-log.png",
+      "src": "/tractorlog/tractor-log.png",
       "sizes": "512x512",
       "type": "image/png",
        "purpose": "any maskable"
