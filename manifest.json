@@ -10,8 +10,9 @@
 
     }
   ],
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#2F4F2F",
-  "theme_color": "#2F4F2F"
+  "start_url": "/tractorlog/index.html",
+"scope": "/tractorlog/",
+"display": "standalone",
+"background_color": "#2F4F2F",
+"theme_color": "#2F4F2F"
 }
