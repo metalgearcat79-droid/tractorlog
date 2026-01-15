@@ -367,7 +367,7 @@
 <script>
   const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
   const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const menu = document.getElementById("sideMenu");
   const overlay = document.getElementById("overlay");
