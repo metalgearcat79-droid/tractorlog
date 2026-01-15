@@ -77,6 +77,10 @@
     .view.active { display: block; }
 
     #mainContainer { width: 100%; }
+
+  .dashboard-active {
+    max-width: 95% !important;
+  }
   </style>
 </head>
 
@@ -265,17 +269,17 @@
         <h2 class="text-3xl font-black text-[#4a6b50] flex items-center tracking-tighter">
           <i class="fa-solid fa-chart-pie mr-4"></i>OPERATION DASHBOARD
         </h2>
-        <p class="text-sm text-gray-500 font-bold ml-12 uppercase tracking-widest">Wano-Hinata Strategic Analytics</p>
+        <p class="text-sm text-gray-500 font-bold ml-12 uppercase tracking-widest">リアルタイム分析</p>
       </div>
       <button onclick="loadDashboard()" class="bg-[#6b8f71] text-white px-6 py-2 rounded-lg shadow-lg hover:bg-[#587a5f] transition-all active:scale-95 font-bold">
-        <i class="fa-solid fa-rotate mr-2"></i>RELOAD DATA
+        <i class="fa-solid fa-rotate mr-2"></i>更新
       </button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
       <div class="bg-gradient-to-br from-[#4a6b50] to-[#2d4031] text-white p-8 rounded-xl shadow-2xl relative overflow-hidden">
         <div class="relative z-10">
-          <p class="text-sm font-bold opacity-70 tracking-widest uppercase mb-1">Monthly Total</p>
+          <p class="text-sm font-bold opacity-70 tracking-widest uppercase mb-1">月間稼働時間</p>
           <h3 id="totalMonthHours" class="text-7xl font-black flex items-baseline">
             0.0<span class="text-2xl ml-3 font-medium opacity-80 italic">h</span>
           </h3>
@@ -285,7 +289,7 @@
 
       <div class="col-span-2 bg-white p-8 rounded-xl shadow-xl border border-gray-100">
         <p class="text-gray-400 text-xs font-black mb-6 flex items-center tracking-widest uppercase">
-          <i class="fa-solid fa-crown text-yellow-500 mr-2"></i>Top Performance Machines
+          <i class="fa-solid fa-crown text-yellow-500 mr-2"></i>ランキング
         </p>
         <div id="top3List" class="grid grid-cols-3 gap-6">
           </div>
@@ -297,7 +301,7 @@
 
     <div class="flex justify-center pb-20">
       <button onclick="switchView('inputView')" class="px-10 py-4 bg-gray-800 text-white rounded-xl font-bold flex items-center justify-center shadow-xl hover:bg-black transition-colors">
-        <i class="fa-solid fa-arrow-left-long mr-3"></i>BACK TO INPUT
+        <i class="fa-solid fa-arrow-left-long mr-3"></i>TOPに戻る
       </button>
     </div>
   </div>
@@ -346,7 +350,13 @@ function switchView(id) {
   
   closeMenu();
 
-  const container = document.getElementById("mainContainer");
+ const container = document.getElementById("mainContainer");
+
+if (id === 'dashboard') {
+  container.classList.add("dashboard-active");
+} else {
+  container.classList.remove("dashboard-active");
+} 
   
   // 3. 【重要】JavaScriptで直接スタイルを上書きする
   if (id === 'dashboard') {
