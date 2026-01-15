@@ -75,6 +75,8 @@
     }
     .view { display: none; padding: 20px; }
     .view.active { display: block; }
+    
+    #mainContainer { width: 100%; }
   </style>
 </head>
 
@@ -111,7 +113,7 @@
   </div>
 </div>
 
-<div id="mainContainer" class="mx-auto transition-all duration-300"></div>
+<div id="mainContainer" class="max-w-2xl mx-auto transition-all duration-300"></div>
   <header class="flex flex-col items-center justify-center py-10 relative">
     <button id="menuBtn" class="absolute left-4 top-4 sm:top-8 z-50 text-3xl text-[#6b8f71] p-2 bg-transparent border-none">
       <i class="fa-solid fa-bars"></i>
@@ -332,27 +334,35 @@
 
   // 画面切り替え
 function switchView(id) {
+  // すべてのViewを非表示にする
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  // 選択されたViewを表示する
   document.getElementById(id).classList.add('active');
+  
   closeMenu();
 
   const container = document.getElementById("mainContainer");
   
-  // ダッシュボードの時だけ幅を広く(95%)、それ以外は元の幅(max-w-2xl)にする
   if (id === 'dashboard') {
+    // ダッシュボード：狭い幅を消して、広い幅をつける
     container.classList.remove('max-w-2xl');
     container.classList.add('max-w-[95%]');
   } else {
+    // それ以外：広い幅を消して、いつもの狭い幅に戻す
     container.classList.remove('max-w-[95%]');
     container.classList.add('max-w-2xl');
   }
 
+  // 各画面のデータ読み込み
   if (id === 'todayView') loadTodayLogs();
   if (id === 'historyView') {
     loadTaskFilterOptions();
     loadHistoryLogs();
   }
-  if (id === 'dashboard') loadDashboard();
+  if (id === 'dashboard') {
+    loadDashboard();
+  }
+
   window.scrollTo(0, 0);
 }
 
