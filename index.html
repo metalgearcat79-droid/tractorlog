@@ -111,7 +111,7 @@
   </div>
 </div>
 
-<div class="max-w-2xl mx-auto">
+<div id="mainContainer" class="mx-auto transition-all duration-300"></div>
   <header class="flex flex-col items-center justify-center py-10 relative">
     <button id="menuBtn" class="absolute left-4 top-4 sm:top-8 z-50 text-3xl text-[#6b8f71] p-2 bg-transparent border-none">
       <i class="fa-solid fa-bars"></i>
@@ -331,18 +331,30 @@
   }
 
   // 画面切り替え
-  function switchView(id) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    closeMenu();
-    if (id === 'todayView') loadTodayLogs();
-    if (id === 'historyView') {
-      loadTaskFilterOptions();
-      loadHistoryLogs();
-    }
-    if (id === 'dashboard') loadDashboard();
-    window.scrollTo(0, 0);
+function switchView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  closeMenu();
+
+  const container = document.getElementById("mainContainer");
+  
+  // ダッシュボードの時だけ幅を広く(95%)、それ以外は元の幅(max-w-2xl)にする
+  if (id === 'dashboard') {
+    container.classList.remove('max-w-2xl');
+    container.classList.add('max-w-[95%]');
+  } else {
+    container.classList.remove('max-w-[95%]');
+    container.classList.add('max-w-2xl');
   }
+
+  if (id === 'todayView') loadTodayLogs();
+  if (id === 'historyView') {
+    loadTaskFilterOptions();
+    loadHistoryLogs();
+  }
+  if (id === 'dashboard') loadDashboard();
+  window.scrollTo(0, 0);
+}
 
   // 機械マスタ読み込み
   async function loadMachines() {
