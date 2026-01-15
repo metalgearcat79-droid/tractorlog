@@ -75,7 +75,7 @@
     }
     .view { display: none; padding: 20px; }
     .view.active { display: block; }
-    
+
     #mainContainer { width: 100%; }
   </style>
 </head>
@@ -334,34 +334,31 @@
 
   // 画面切り替え
 function switchView(id) {
-  // すべてのViewを非表示にする
+  // 1. すべてのViewを非表示にする
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  // 選択されたViewを表示する
+  // 2. 選択されたViewを表示する
   document.getElementById(id).classList.add('active');
   
   closeMenu();
 
   const container = document.getElementById("mainContainer");
   
+  // 3. 【重要】JavaScriptで直接スタイルを上書きする
   if (id === 'dashboard') {
-    // ダッシュボード：狭い幅を消して、広い幅をつける
-    container.classList.remove('max-w-2xl');
-    container.classList.add('max-w-[95%]');
+    // ダッシュボードの時は 95%
+    container.style.maxWidth = "95%";
   } else {
-    // それ以外：広い幅を消して、いつもの狭い幅に戻す
-    container.classList.remove('max-w-[95%]');
-    container.classList.add('max-w-2xl');
+    // それ以外の時は 672px (Tailwindの 2xl 相当)
+    container.style.maxWidth = "672px";
   }
 
-  // 各画面のデータ読み込み
+  // 4. 各画面のデータ読み込み
   if (id === 'todayView') loadTodayLogs();
   if (id === 'historyView') {
     loadTaskFilterOptions();
     loadHistoryLogs();
   }
-  if (id === 'dashboard') {
-    loadDashboard();
-  }
+  if (id === 'dashboard') loadDashboard();
 
   window.scrollTo(0, 0);
 }
