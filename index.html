@@ -752,46 +752,53 @@ async function loadDashboard() {
   const grid = document.getElementById("tractorGrid");
   grid.innerHTML = "";
 
-  // ▼ Supabase から machines を取得
-  const { data: machines, error } = await supabase
+  // ▼ machines を取得（メーカー順）
+  const { data: machines, error: mError } = await supabase
     .from("machines")
-    .select("*");
+    .select("*")
+    .order("manufacturer", { ascending: true });
 
-  if (error) {
-    console.error("機械データ取得エラー:", error);
+  if (mError) {
+    console.error("machines取得エラー:", mError);
     return;
   }
 
-  // ▼ メーカー順に並び替え
-  machines.sort((a, b) => a.maker.localeCompare(b.maker));
+  // ▼ 各機械ごとにカード生成
+  for (const machine of machines) {
 
-  // ▼ 年間稼働時間を計算（例：year_start と year_end がある場合）
-  const hours = machines.map(m => {
-    if (m.year_start && m.year_end) {
-      return m.year_end - m.year_start;
-    } else {
-      return 0; // データがない場合は0
+    // ▼ logs を取得（この機械の全ログ）
+    const { data: logs, error: lError } = await supabase
+      .from("logs")
+      .select("*")
+      .eq("machine_id", machine.id);
+
+    if (lError) {
+      console.error("logs取得エラー:", lError);
+      continue;
     }
-  });
 
-  // ▼ カード生成
-  machines.forEach((machine, index) => {
+    // ▼ 年間稼働時間 = working_hours の合計
+    const totalHours = logs.reduce(
+      (sum, log) => sum + (log.working_hours || 0),
+      0
+    );
+
+    // ▼ カード生成
     const card = document.createElement("div");
     card.className = "bg-white rounded-xl p-4 shadow flex flex-col items-center";
 
     const canvas = document.createElement("canvas");
-    canvas.id = `chart_${index}`;
     canvas.width = 200;
     canvas.height = 200;
 
     const label = document.createElement("p");
     label.className = "mt-3 text-lg font-medium text-gray-700";
-    label.textContent = `${machine.maker} ${machine.name}`;
+    label.textContent = `${machine.manufacturer} ${machine.name}`;
 
     const centerText = document.createElement("div");
     centerText.className = "absolute text-xl font-semibold text-gray-700";
     centerText.style.marginTop = "85px";
-    centerText.textContent = `${hours[index]}h`;
+    centerText.textContent = `${totalHours}h`;
 
     const wrapper = document.createElement("div");
     wrapper.className = "relative w-40 h-20 overflow-hidden flex justify-center";
@@ -812,7 +819,7 @@ async function loadDashboard() {
       type: "doughnut",
       data: {
         datasets: [{
-          data: [hours[index], 200 - hours[index]],
+          data: [totalHours, 200 - totalHours],
           backgroundColor: [gradient, "rgba(0,0,0,0)"],
           borderWidth: 0,
           cutout: "70%"
@@ -827,7 +834,7 @@ async function loadDashboard() {
         }
       }
     });
-  });
+  }
 }
 </script>
 <script>
