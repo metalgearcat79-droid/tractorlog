@@ -748,42 +748,51 @@ async function loadTodayLogs() {
   }
 </script>
 <script>
- // ▼ トラクター名（仮）
-const tractors = [
-  "トラクターA", "トラクターB", "トラクターC", "トラクターD", "トラクターE",
-  "トラクターF", "トラクターG", "トラクターH", "トラクターI", "トラクターJ"
-];
-
-// ▼ 仮の稼働時間（後で Supabase に置き換える）
-const hours = [120, 95, 80, 140, 60, 110, 75, 90, 130, 50];
-
-function loadDashboard() {
+async function loadDashboard() {
   const grid = document.getElementById("tractorGrid");
-  grid.innerHTML = ""; // いったんリセット
+  grid.innerHTML = "";
 
-  tractors.forEach((name, index) => {
-    // ▼ カードを作成
+  // ▼ Supabase から machines を取得
+  const { data: machines, error } = await supabase
+    .from("machines")
+    .select("*");
+
+  if (error) {
+    console.error("機械データ取得エラー:", error);
+    return;
+  }
+
+  // ▼ メーカー順に並び替え
+  machines.sort((a, b) => a.maker.localeCompare(b.maker));
+
+  // ▼ 年間稼働時間を計算（例：year_start と year_end がある場合）
+  const hours = machines.map(m => {
+    if (m.year_start && m.year_end) {
+      return m.year_end - m.year_start;
+    } else {
+      return 0; // データがない場合は0
+    }
+  });
+
+  // ▼ カード生成
+  machines.forEach((machine, index) => {
     const card = document.createElement("div");
     card.className = "bg-white rounded-xl p-4 shadow flex flex-col items-center";
 
-    // ▼ キャンバス
     const canvas = document.createElement("canvas");
     canvas.id = `chart_${index}`;
     canvas.width = 200;
     canvas.height = 200;
 
-    // ▼ トラクター名
     const label = document.createElement("p");
     label.className = "mt-3 text-lg font-medium text-gray-700";
-    label.textContent = name;
+    label.textContent = `${machine.maker} ${machine.name}`;
 
-    // ▼ 数字（中央に重ねる）
     const centerText = document.createElement("div");
     centerText.className = "absolute text-xl font-semibold text-gray-700";
     centerText.style.marginTop = "85px";
     centerText.textContent = `${hours[index]}h`;
 
-    // ▼ ラッパー
     const wrapper = document.createElement("div");
     wrapper.className = "relative w-40 h-20 overflow-hidden flex justify-center";
     wrapper.appendChild(canvas);
@@ -793,9 +802,8 @@ function loadDashboard() {
     card.appendChild(label);
     grid.appendChild(card);
 
-    // ▼ Chart.js セミドーナツ
+    // ▼ Chart.js
     const ctx = canvas.getContext("2d");
-
     const gradient = ctx.createLinearGradient(0, 0, 0, 200);
     gradient.addColorStop(0, "#81c784");
     gradient.addColorStop(1, "#2e7d32");
