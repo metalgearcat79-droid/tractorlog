@@ -9,18 +9,47 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    body { background-color: #f7f4ef; color: #3a3a3a; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; margin: 0; padding: 0; }
+    /* --- 基本設定 --- */
+    body { 
+      background-color: #f7f4ef; 
+      color: #3a3a3a; 
+      font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; 
+      margin: 0; padding: 0; 
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    /* --- ダークモード定義 --- */
+    body.dark-mode {
+      background: radial-gradient(circle at top right, #1b3022, #000000);
+      background-attachment: fixed;
+      color: #e0e0e0;
+    }
+
+    /* ガラス風カード（Glassmorphism） */
+    .card { background: #ffffff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); position: relative; transition: all 0.3s; }
+    
+    body.dark-mode .card {
+      background: rgba(45, 45, 45, 0.6) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      color: #e0e0e0;
+    }
+
+    body.dark-mode #sideMenu { background-color: #1a1a1a; color: #e0e0e0; }
+    body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
+      background-color: rgba(60, 60, 60, 0.8) !important;
+      color: white !important;
+      border-color: #444 !important;
+    }
+
+    /* アニメーション & その他 */
     .hidden { display: none; }
-    .fade-in { animation: fadeIn 0.3s forwards; }
-    .fade-out { animation: fadeOut 0.3s forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(10px); } }
-    .card { background: #ffffff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); position: relative; }
     .btn-main { background-color: #6b8f71; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; width: 100%; transition: all 0.2s; }
     .btn-main:active { background-color: #587a5f; transform: scale(0.98); }
     #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
     #sideMenu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 9999; transition: left 0.3s ease; padding: 20px; padding-top: 60px; }
-    @media (max-width: 480px) { #sideMenu { width: 240px; } }
     .view { display: none; padding: 20px; }
     .view.active { display: block; }
     #mainContainer { width: 100%; max-width: 672px; transition: max-width 0.3s ease; margin: 0 auto; }
@@ -28,7 +57,7 @@
   </style>
 </head>
 
-<body class="pb-10 bg-[#f7f4ef] text-gray-800">
+<body class="pb-10">
 <div id="overlay"></div>
 
 <div id="sideMenu">
@@ -38,12 +67,11 @@
       <button id="closeMenuBtn" style="font-size: 36px; color: #aaa; line-height: 1;">&times;</button>
     </div>
     <nav class="space-y-4">
-      <button onclick="switchView('inputView')" class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-pen-to-square mr-3"></i>ログ入力</button>
-      <button onclick="switchView('todayView')" class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-calendar-day mr-3"></i>本日の稼働状況</button>
-      <button onclick="switchView('historyView')" class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-magnifying-glass mr-3"></i>稼働履歴・検索</button>
-      <button onclick="switchView('dashboard')" class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-chart-line mr-3"></i>DASHBOARD</button>
-      <button onclick="switchView('maintenanceView')" class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-wrench mr-3"></i>メンテナンス情報</button>
-      <button onclick="switchView('repairView')" class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-screwdriver-wrench mr-3"></i>故障・修理履歴</button>
+      <button onclick="switchView('inputView')" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-pen-to-square mr-3"></i>ログ入力</button>
+      <button onclick="switchView('todayView')" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-calendar-day mr-3"></i>本日の稼働状況</button>
+      <button onclick="switchView('historyView')" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-magnifying-glass mr-3"></i>稼働履歴・検索</button>
+      <button onclick="switchView('dashboard')" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-chart-line mr-3"></i>DASHBOARD</button>
+      <button onclick="toggleDarkMode()" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold flex items-center text-[#6b8f71]"><i class="fa-solid fa-moon mr-3"></i>モード切替 (明/暗)</button>
     </nav>
   </div>
 </div>
@@ -67,13 +95,13 @@
     <button id="saveBtn" class="btn-main text-base py-3">保存する</button>
   </div>
 
-  <div id="dashboard" class="view bg-gradient-to-b from-[#efede8] to-[#f7f4ef] min-h-screen">
+  <div id="dashboard" class="view min-h-screen">
     <div class="max-w-full mx-auto pt-4"> 
       <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-4 mb-8">
         <div class="flex items-center min-w-0">
           <button onclick="document.getElementById('menuBtn').click()" class="mr-2 sm:mr-4 text-3xl text-[#6b8f71] p-2 flex-shrink-0"><i class="fa-solid fa-bars"></i></button>
           <div class="min-w-0">
-            <h2 class="text-xl sm:text-3xl font-black text-[#4a6b50] flex items-center tracking-tighter truncate"><i class="fa-solid fa-chart-pie mr-2 sm:mr-4"></i>OPERATION DASHBOARD</h2>
+            <h2 class="text-xl sm:text-3xl font-black text-[#4a6b50] dark:text-[#00ff9f] flex items-center tracking-tighter truncate"><i class="fa-solid fa-chart-pie mr-2 sm:mr-4"></i>OPERATION DASHBOARD</h2>
             <p class="text-[10px] sm:text-sm text-gray-500 font-bold ml-8 sm:ml-12 uppercase tracking-widest">2026年度 稼働分析</p>
           </div>
         </div>
@@ -84,55 +112,52 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
         <div class="bg-gradient-to-br from-[#4a6b50] to-[#2d4031] text-white p-8 rounded-xl shadow-2xl relative overflow-hidden min-h-[200px] flex flex-col justify-between">
-          <div class="relative z-10">
-            <p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">年間総稼働時間</p>
-          </div>
+          <div class="relative z-10"><p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">年間総稼働時間</p></div>
           <div class="relative z-10 flex items-baseline justify-center md:justify-end">
             <h3 id="totalYearHours" class="text-6xl sm:text-7xl font-black flex items-baseline leading-none">0.0<span class="text-4xl sm:text-5xl ml-2 font-bold opacity-100" style="font-style: normal;">h</span></h3>
           </div>
           <i class="fa-solid fa-calendar-check absolute -left-4 -top-4 text-9xl opacity-10"></i>
         </div>
 
-        <div class="col-span-2 bg-white p-4 sm:p-8 rounded-xl shadow-xl border border-gray-100">
-          <p class="text-gray-500 text-sm font-black mb-6 flex items-center tracking-widest uppercase"><i class="fa-solid fa-crown text-yellow-500 mr-2"></i>年間稼働ランキング</p>
-          <div id="top3List" class="grid grid-cols-3 gap-2 sm:gap-6">
-            </div>
+        <div class="col-span-2 card p-4 sm:p-8">
+          <p class="text-gray-500 dark:text-gray-400 text-sm font-black mb-6 flex items-center tracking-widest uppercase"><i class="fa-solid fa-crown text-yellow-500 mr-2"></i>年間稼働ランキング</p>
+          <div id="top3List" class="grid grid-cols-3 gap-2 sm:gap-6"></div>
         </div>
       </div>
       
       <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-12"></div>
 
       <div class="max-w-md mx-auto pb-20 px-4">
-        <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
+        <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
+          <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
+        </button>
       </div>
     </div>
   </div>
 
   <div id="todayView" class="view">
-    <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6"><h2 class="text-xl font-bold text-[#6b8f71]">本日の稼働状況</h2><button onclick="loadTodayLogs()" class="text-sm bg-white px-3 py-1 rounded-lg shadow"><i class="fa-solid fa-rotate"></i> 更新</button></div>
+    <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6"><h2 class="text-xl font-bold text-[#6b8f71]">本日の稼働状況</h2><button onclick="loadTodayLogs()" class="text-sm bg-white dark:bg-gray-800 px-3 py-1 rounded-lg shadow"><i class="fa-solid fa-rotate"></i> 更新</button></div>
     <div id="todayLogList" class="space-y-4 mb-10"></div>
-    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
-  <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
+    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
   </div>
   
   <div id="historyView" class="view">
     <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6"><h2 class="text-xl font-bold text-[#6b8f71]">稼働履歴・検索</h2><div id="historyTotalHours" class="text-sm font-bold bg-[#6b8f71] text-white px-3 py-1 rounded-full">合計: 0.0 h</div></div>
     <div id="historyLogList" class="space-y-4 mb-10"></div>
-    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
+    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
   </div>
 
-  <div id="maintenanceView" class="view"><h2 class="text-xl font-bold text-[#6b8f71]">メンテナンス情報</h2><div class="card text-center py-20 text-gray-500 font-bold">準備中です...</div><button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold">TOPに戻る</button></div>
-  <div id="repairView" class="view"><h2 class="text-xl font-bold text-[#6b8f71]">故障・修理履歴</h2><div class="card text-center py-20 text-gray-500 font-bold">準備中です...</div><button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button></div>
+  <div id="maintenanceView" class="view"><h2 class="text-xl font-bold text-[#6b8f71]">メンテナンス情報</h2><div class="card text-center py-20 text-gray-500 font-bold">準備中です...</div><button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button></div>
+  <div id="repairView" class="view"><h2 class="text-xl font-bold text-[#6b8f71]">故障・修理履歴</h2><div class="card text-center py-20 text-gray-500 font-bold">準備中です...</div><button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button></div>
 </div>
 
 <div id="savePopup" class="hidden fixed inset-0 flex items-center justify-center z-[10001]"><div class="px-6 py-3 rounded-lg text-white bg-[#2f5d3a] shadow-xl font-bold">保存しました</div></div>
-<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[10000]"><div class="bg-white p-6 rounded-xl shadow-xl max-w-sm w-full mx-4 text-center"><p class="text-lg font-bold mb-6">ログを削除しますか？</p><div class="flex space-x-4"><button id="cancelDelete" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold">キャンセル</button><button id="confirmDelete" class="flex-1 py-3 bg-red-500 text-white rounded-lg font-bold">削除する</button></div></div></div>
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[10000]"><div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl max-w-sm w-full mx-4 text-center"><p class="text-lg font-bold mb-6">ログを削除しますか？</p><div class="flex space-x-4"><button id="cancelDelete" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold">キャンセル</button><button id="confirmDelete" class="flex-1 py-3 bg-red-500 text-white rounded-lg font-bold">削除する</button></div></div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  // --- Supabase設定 ---
   const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
   const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
   const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -143,34 +168,31 @@
 
   // --- 初期化 ---
   document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     const now = new Date();
-    now.setHours(now.getHours() + 9); // 日本時間補正
-    const today = now.toISOString().split("T")[0];
-    document.getElementById("workDate").value = today;
+    now.setHours(now.getHours() + 9);
+    document.getElementById("workDate").value = now.toISOString().split("T")[0];
     loadMachines();
   });
 
-  // --- メニュー操作 ---
-  function closeMenu() {
-    menu.style.left = "-280px";
-    overlay.style.display = "none";
+  function toggleDarkMode() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    if (document.getElementById('dashboard').classList.contains('active')) loadDashboard();
+    closeMenu();
   }
-  document.getElementById("menuBtn").onclick = () => {
-    menu.style.left = "0px";
-    overlay.style.display = "block";
-  };
+
+  function closeMenu() { menu.style.left = "-280px"; overlay.style.display = "none"; }
+  document.getElementById("menuBtn").onclick = () => { menu.style.left = "0px"; overlay.style.display = "block"; };
   document.getElementById("closeMenuBtn").onclick = closeMenu;
   overlay.onclick = closeMenu;
 
-  // --- 画面切り替え ---
   function switchView(id) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     closeMenu();
-
     const container = document.getElementById("mainContainer");
     const header = document.getElementById("pageHeader");
-
     if (id === 'dashboard') {
       container.classList.add("dashboard-active");
       if (header) header.style.display = 'none';
@@ -179,22 +201,18 @@
       container.classList.remove("dashboard-active");
       if (header) header.style.display = 'flex';
     }
-
     if (id === 'todayView') loadTodayLogs();
     if (id === 'historyView') loadHistoryLogs();
     window.scrollTo(0, 0);
   }
 
-  // --- 機械マスタ読み込み ---
   async function loadMachines() {
     const { data } = await client.from("machines").select("*").order("name");
     const machineSelect = document.getElementById("machineSelect");
-    const optionsHtml = '<option value="">選択してください</option>' +
+    machineSelect.innerHTML = '<option value="">選択してください</option>' +
       (data || []).map(m => `<option value="${m.id}">${m.manufacturer} ${m.name}</option>`).join("");
-    machineSelect.innerHTML = optionsHtml;
   }
 
-  // --- 作業内容の動的選択 ---
   const taskOptions = {
     "水稲": ["あぜ塗り", "クロぶつし", "起耕", "起耕+基肥散布", "粗代", "本代", "ロール運搬", "その他"],
     "そば": ["起耕", "起耕+基肥散布", "その他"],
@@ -205,183 +223,123 @@
 
   document.getElementById("categorySelect").addEventListener("change", function () {
     const taskSelect = document.getElementById("taskSelect");
-    taskSelect.innerHTML = "";
-    (taskOptions[this.value] || []).forEach(task => {
-      const option = document.createElement("option");
-      option.value = task;
-      option.textContent = task;
-      taskSelect.appendChild(option);
-    });
+    taskSelect.innerHTML = (taskOptions[this.value] || []).map(t => `<option value="${t}">${t}</option>`).join("");
   });
 
-  // --- 前回のメーター自動取得 ---
   document.getElementById("machineSelect").addEventListener("change", async function () {
     if (!this.value) return;
     const { data } = await client.from("hour_logs").select("end_hour").eq("machine_id", this.value).order("date", { ascending: false }).order("created_at", { ascending: false }).limit(1);
-    if (data && data[0]) {
-      document.getElementById("hourBefore").value = data[0].end_hour;
-      calculate();
-    }
+    if (data?.[0]) { document.getElementById("hourBefore").value = data[0].end_hour; calculate(); }
   });
 
   function calculate() {
-    const before = parseFloat(document.getElementById("hourBefore").value) || 0;
-    const after = parseFloat(document.getElementById("hourAfter").value) || 0;
-    const diff = after - before;
-    const diffElement = document.getElementById("hourDiffDisplay");
-    diffElement.textContent = `稼働時間: ${diff.toFixed(1)} h`;
-    diffElement.classList.toggle("text-red-500", diff < 0);
+    const diff = (parseFloat(document.getElementById("hourAfter").value) || 0) - (parseFloat(document.getElementById("hourBefore").value) || 0);
+    const el = document.getElementById("hourDiffDisplay");
+    el.textContent = `稼働時間: ${diff.toFixed(1)} h`;
+    el.classList.toggle("text-red-500", diff < 0);
   }
   document.getElementById("hourAfter").addEventListener("input", calculate);
 
-  // --- 保存処理 ---
   document.getElementById("saveBtn").onclick = async function () {
-    const machineId = document.getElementById("machineSelect").value;
-    const hAfter = parseFloat(document.getElementById("hourAfter").value);
-    const operator = document.getElementById("operatorSelect").value;
-    
-    if (!machineId || isNaN(hAfter) || operator === "選択してください") {
-      alert("必須項目を入力してください"); return;
-    }
-
+    const mId = document.getElementById("machineSelect").value;
+    const hA = parseFloat(document.getElementById("hourAfter").value);
+    const op = document.getElementById("operatorSelect").value;
+    if (!mId || isNaN(hA) || op === "選択してください") { alert("必須項目を入力してください"); return; }
     const { error } = await client.from("hour_logs").insert([{
-      machine_id: machineId,
-      date: document.getElementById("workDate").value,
-      operator: operator,
-      category: document.getElementById("categorySelect").value,
-      task: document.getElementById("taskSelect").value,
-      start_hour: parseFloat(document.getElementById("hourBefore").value) || 0,
-      end_hour: hAfter,
-      memo: document.getElementById("memoInput").value
+      machine_id: mId, date: document.getElementById("workDate").value, operator: op,
+      category: document.getElementById("categorySelect").value, task: document.getElementById("taskSelect").value,
+      start_hour: parseFloat(document.getElementById("hourBefore").value) || 0, end_hour: hA, memo: document.getElementById("memoInput").value
     }]);
-
-    if (error) {
-      alert("保存失敗: " + error.message);
-    } else {
-      showSavePopup();
-      setTimeout(() => location.reload(), 1500);
-    }
+    if (error) alert("保存失敗: " + error.message);
+    else { showSavePopup(); setTimeout(() => location.reload(), 1500); }
   };
 
-  function showSavePopup() {
-    const p = document.getElementById("savePopup");
-    p.classList.remove("hidden");
-    setTimeout(() => p.classList.add("hidden"), 1500);
-  }
+  function showSavePopup() { const p = document.getElementById("savePopup"); p.classList.remove("hidden"); setTimeout(() => p.classList.add("hidden"), 1500); }
 
-  // --- ダッシュボード集計ロジック ---
   async function loadDashboard() {
     const grid = document.getElementById("tractorGrid");
     const top3List = document.getElementById("top3List");
-    const totalDisplay = document.getElementById("totalYearHours");
-    
-    grid.innerHTML = "<p class='col-span-full text-center py-10'>データを読み込み中...</p>";
+    grid.innerHTML = "<p class='col-span-full text-center py-10'>読み込み中...</p>";
     top3List.innerHTML = "";
-
+    
     const { data: machines } = await client.from("machines").select("*").order("manufacturer");
     const { data: logs } = await client.from("hour_logs").select("*, machines(name, manufacturer)");
-
     if (!machines || !logs) return;
 
-    // ★2026年度（年間）の集計
-    const currentYear = 2026;
-    const yearLogs = logs.filter(l => new Date(l.date).getFullYear() === currentYear);
-    
-    const totalYearHours = yearLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
-    totalDisplay.innerHTML = `${totalYearHours.toFixed(1)}<span class="text-5xl ml-4 font-bold" style="font-style: normal;">h</span>`;
+    const yearLogs = logs.filter(l => new Date(l.date).getFullYear() === 2026);
+    const totalH = yearLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
+    document.getElementById("totalYearHours").innerHTML = `${totalH.toFixed(1)}<span class="text-5xl ml-4 font-bold">h</span>`;
 
     const stats = machines.map(m => {
-      const mLogs = yearLogs.filter(l => l.machine_id === m.id);
-      const hours = mLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
-      return { ...m, hours };
+      const h = yearLogs.filter(l => l.machine_id === m.id).reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
+      return { ...m, hours: h };
     }).sort((a, b) => b.hours - a.hours);
 
-    grid.innerHTML = "";
-
-    // TOP3
     stats.slice(0, 3).forEach((m, i) => {
       const colors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
       top3List.innerHTML += `
-        <div class="text-center p-2 sm:p-4 bg-gray-50 rounded-xl border-b-4 border-gray-200">
+        <div class="text-center p-2 sm:p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-b-4 border-gray-200 dark:border-gray-700">
           <p class="text-[10px] sm:text-xs font-black ${colors[i]} uppercase">Rank ${i+1}</p>
-          <p class="font-bold text-gray-700 truncate text-xs sm:text-sm mb-1">${m.name}</p>
-          <p class="text-lg sm:text-2xl font-black text-gray-800 leading-none">${m.hours.toFixed(1)}<span class="text-[10px] sm:text-xs ml-0.5">h</span></p>
+          <p class="font-bold truncate text-xs sm:text-sm mb-1">${m.name}</p>
+          <p class="text-lg sm:text-2xl font-black leading-none">${m.hours.toFixed(1)}<span class="text-[10px] sm:text-xs ml-0.5">h</span></p>
         </div>`;
     });
 
-    // 個別グラフ生成
+    grid.innerHTML = "";
+    const isDark = document.body.classList.contains('dark-mode');
+    const chartColor = isDark ? '#00ff9f' : '#6b8f71';
+    const chartBg = isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6';
+
     stats.forEach(m => {
       const card = document.createElement("div");
-      card.className = "bg-white rounded-xl p-6 shadow-md border border-gray-100 flex flex-col items-center hover:shadow-2xl transition-all";
-      const target = 300; // 目標稼働時間
+      card.className = "card flex flex-col items-center hover:shadow-2xl transition-all";
+      const target = 300;
       const percent = Math.min(100, (m.hours / target) * 100);
-
       card.innerHTML = `
         <div class="relative w-full h-32 flex justify-center mb-6">
           <canvas id="chart-${m.id}"></canvas>
           <div class="absolute inset-0 flex flex-col items-center justify-center pt-4">
-            <div class="flex items-baseline">
-              <span class="text-3xl font-black text-gray-800">${m.hours.toFixed(1)}</span>
-              <span class="text-sm ml-1 font-bold text-gray-400">h</span>
-            </div>
+            <div class="flex items-baseline"><span class="text-3xl font-black">${m.hours.toFixed(1)}</span><span class="text-sm ml-1 font-bold opacity-40">h</span></div>
           </div>
         </div>
         <div class="w-full text-center">
-          <p class="text-[10px] font-black text-[#6b8f71] uppercase tracking-[0.2em] mb-1">${m.manufacturer}</p>
-          <h4 class="text-lg font-bold text-gray-800 leading-tight mb-4">${m.name}</h4>
-          <div class="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
-            <div class="bg-[#6b8f71] h-full rounded-full" style="width: ${percent}%"></div>
+          <p class="text-[10px] font-black text-[#6b8f71] dark:text-[#00ff9f] uppercase tracking-[0.2em] mb-1">${m.manufacturer}</p>
+          <h4 class="text-lg font-bold leading-tight mb-4">${m.name}</h4>
+          <div class="w-full bg-gray-100 dark:bg-gray-800 h-1 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: ${percent}%; background-color: ${chartColor}"></div>
           </div>
         </div>`;
       grid.appendChild(card);
 
-      // グラフ描画実行
       setTimeout(() => {
-        const canvas = document.getElementById(`chart-${m.id}`);
-        if (!canvas) return;
-        new Chart(canvas.getContext("2d"), {
+        const ctx = document.getElementById(`chart-${m.id}`).getContext("2d");
+        new Chart(ctx, {
           type: 'doughnut',
-          data: {
-            datasets: [{
-              data: [m.hours, Math.max(0.1, target - m.hours)],
-              backgroundColor: ['#6b8f71', '#f3f4f6'],
-              borderWidth: 0,
-              cutout: '85%'
-            }]
-          },
-          options: {
-            rotation: -120, circumference: 240,
-            plugins: { legend: { display: false }, tooltip: { enabled: false } },
-            maintainAspectRatio: false
-          }
+          data: { datasets: [{ data: [m.hours, Math.max(0.1, target - m.hours)], backgroundColor: [chartColor, chartBg], borderWidth: 0, cutout: '85%' }] },
+          options: { rotation: -120, circumference: 240, plugins: { legend: { display: false }, tooltip: { enabled: false } }, maintainAspectRatio: false }
         });
       }, 100);
     });
   }
 
-  // --- 履歴表示・削除関連 (簡易) ---
   function renderLogs(data, elementId) {
     const list = document.getElementById(elementId);
-    list.innerHTML = data?.length ? "" : "<p class='text-center text-gray-400'>データがありません</p>";
+    list.innerHTML = data?.length ? "" : "<p class='text-center opacity-40'>データがありません</p>";
     data?.forEach(log => {
       const diff = (log.end_hour - log.start_hour).toFixed(1);
       list.innerHTML += `
         <div class="card border-l-4 border-[#6b8f71] relative mb-4">
-          <button onclick="openDeleteModal(${log.id})" class="absolute top-3 right-4 text-gray-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
-          <div class="flex justify-between items-start mb-2">
-            <span class="text-xs font-bold text-gray-400">${log.date}</span>
-            <span class="bg-[#f7f4ef] text-[#6b8f71] px-2 py-1 rounded text-xs font-bold">${diff} h</span>
-          </div>
-          <div class="font-bold text-gray-700">${log.machines?.name || '不明'} / ${log.operator}</div>
-          <div class="text-sm text-gray-500">${log.category} - ${log.task}</div>
-          ${log.memo ? `<div class="text-xs mt-2 text-gray-400 bg-gray-50 p-2 rounded">${log.memo}</div>` : ""}
+          <button onclick="openDeleteModal(${log.id})" class="absolute top-3 right-4 opacity-40 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+          <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold opacity-40">${log.date}</span><span class="bg-[#f7f4ef] dark:bg-gray-800 text-[#6b8f71] dark:text-[#00ff9f] px-2 py-1 rounded text-xs font-bold">${diff} h</span></div>
+          <div class="font-bold">${log.machines?.name || '不明'} / ${log.operator}</div>
+          <div class="text-sm opacity-60">${log.category} - ${log.task}</div>
+          ${log.memo ? `<div class="text-xs mt-2 opacity-50 bg-black/5 dark:bg-white/5 p-2 rounded">${log.memo}</div>` : ""}
         </div>`;
     });
   }
 
   async function loadTodayLogs() {
-    const today = new Date().toISOString().split("T")[0];
-    const { data } = await client.from("hour_logs").select("*, machines(name)").eq("date", today).order("created_at", { ascending: false });
+    const { data } = await client.from("hour_logs").select("*, machines(name)").eq("date", new Date().toISOString().split("T")[0]).order("created_at", { ascending: false });
     renderLogs(data, "todayLogList");
   }
 
@@ -392,16 +350,12 @@
     document.getElementById("historyTotalHours").textContent = `合計: ${total.toFixed(1)} h`;
   }
 
-  function openDeleteModal(id) {
-    deleteTargetId = id;
-    document.getElementById("deleteModal").classList.remove("hidden");
-  }
+  function openDeleteModal(id) { deleteTargetId = id; document.getElementById("deleteModal").classList.remove("hidden"); }
   document.getElementById("cancelDelete").onclick = () => document.getElementById("deleteModal").classList.add("hidden");
   document.getElementById("confirmDelete").onclick = async () => {
     await client.from("hour_logs").delete().eq("id", deleteTargetId);
     document.getElementById("deleteModal").classList.add("hidden");
-    loadTodayLogs();
-    loadHistoryLogs();
+    loadTodayLogs(); loadHistoryLogs();
   };
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register('/tractorlog/sw.js');
