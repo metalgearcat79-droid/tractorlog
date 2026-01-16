@@ -587,7 +587,7 @@
     const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
     const monthLogs = logs.filter(l => l.date >= firstDay);
     const totalMonthHours = monthLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
-    totalDisplay.innerHTML = `${totalMonthHours.toFixed(1)}<span class="text-2xl ml-3 font-medium opacity-80 italic">h</span>`;
+    totalDisplay.innerHTML = `${totalYearHours.toFixed(1)}<span class="text-5xl ml-4 font-bold opacity-90">h</span>`;
 
     const stats = machines.map(m => {
       const mLogs = monthLogs.filter(l => l.machine_id === m.id);
