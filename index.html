@@ -414,12 +414,15 @@
     
     closeMenu();
     const container = document.getElementById("mainContainer");
+    const header = document.querySelector('header'); // header要素を取得
 
     if (id === 'dashboard') {
       container.classList.add("dashboard-active");
+      if (header) header.style.display = 'none'; // ★ダッシュボードならheaderを隠す
       loadDashboard();
     } else {
       container.classList.remove("dashboard-active");
+      if (header) header.style.display = 'flex'; // ★他の画面ならheaderを表示する
     }
 
     if (id === 'todayView') loadTodayLogs();
