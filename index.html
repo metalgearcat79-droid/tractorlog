@@ -86,13 +86,11 @@
     #mainContainer.dashboard-active {
       max-width: 95% !important;
     }
+    .dashboard-active header {
+    display: none;
+    }
   </style>
 </head>
-
-<body class="pb-10 bg-[#f7f4ef] text-gray-800">
-
-<div id="overlay"></div>
-
 <body class="pb-10 bg-[#f7f4ef] text-gray-800">
 
 <div id="overlay"></div>
@@ -120,21 +118,34 @@
         <i class="fa-solid fa-wrench mr-3 text-lg lg:text-base"></i>メンテナンス情報
       </button>
       <button onclick="switchView('repairView')" class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71] text-base lg:text-sm">
-        <i class="fa-solid fa-tools mr-3 text-lg lg:text-base"></i>故障・修理履歴
+        <i class="fa-solid fa-screwdriver-wrench mr-3 text-lg lg:text-base"></i>故障・修理履歴
       </button>
     </nav>
   </div>
 </div>
 
 <div id="mainContainer" class="mx-auto">
+  <header class="flex flex-col items-center justify-center py-10 relative">
+    <button id="menuBtn" class="absolute left-4 top-4 sm:top-8 z-50 text-3xl text-[#6b8f71] p-2">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <i class="fa-solid fa-tractor text-4xl sm:text-7xl text-[#6b8f71] mb-2"></i>
+    <h1 class="text-lg sm:text-2xl font-bold text-[#6b8f71] tracking-wider text-center">和農日向 Tractor log</h1>
+  </header>
+
   <div id="dashboard" class="view bg-gradient-to-b from-[#efede8] to-[#f7f4ef] min-h-screen">
     <div class="max-w-full mx-auto"> 
-      <div class="flex justify-between items-end border-b-2 border-[#6b8f71] pb-4 mb-8">
-        <div>
-          <h2 class="text-3xl font-black text-[#4a6b50] flex items-center tracking-tighter">
-            <i class="fa-solid fa-chart-pie mr-4"></i>OPERATION DASHBOARD
-          </h2>
-          <p class="text-sm text-gray-500 font-bold ml-12 uppercase tracking-widest">2026年度 リアルタイム分析</p>
+      <div class="flex justify-between items-end border-b-2 border-[#6b8f71] pb-4 mb-8 pt-4">
+        <div class="flex items-center">
+          <button onclick="document.getElementById('menuBtn').click()" class="mr-4 text-3xl text-[#6b8f71]">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <h2 class="text-3xl font-black text-[#4a6b50] flex items-center tracking-tighter">
+              <i class="fa-solid fa-chart-pie mr-4"></i>ANNUAL DASHBOARD
+            </h2>
+            <p class="text-sm text-gray-500 font-bold ml-12 uppercase tracking-widest">2026年度 稼働分析</p>
+          </div>
         </div>
         <button onclick="loadDashboard()" class="bg-[#6b8f71] text-white px-6 py-2 rounded-lg shadow-lg hover:bg-[#587a5f] transition-all active:scale-95 font-bold">
           <i class="fa-solid fa-rotate mr-2"></i>更新
@@ -146,7 +157,7 @@
           <div class="relative z-10">
             <p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">年間総稼働時間</p>
             <h3 id="totalYearHours" class="text-7xl font-black flex items-baseline">
-              0.0<span class="text-2xl ml-3 font-medium opacity-80 italic">h</span>
+              0.0<span class="text-5xl ml-4 font-bold opacity-90">h</span>
             </h3>
           </div>
           <i class="fa-solid fa-calendar-check absolute -right-4 -top-4 text-9xl opacity-10"></i>
@@ -159,18 +170,28 @@
           <div id="top3List" class="grid grid-cols-3 gap-6"></div>
         </div>
       </div>
-      
+
       <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-12"></div>
+
+      <div class="flex justify-center pb-20">
+        <button onclick="switchView('inputView')" class="px-10 py-4 bg-gray-800 text-white rounded-xl font-bold flex items-center justify-center shadow-xl hover:bg-black transition-colors">
+          <i class="fa-solid fa-arrow-left-long mr-3"></i>TOPに戻る
+        </button>
       </div>
+    </div>
   </div>
-  
+
   <div id="maintenanceView" class="view">
-    <h2 class="text-xl font-bold text-[#6b8f71] mb-4">メンテナンス情報</h2>
-    <p class="text-gray-500">現在、詳細画面を構築中です...</p>
+    <div class="border-b-2 border-[#6b8f71] pb-3 mb-6">
+      <h2 class="text-xl font-bold text-[#6b8f71]">メンテナンス情報</h2>
+    </div>
+    <div class="card"><p class="text-gray-500 text-center py-10">準備中です...</p></div>
   </div>
   <div id="repairView" class="view">
-    <h2 class="text-xl font-bold text-[#6b8f71] mb-4">故障・修理履歴</h2>
-    <p class="text-gray-500">現在、詳細画面を構築中です...</p>
+    <div class="border-b-2 border-[#6b8f71] pb-3 mb-6">
+      <h2 class="text-xl font-bold text-[#6b8f71]">故障・修理履歴</h2>
+    </div>
+    <div class="card"><p class="text-gray-500 text-center py-10">準備中です...</p></div>
   </div>
 </div>
 
@@ -581,10 +602,10 @@
     const { data: logs } = await client.from("hour_logs").select("*, machines(name, manufacturer)");
 
     const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-    const monthLogs = logs.filter(l => l.date >= firstDay);
-    const totalMonthHours = monthLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
-    totalDisplay.innerHTML = `${totalMonthHours.toFixed(1)}<span class="text-2xl ml-3 font-medium opacity-80 italic">h</span>`;
+    const firstDayOfYear = `${now.getFullYear()}-01-01`;
+
+    const yearLogs = logs.filter(l => l.date >= firstDayOfYear);
+    const totalYearHours = yearLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
 
     const stats = machines.map(m => {
       const mLogs = monthLogs.filter(l => l.machine_id === m.id);
