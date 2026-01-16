@@ -93,10 +93,6 @@
 
 <div id="overlay"></div>
 
-<body class="pb-10 bg-[#f7f4ef] text-gray-800">
-
-<div id="overlay"></div>
-
 <div id="sideMenu">
   <div class="menuContent">
     <div class="flex justify-between items-center mb-8">
@@ -120,57 +116,9 @@
         <i class="fa-solid fa-wrench mr-3 text-lg lg:text-base"></i>メンテナンス情報
       </button>
       <button onclick="switchView('repairView')" class="w-full text-left p-4 hover:bg-[#f7f4ef] rounded-lg font-bold flex items-center text-[#6b8f71] text-base lg:text-sm">
-        <i class="fa-solid fa-tools mr-3 text-lg lg:text-base"></i>故障・修理履歴
+        <i class="fa-solid fa-screwdriver-wrench mr-3 text-lg lg:text-base"></i>故障・修理履歴
       </button>
     </nav>
-  </div>
-</div>
-
-<div id="mainContainer" class="mx-auto">
-  <div id="dashboard" class="view bg-gradient-to-b from-[#efede8] to-[#f7f4ef] min-h-screen">
-    <div class="max-w-full mx-auto"> 
-      <div class="flex justify-between items-end border-b-2 border-[#6b8f71] pb-4 mb-8">
-        <div>
-          <h2 class="text-3xl font-black text-[#4a6b50] flex items-center tracking-tighter">
-            <i class="fa-solid fa-chart-pie mr-4"></i>OPERATION DASHBOARD
-          </h2>
-          <p class="text-sm text-gray-500 font-bold ml-12 uppercase tracking-widest">2026年度 リアルタイム分析</p>
-        </div>
-        <button onclick="loadDashboard()" class="bg-[#6b8f71] text-white px-6 py-2 rounded-lg shadow-lg hover:bg-[#587a5f] transition-all active:scale-95 font-bold">
-          <i class="fa-solid fa-rotate mr-2"></i>更新
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-        <div class="bg-gradient-to-br from-[#4a6b50] to-[#2d4031] text-white p-8 rounded-xl shadow-2xl relative overflow-hidden">
-          <div class="relative z-10">
-            <p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">年間総稼働時間</p>
-            <h3 id="totalYearHours" class="text-7xl font-black flex items-baseline">
-              0.0<span class="text-5xl ml-4 font-bold opacity-90">h</span>
-            </h3>
-          </div>
-          <i class="fa-solid fa-calendar-check absolute -right-4 -top-4 text-9xl opacity-10"></i>
-        </div>
-
-        <div class="col-span-2 bg-white p-8 rounded-xl shadow-xl border border-gray-100">
-          <p class="text-gray-500 text-sm font-black mb-6 flex items-center tracking-widest uppercase">
-            <i class="fa-solid fa-crown text-yellow-500 mr-2"></i>年間稼働ランキング
-          </p>
-          <div id="top3List" class="grid grid-cols-3 gap-6"></div>
-        </div>
-      </div>
-      
-      <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-12"></div>
-      </div>
-  </div>
-  
-  <div id="maintenanceView" class="view">
-    <h2 class="text-xl font-bold text-[#6b8f71] mb-4">メンテナンス情報</h2>
-    <p class="text-gray-500">現在、詳細画面を構築中です...</p>
-  </div>
-  <div id="repairView" class="view">
-    <h2 class="text-xl font-bold text-[#6b8f71] mb-4">故障・修理履歴</h2>
-    <p class="text-gray-500">現在、詳細画面を構築中です...</p>
   </div>
 </div>
 
@@ -184,182 +132,88 @@
   </header>
 
   <div id="inputView" class="view active">
-    <div class="card mb-4">
-      <label class="block text-sm font-medium text-gray-500 mb-1">機械を選択</label>
-      <select id="machineSelect" class="w-full p-3 border rounded-lg bg-white outline-none focus:border-[#6b8f71]">
-        <option value="">機械を選択してください</option>
-      </select>
-    </div>
-    <div class="card mb-4">
-      <label class="block text-sm font-medium text-gray-500 mb-1">作業日</label>
-      <input type="date" id="workDate" class="w-full p-3 border rounded-lg outline-none" />
-    </div>
-    <div class="card mb-4">
-      <label class="block text-sm font-medium text-gray-500 mb-1">オペレーター</label>
-      <select id="operatorSelect" class="w-full p-3 border rounded-lg outline-none">
-        <option value="選択してください">選択してください</option>
-        <option value="阿曽 千一">阿曽 千一</option>
-        <option value="阿曽 右貢">阿曽 右貢</option>
-        <option value="菅原 亜美">菅原 亜美</option>
-        <option value="土井 達也">土井 達也</option>
-        <option value="阿曽 文平">阿曽 文平</option>
-        <option value="田中 武志">田中 武志</option>
-        <option value="赤塚 かおり">赤塚 かおり</option>
-        <option value="土門 元義">土門 元義</option>
-        <option value="その他">その他</option>
-      </select>
-    </div>
-    <div class="card mb-4">
-      <label class="block text-sm font-medium text-gray-500 mb-1">種別</label>
-      <select id="categorySelect" class="w-full p-3 border rounded-lg outline-none">
-        <option value="">選択してください</option>
-        <option value="水稲">水稲</option>
-        <option value="そば">そば</option>
-        <option value="保全会">保全会</option>
-        <option value="小規模工事">小規模工事</option>
-        <option value="その他">その他</option>
-      </select>
-    </div>
-    <div class="card mb-4">
-      <label class="block text-sm font-medium text-gray-500 mb-1">作業内容</label>
-      <select id="taskSelect" class="w-full p-3 border rounded-lg outline-none"></select>
-    </div>
-    <div class="card mb-4">
-      <div class="flex space-x-4">
-        <div class="flex-1">
-          <label class="block text-sm font-medium text-gray-500 mb-1">稼働前メーター</label>
-          <input type="number" id="hourBefore" class="w-full p-3 border rounded-lg mt-1" step="0.1" />
-        </div>
-        <div class="flex-1">
-          <label class="block text-sm font-medium text-gray-500 mb-1">稼働後メーター</label>
-          <input type="number" id="hourAfter" class="w-full p-3 border rounded-lg mt-1" step="0.1" />
-        </div>
-      </div>
-    </div>
-    <div id="hourDiffDisplay" class="text-right font-bold text-[#6b8f71] mb-6 text-lg">
-      稼働時間: 0.0 h
-    </div>
-    <div class="card mb-6">
-      <label class="block text-sm font-medium text-gray-500 mb-1">メモ</label>
-      <textarea id="memoInput" class="w-full p-3 border rounded-lg outline-none" rows="3" placeholder="備考など"></textarea>
-    </div>
+    <div class="card mb-4"><label class="block text-sm font-medium text-gray-500 mb-1">機械を選択</label><select id="machineSelect" class="w-full p-3 border rounded-lg bg-white outline-none focus:border-[#6b8f71]"><option value="">機械を選択してください</option></select></div>
+    <div class="card mb-4"><label class="block text-sm font-medium text-gray-500 mb-1">作業日</label><input type="date" id="workDate" class="w-full p-3 border rounded-lg outline-none" /></div>
+    <div class="card mb-4"><label class="block text-sm font-medium text-gray-500 mb-1">オペレーター</label><select id="operatorSelect" class="w-full p-3 border rounded-lg outline-none"><option value="選択してください">選択してください</option><option value="阿曽 千一">阿曽 千一</option><option value="阿曽 右貢">阿曽 右貢</option><option value="菅原 亜美">菅原 亜美</option><option value="土井 達也">土井 達也</option><option value="阿曽 文平">阿曽 文平</option><option value="田中 武志">田中 武志</option><option value="赤塚 かおり">赤塚 かおり</option><option value="土門 元義">土門 元義</option><option value="その他">その他</option></select></div>
+    <div class="card mb-4"><label class="block text-sm font-medium text-gray-500 mb-1">種別</label><select id="categorySelect" class="w-full p-3 border rounded-lg outline-none"><option value="">選択してください</option><option value="水稲">水稲</option><option value="そば">そば</option><option value="保全会">保全会</option><option value="小規模工事">小規模工事</option><option value="その他">その他</option></select></div>
+    <div class="card mb-4"><label class="block text-sm font-medium text-gray-500 mb-1">作業内容</label><select id="taskSelect" class="w-full p-3 border rounded-lg outline-none"></select></div>
+    <div class="card mb-4"><div class="flex space-x-4"><div class="flex-1"><label class="block text-sm font-medium text-gray-500 mb-1">稼働前メーター</label><input type="number" id="hourBefore" class="w-full p-3 border rounded-lg mt-1" step="0.1" /></div><div class="flex-1"><label class="block text-sm font-medium text-gray-500 mb-1">稼働後メーター</label><input type="number" id="hourAfter" class="w-full p-3 border rounded-lg mt-1" step="0.1" /></div></div></div>
+    <div id="hourDiffDisplay" class="text-right font-bold text-[#6b8f71] mb-6 text-lg">稼働時間: 0.0 h</div>
+    <div class="card mb-6"><label class="block text-sm font-medium text-gray-500 mb-1">メモ</label><textarea id="memoInput" class="w-full p-3 border rounded-lg outline-none" rows="3" placeholder="備考など"></textarea></div>
     <button id="saveBtn" class="btn-main text-base py-3">保存する</button>
-  </div>
-
-  <div id="savePopup" class="hidden fixed inset-0 flex items-center justify-center z-50">
-    <div class="px-6 py-3 rounded-lg text-white text-lg shadow-lg" style="background-color: #2f5d3a;">
-      保存しました
-    </div>
   </div>
 
   <div id="todayView" class="view">
     <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
-      <h2 class="text-xl font-bold text-[#6b8f71] flex items-center">
-        <i class="fa-solid fa-calendar-day mr-2"></i>本日の稼働状況
-      </h2>
-      <button onclick="loadTodayLogs()" class="text-sm bg-white px-3 py-1 rounded-lg shadow text-gray-600 active:scale-95">
-        <i class="fa-solid fa-rotate"></i> 更新
-      </button>
+      <h2 class="text-xl font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-calendar-day mr-2"></i>本日の稼働状況</h2>
+      <button onclick="loadTodayLogs()" class="text-sm bg-white px-3 py-1 rounded-lg shadow text-gray-600 active:scale-95"><i class="fa-solid fa-rotate"></i> 更新</button>
     </div>
     <div id="todayLogList" class="space-y-4 mb-10"></div>
-    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
-      <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
-    </button>
+    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
   </div>
 
   <div id="historyView" class="view">
     <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
-      <h2 class="text-xl font-bold text-[#6b8f71] flex items-center">
-        <i class="fa-solid fa-magnifying-glass mr-2"></i>過去の履歴・検索
-      </h2>
-      <div id="historyTotalHours" class="text-sm font-bold bg-[#6b8f71] text-white px-3 py-1 rounded-full">
-        合計: 0.0 h
-      </div>
-    </div>
-    <div class="card mb-6 bg-white border border-gray-200">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div>
-          <label class="text-xs font-bold text-gray-500 mb-1 block">表示月</label>
-          <input type="month" id="filterMonth" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white" />
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-500 mb-1 block">日付</label>
-          <input type="date" id="filterDay" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white text-sm">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-500 mb-1 block">オペレーター</label>
-          <select id="filterOperator" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white text-sm">
-            <option value="すべて">すべて</option>
-            <option value="阿曽 千一">阿曽 千一</option>
-            <option value="阿曽 右貢">阿曽 右貢</option>
-            <option value="菅原 亜美">菅原 亜美</option>
-            <option value="土井 達也">土井 達也</option>
-            <option value="阿曽 文平">阿曽 文平</option>
-            <option value="田中 武志">田中 武志</option>
-            <option value="赤塚 かおり">赤塚 かおり</option>
-            <option value="土門 元義">土門 元義</option>
-            <option value="その他">その他</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-500 mb-1 block">機械</label>
-          <select id="filterMachine" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white text-sm"></select>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-500 mb-1 block">作業内容</label>
-          <select id="filterTask" onchange="loadHistoryLogs()" class="w-full p-2 border rounded-lg bg-white text-sm">
-            <option value="すべて">すべて</option>
-          </select>
-        </div>
-      </div>
+      <h2 class="text-xl font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-magnifying-glass mr-2"></i>過去の履歴・検索</h2>
+      <div id="historyTotalHours" class="text-sm font-bold bg-[#6b8f71] text-white px-3 py-1 rounded-full">合計: 0.0 h</div>
     </div>
     <div id="historyLogList" class="space-y-4 mb-10"></div>
-    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
-      <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
-    </button>
+    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
   </div>
 
   <div id="dashboard" class="view bg-gradient-to-b from-[#efede8] to-[#f7f4ef] min-h-screen">
-    <div class="max-w-full mx-auto"> 
+    <div class="max-w-full mx-auto pt-4"> 
       <div class="flex justify-between items-end border-b-2 border-[#6b8f71] pb-4 mb-8">
-        <div>
-          <h2 class="text-3xl font-black text-[#4a6b50] flex items-center tracking-tighter">
-            <i class="fa-solid fa-chart-pie mr-4"></i>OPERATION DASHBOARD
-          </h2>
-          <p class="text-sm text-gray-500 font-bold ml-12 uppercase tracking-widest">リアルタイム分析</p>
+        <div class="flex items-center">
+          <button onclick="document.getElementById('menuBtn').click()" class="mr-4 text-3xl text-[#6b8f71] p-2"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h2 class="text-3xl font-black text-[#4a6b50] flex items-center tracking-tighter"><i class="fa-solid fa-chart-pie mr-4"></i>ANNUAL DASHBOARD</h2>
+            <p class="text-sm text-gray-500 font-bold ml-12 uppercase tracking-widest">2026年度 稼働分析</p>
+          </div>
         </div>
-        <button onclick="loadDashboard()" class="bg-[#6b8f71] text-white px-6 py-2 rounded-lg shadow-lg hover:bg-[#587a5f] transition-all active:scale-95 font-bold">
-          <i class="fa-solid fa-rotate mr-2"></i>更新
-        </button>
+        <button onclick="loadDashboard()" class="bg-[#6b8f71] text-white px-6 py-2 rounded-lg shadow-lg hover:bg-[#587a5f] transition-all active:scale-95 font-bold"><i class="fa-solid fa-rotate mr-2"></i>更新</button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
         <div class="bg-gradient-to-br from-[#4a6b50] to-[#2d4031] text-white p-8 rounded-xl shadow-2xl relative overflow-hidden">
           <div class="relative z-10">
-            <p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">月間稼働時間</p>
-            <h3 id="totalMonthHours" class="text-7xl font-black flex items-baseline">
-              0.0<span class="text-2xl ml-3 font-medium opacity-80 italic">h</span>
+            <p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">年間総稼働時間</p>
+            <h3 id="totalYearHours" class="text-7xl font-black flex items-baseline">
+              0.0<span class="text-5xl ml-4 font-bold opacity-100" style="font-style: normal;">h</span>
             </h3>
           </div>
-          <i class="fa-solid fa-chart-line absolute -right-4 -top-4 text-9xl opacity-10"></i>
+          <i class="fa-solid fa-calendar-check absolute -right-4 -top-4 text-9xl opacity-10"></i>
         </div>
-
         <div class="col-span-2 bg-white p-8 rounded-xl shadow-xl border border-gray-100">
-          <p class="text-gray-500 text-sm font-black mb-6 flex items-center tracking-widest uppercase">
-            <i class="fa-solid fa-crown text-yellow-500 mr-2"></i>月間稼働ランキング
-          </p>
+          <p class="text-gray-500 text-sm font-black mb-6 flex items-center tracking-widest uppercase"><i class="fa-solid fa-crown text-yellow-500 mr-2"></i>年間稼働ランキング</p>
           <div id="top3List" class="grid grid-cols-3 gap-6"></div>
         </div>
       </div>
-
+      
       <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-12"></div>
 
-      <div class="flex justify-center pb-20">
-        <button onclick="switchView('inputView')" class="px-10 py-4 bg-gray-800 text-white rounded-xl font-bold flex items-center justify-center shadow-xl hover:bg-black transition-colors">
-          <i class="fa-solid fa-arrow-left-long mr-3"></i>TOPに戻る
+      <div class="max-w-md mx-auto pb-20">
+        <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
+          <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
         </button>
       </div>
     </div>
+  </div>
+
+  <div id="maintenanceView" class="view">
+    <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
+      <h2 class="text-xl font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-wrench mr-2"></i>メンテナンス情報</h2>
+    </div>
+    <div class="card text-center py-20 text-gray-500 font-bold">準備中です...</div>
+    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
+  </div>
+
+  <div id="repairView" class="view">
+    <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
+      <h2 class="text-xl font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-screwdriver-wrench mr-2"></i>故障・修理履歴</h2>
+    </div>
+    <div class="card text-center py-20 text-gray-500 font-bold">準備中です...</div>
+    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 text-gray-700 rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
   </div>
 </div>
 
