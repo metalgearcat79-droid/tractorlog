@@ -54,7 +54,7 @@
     .bi-header { height: 60px; display: flex; align-items: center; padding: 0 20px; background: #2d4031; color: white; flex-shrink: 0; }
     .bi-container { display: flex; padding: 15px; gap: 15px; overflow: hidden; }
     .bi-left-col { width: 300px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-    .bi-main-col { flex: 1.2; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    .bi-main-col { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
     .bi-right-col { width: 280px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
     .kpi-card { background: #6b8f71; color: white; padding: 8px 4px; border-radius: 12px; text-align: center; }
     .tab-btn { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; white-space: nowrap; cursor: pointer; }
@@ -173,7 +173,7 @@
           <p id="detailCompareValue" class="text-xl font-black text-[#6b8f71]">--%</p>
         </div>
         <div class="card flex-[2] m-0 overflow-y-auto">
-          <p class="text-xs font-bold mb-2 border-b pb-1">最近の履歴</p>
+          <p class="text-m font-bold mb-2 border-b pb-1">メンテナンス情報</p>
           <div id="recentLogList" class="text-[10px] space-y-2 opacity-80"></div>
         </div>
         <button onclick="switchView('inputView')" class="btn-sub py-2 mt-0"><i class="fa-solid fa-house mr-2"></i>TOP</button>
