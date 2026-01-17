@@ -9,50 +9,84 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* --- 基本設定 --- */
-    body { 
-      background-color: #f7f4ef; 
-      color: #3a3a3a; 
-      font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; 
-      margin: 0; padding: 0; 
-      transition: background 0.3s, color 0.3s;
-    }
-    
-    body.dark-mode {
-      background: radial-gradient(circle at top right, #1b3022, #000000);
-      background-attachment: fixed;
-      color: #e0e0e0;
-    }
+  /* --- 基本設定 --- */
+  body { 
+    background-color: #f7f4ef; 
+    color: #3a3a3a; 
+    font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; 
+    margin: 0; padding: 0; 
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  /* ダークモード時の背景設定 */
+  body.dark-mode {
+    background: radial-gradient(circle at top right, #1b3022, #000000);
+    background-attachment: fixed;
+    color: #e0e0e0;
+  }
 
-    .card { background: #ffffff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); position: relative; transition: all 0.3s; }
-    
-    body.dark-mode .card {
-      background: rgba(45, 45, 45, 0.6) !important;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      color: #e0e0e0;
-    }
+  /* --- カード設定（重複を統合） --- */
+  .card { 
+    background: #ffffff; 
+    border-radius: 12px; 
+    padding: 16px; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08); 
+    position: relative; 
+    transition: all 0.3s; 
+    border: 1px solid transparent; /* ライトモードでは枠線なし */
+  }
+  
+  body.dark-mode .card {
+    background: rgba(45, 45, 45, 0.6) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    color: #e0e0e0 !important;
+  }
 
-    body.dark-mode #sideMenu { background-color: #1a1a1a; color: #e0e0e0; }
-    body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
-      background-color: rgba(60, 60, 60, 0.8) !important;
-      color: white !important;
-      border-color: #444 !important;
-    }
+  /* --- ボタン・メニュー設定 --- */
+  .btn-main { background-color: #6b8f71; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; width: 100%; transition: all 0.2s; }
+  .btn-main:active { background-color: #587a5f; transform: scale(0.98); }
 
-    .hidden { display: none; }
-    .btn-main { background-color: #6b8f71; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; width: 100%; transition: all 0.2s; }
-    .btn-main:active { background-color: #587a5f; transform: scale(0.98); }
-    #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
-    #sideMenu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 9999; transition: left 0.3s ease; padding: 20px; padding-top: 60px; }
-    .view { display: none; padding: 20px; }
-    .view.active { display: block; }
-    #mainContainer { width: 100%; max-width: 672px; transition: max-width 0.3s ease; margin: 0 auto; }
-    #mainContainer.dashboard-active { max-width: 95% !important; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-  </style>
+  /* 「戻る」ボタン専用（ライトモードで黒くなるのを防ぐ） */
+  .btn-back-light {
+    background-color: #e5e7eb !important; /* Tailwindのgray-200相当 */
+    color: #374151 !important; /* gray-700相当 */
+  }
+  body.dark-mode .btn-back-light {
+    background-color: #374151 !important;
+    color: #ffffff !important;
+  }
+
+  /* サイドメニュー */
+  #sideMenu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 9999; transition: left 0.3s ease; padding: 20px; padding-top: 60px; }
+  body.dark-mode #sideMenu { background-color: #1a1a1a; color: #e0e0e0; }
+
+  /* メニューのホバー色修正 */
+  #sideMenu button:hover {
+    background-color: rgba(107, 143, 113, 0.1) !important; /* ほんのり和農グリーン */
+  }
+  body.dark-mode #sideMenu button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* フォーム要素 */
+  body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
+    background-color: rgba(60, 60, 60, 0.8) !important;
+    color: white !important;
+    border-color: #444 !important;
+  }
+
+  /* --- レイアウト用 --- */
+  #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
+  .view { display: none; padding: 20px; }
+  .view.active { display: block; }
+  .hidden { display: none; }
+  #mainContainer { width: 100%; max-width: 672px; transition: max-width 0.3s ease; margin: 0 auto; }
+  #mainContainer.dashboard-active { max-width: 95% !important; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+</style>
 </head>
 
 <body class="pb-10">
@@ -189,18 +223,18 @@
         </div>
 
         <div class="max-w-md mx-auto pt-12 pb-20 px-4">
-          <button onclick="selectAnalysis('all', '全体')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
-            <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>マシン一覧に戻る
-          </button>
+          <button onclick="switchView('inputView')" class="w-full py-4 btn-back-light rounded-xl font-bold flex items-center justify-center shadow-sm active:opacity-70">
+          <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
         </div>
       </div> </div> </div> <div id="todayView" class="view">
     <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
       <h2 class="text-xl font-bold text-[#6b8f71]">本日の稼働状況</h2>
       <button onclick="loadTodayLogs()" class="text-sm bg-white dark:bg-gray-800 px-3 py-1 rounded-lg shadow"><i class="fa-solid fa-rotate"></i> 更新</button>
     </div>
-    <div id="todayLogList" class="space-y-4 mb-10"></div>
-    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
-  </div>
+       <div id="todayLogList" class="space-y-4 mb-10"></div>
+          <button onclick="switchView('inputView')" class="w-full py-4 btn-back-light rounded-xl font-bold flex items-center justify-center shadow-sm active:opacity-70">
+         <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
+       </div>
   
   <div id="historyView" class="view">
     <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
@@ -208,7 +242,8 @@
       <div id="historyTotalHours" class="text-sm font-bold bg-[#6b8f71] text-white px-3 py-1 rounded-full">合計: 0.0 h</div>
     </div>
     <div id="historyLogList" class="space-y-4 mb-10"></div>
-    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
+         <button onclick="switchView('inputView')" class="w-full py-4 btn-back-light rounded-xl font-bold flex items-center justify-center shadow-sm active:opacity-70">
+  <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
   </div>
 </div>
 
