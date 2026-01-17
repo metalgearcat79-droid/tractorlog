@@ -9,55 +9,51 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* --- 基本設定 --- */
-    body { background-color: #f7f4ef; color: #3a3a3a; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; margin: 0; padding: 0; }
+    body { background-color: #f7f4ef; color: #3a3a3a; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; margin: 0; }
     body.dark-mode { background: #1a1c1e; color: #e0e0e0; }
 
-    /* 表示の切り替え */
     .view { display: none; }
     .view.active { display: block; }
 
-    /* サイドメニュー（スライド式） */
+    /* サイドメニュー（共通） */
     #sideMenu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 9999; transition: left 0.3s ease; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
     body.dark-mode #sideMenu { background-color: #1a1a1a; color: #e0e0e0; }
     #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
 
-    /* --- BIダッシュボード専用デザイン --- */
-    #dashboard.active { display: flex !important; } /* DashboardのみFlexレイアウト */
-    #dashboard { height: 100vh; background-color: #e2e8e3; overflow: hidden; }
+    /* DASHBOARDレイアウト */
+    #dashboard.active { display: flex !important; flex-direction: column; height: 100vh; background-color: #e2e8e3; overflow: hidden; }
     body.dark-mode #dashboard { background-color: #121412; }
 
-    .bi-sidebar { width: 240px; background: #2d4031; color: white; height: 100vh; flex-shrink: 0; padding-top: 20px; }
-    .bi-nav-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; opacity: 0.7; font-weight: bold; }
-    .bi-nav-item.active { background: rgba(255,255,255,0.1); opacity: 1; border-left: 4px solid #a3b18a; }
+    .bi-header { height: 60px; display: flex; align-items: center; padding: 0 20px; background: #2d4031; color: white; flex-shrink: 0; }
+    .bi-container { flex: 1; display: flex; padding: 15px; gap: 15px; overflow: hidden; }
+    
+    /* カラム設定：左（300px）-中（1.2倍）-右（280px） */
+    .bi-left-col { width: 300px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+    .bi-main-col { flex: 1.2; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    .bi-right-col { width: 280px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
 
-    .bi-content-wrapper { flex: 1; display: flex; padding: 20px; gap: 20px; overflow-y: auto; }
-    .bi-main-col { flex: 1; display: flex; flex-direction: column; gap: 15px; min-width: 0; }
-    .bi-right-col { width: 300px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0; }
+    /* KPIカード（小型化） */
+    .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 5px; }
+    .kpi-card { background: #6b8f71; color: white; padding: 8px 4px; border-radius: 12px; text-align: center; }
+    .kpi-card .val { font-size: 14px; font-weight: 900; }
+    .kpi-card .unit { font-size: 10px; opacity: 0.8; margin-left: 2px; }
 
-    /* カード・KPI */
-    .bi-card { background: white; border-radius: 16px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    body.dark-mode .bi-card { background: rgba(45, 45, 45, 0.8); color: #fff; }
-    .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-    .kpi-card { background: #6b8f71; color: white; padding: 12px; border-radius: 30px; text-align: center; }
-    .kpi-card .val { font-size: 18px; font-weight: 900; }
+    /* BIパーツ共通 */
+    .bi-card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+    body.dark-mode .bi-card { background: #2d2d2d; color: #fff; }
+    .chart-wrapper { position: relative; flex: 1; min-height: 80px; }
+    .chart-icon-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #6b8f71; font-size: 16px; pointer-events: none; }
 
-    /* ドーナツ中央アイコン用 */
-    .chart-wrapper { position: relative; height: 100px; }
-    .chart-icon-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #6b8f71; font-size: 18px; pointer-events: none; }
+    /* タブ切り替え（スクロール可能） */
+    .machine-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+    .tab-btn { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; white-space: nowrap; transition: 0.3s; }
+    .tab-btn.active { background: #2d4031; color: white; }
+    .tab-btn.inactive { background: white; color: #6b8f71; }
 
-    /* 汎用カード（入力画面等） */
-    .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 16px; }
-    body.dark-mode .card { background: #2d2d2d; }
-    .btn-main { background-color: #6b8f71; color: white; padding: 14px; border-radius: 10px; text-align: center; font-weight: bold; width: 100%; display: block; }
-
-    /* モバイルレスポンシブ（ダッシュボード） */
     @media (max-width: 1024px) {
-      .bi-sidebar { display: none; }
-      #dashboard { flex-direction: column; overflow-y: auto; height: auto; }
-      .bi-content-wrapper { flex-direction: column; }
-      .bi-right-col { width: 100%; }
-      .kpi-row { grid-template-columns: repeat(3, 1fr); }
+      #dashboard.active { overflow-y: auto; height: auto; }
+      .bi-container { flex-direction: column; overflow: visible; }
+      .bi-left-col, .bi-main-col, .bi-right-col { width: 100%; }
     }
   </style>
 </head>
@@ -68,7 +64,7 @@
 <div id="sideMenu">
   <div class="flex justify-between items-center mb-8">
     <h2 class="font-bold text-xl text-[#6b8f71]">メニュー</h2>
-    <button id="closeMenuBtn" style="font-size: 32px; color: #aaa;">&times;</button>
+    <button id="closeMenuBtn" class="text-3xl text-gray-400">&times;</button>
   </div>
   <nav class="space-y-2">
     <button onclick="switchView('inputView')" class="w-full text-left p-4 hover:bg-gray-100 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-pen-to-square mr-3"></i>ログ入力</button>
@@ -81,114 +77,91 @@
 
 <div id="mainContainer">
   <header id="pageHeader" class="flex flex-col items-center justify-center py-8 relative">
-    <button id="menuBtn" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i class="fa-solid fa-bars"></i></button>
+    <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i class="fa-solid fa-bars"></i></button>
     <i class="fa-solid fa-tractor text-6xl text-[#6b8f71] mb-2"></i>
     <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 Tractor log</h1>
   </header>
 
   <div id="inputView" class="view active px-4 max-w-xl mx-auto pb-10">
-    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label><select id="machineSelect" class="w-full p-3 border rounded-lg bg-white outline-none"></select></div>
-    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">作業日</label><input type="date" id="workDate" class="w-full p-3 border rounded-lg outline-none" /></div>
-    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">オペレーター</label><select id="operatorSelect" class="w-full p-3 border rounded-lg outline-none"><option>選択してください</option><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option><option>その他</option></select></div>
-    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">種別</label><select id="categorySelect" class="w-full p-3 border rounded-lg outline-none"><option value="">選択してください</option><option value="水稲">水稲</option><option value="そば">そば</option><option value="保全会">保全会</option><option value="小規模工事">小規模工事</option><option value="その他">その他</option></select></div>
-    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">作業内容</label><select id="taskSelect" class="w-full p-3 border rounded-lg outline-none"></select></div>
-    <div class="card"><div class="flex space-x-4"><div><label class="block text-xs font-bold text-gray-400 mb-1">稼働前</label><input type="number" id="hourBefore" class="w-full p-3 border rounded-lg" step="0.1" /></div><div><label class="block text-xs font-bold text-gray-400 mb-1">稼働後</label><input type="number" id="hourAfter" class="w-full p-3 border rounded-lg" step="0.1" /></div></div></div>
-    <div id="hourDiffDisplay" class="text-right font-black text-[#6b8f71] mb-6 text-xl">稼働時間: 0.0 h</div>
-    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">給油量 (L)</label><input type="number" id="fuelAmount" class="w-full p-3 border rounded-lg" placeholder="給油した場合のみ" /></div>
-    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">メモ</label><textarea id="memoInput" class="w-full p-3 border rounded-lg" rows="2"></textarea></div>
-    <button id="saveBtn" class="btn-main">ログを保存する</button>
-  </div>
-
-  <div id="todayView" class="view px-4 max-w-xl mx-auto">
-    <h2 class="text-xl font-bold text-[#6b8f71] mb-4">本日の稼働状況</h2>
-    <div id="todayLogList" class="space-y-4"></div>
-  </div>
-  <div id="historyView" class="view px-4 max-w-xl mx-auto">
-    <h2 class="text-xl font-bold text-[#6b8f71] mb-4">稼働履歴</h2>
-    <div id="historyLogList" class="space-y-4"></div>
+    <div class="space-y-4">
+      <div class="bi-card"><label class="text-xs font-bold text-gray-400">機械</label><select id="machineSelect" class="w-full p-2 outline-none bg-transparent"></select></div>
+      <div class="bi-card"><label class="text-xs font-bold text-gray-400">作業日</label><input type="date" id="workDate" class="w-full p-2 outline-none bg-transparent" /></div>
+      <div class="bi-card"><label class="text-xs font-bold text-gray-400">オペレーター</label><select id="operatorSelect" class="w-full p-2 outline-none bg-transparent"><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option><option>その他</option></select></div>
+      <div class="bi-card"><label class="text-xs font-bold text-gray-400">種別</label><select id="categorySelect" class="w-full p-2 outline-none bg-transparent"><option value="">選択</option><option value="水稲">水稲</option><option value="そば">そば</option><option value="保全会">保全会</option><option value="小規模工事">小規模工事</option></select></div>
+      <div class="bi-card"><label class="text-xs font-bold text-gray-400">内容</label><select id="taskSelect" class="w-full p-2 outline-none bg-transparent"></select></div>
+      <div class="bi-card flex-row gap-4">
+        <div class="flex-1"><label class="text-xs font-bold text-gray-400">稼働前</label><input type="number" id="hourBefore" class="w-full p-2 outline-none bg-transparent" step="0.1" /></div>
+        <div class="flex-1"><label class="text-xs font-bold text-gray-400">稼働後</label><input type="number" id="hourAfter" class="w-full p-2 outline-none bg-transparent" step="0.1" /></div>
+      </div>
+      <div id="hourDiffDisplay" class="text-right font-black text-[#6b8f71] text-lg">稼働時間: 0.0 h</div>
+      <div class="bi-card"><label class="text-xs font-bold text-gray-400">給油量 (L)</label><input type="number" id="fuelAmount" class="w-full p-2 outline-none bg-transparent" /></div>
+      <div class="bi-card"><label class="text-xs font-bold text-gray-400">メモ</label><textarea id="memoInput" class="w-full p-2 outline-none bg-transparent"></textarea></div>
+      <button id="saveBtn" class="w-full bg-[#6b8f71] text-white p-4 rounded-xl font-bold">ログを保存する</button>
+    </div>
   </div>
 
   <div id="dashboard" class="view">
-    <div class="bi-sidebar">
-      <div class="px-8 mb-10"><i class="fa-solid fa-chart-line text-3xl text-[#a3b18a]"></i></div>
-      <div class="bi-nav-item active" onclick="switchView('dashboard')"><i class="fa-solid fa-gauge-high mr-3"></i>DASHBOARD</div>
-      <div class="bi-nav-item" onclick="switchView('inputView')"><i class="fa-solid fa-pen-to-square mr-3"></i>INPUT</div>
-      <div class="bi-nav-item" onclick="toggleDarkMode()"><i class="fa-solid fa-moon mr-3"></i>DARK MODE</div>
+    <div class="bi-header">
+      <button onclick="openMenu()" class="text-2xl mr-4"><i class="fa-solid fa-bars"></i></button>
+      <h1 class="text-lg font-black tracking-widest">OPERATION DASHBOARD</h1>
+      <span id="currentViewLabel" class="ml-auto text-xs font-bold bg-white/20 px-3 py-1 rounded-full text-[#a3b18a]">ALL MACHINES</span>
     </div>
-    
-    <div class="bi-content-wrapper">
-      <div class="bi-main-col">
-        <div id="machineTabs" class="flex gap-2 overflow-x-auto no-scrollbar pb-2"></div>
-        
-        <div class="kpi-row">
-          <div class="kpi-card">
-            <p class="text-[10px] opacity-80 uppercase">Hours</p>
-            <p class="val" id="kpi-hours">0.0</p>
-          </div>
-          <div class="kpi-card">
-            <p class="text-[10px] opacity-80 uppercase">Fuel</p>
-            <p class="val" id="kpi-fuel">0</p>
-          </div>
-          <div class="kpi-card">
-            <p class="text-[10px] opacity-80 uppercase">L/h</p>
-            <p class="val" id="kpi-avg">0.0</p>
-          </div>
-          <div class="kpi-card">
-            <p class="text-[10px] opacity-80 uppercase">Days</p>
-            <p class="val" id="kpi-days">0</p>
-          </div>
-          <div class="kpi-card bg-[#4a6b50]">
-            <p class="text-[10px] opacity-80 uppercase">Maint</p>
-            <p class="val">OK</p>
-          </div>
-        </div>
 
-        <div class="flex flex-col lg:flex-row gap-4">
-          <div class="w-full lg:w-40 flex flex-col gap-4">
-            <div class="bi-card">
-              <p class="text-[10px] font-bold text-[#6b8f71] mb-2">作物</p>
-              <div class="chart-wrapper"><canvas id="categoryShareChart"></canvas><i class="fa-solid fa-wheat-awn chart-icon-center"></i></div>
-            </div>
-            <div class="bi-card">
-              <p class="text-[10px] font-bold text-[#6b8f71] mb-2">工程</p>
-              <div class="chart-wrapper"><canvas id="taskShareChart"></canvas><i class="fa-solid fa-gears chart-icon-center"></i></div>
-            </div>
-            <div class="bi-card">
-              <p class="text-[10px] font-bold text-[#6b8f71] mb-2">担当</p>
-              <div class="chart-wrapper"><canvas id="operatorShareChart"></canvas><i class="fa-solid fa-user chart-icon-center"></i></div>
-            </div>
-          </div>
-          <div class="flex-1 flex flex-col gap-4">
-            <div class="bi-card h-52">
-              <p class="text-xs font-bold mb-2">月別稼働推移</p>
-              <canvas id="detailChart"></canvas>
-            </div>
-            <div class="bi-card flex-1">
-              <p class="text-xs font-bold mb-2">作業内容分析</p>
-              <canvas id="gradientBarChart"></canvas>
-            </div>
-          </div>
+    <div class="bi-container">
+      <div class="bi-left-col">
+        <div class="bi-card flex-1">
+          <p class="text-[10px] font-bold text-[#6b8f71] mb-1">CROP SHARE</p>
+          <div class="chart-wrapper"><canvas id="categoryShareChart"></canvas><i class="fa-solid fa-wheat-awn chart-icon-center"></i></div>
+        </div>
+        <div class="bi-card flex-1">
+          <p class="text-[10px] font-bold text-[#6b8f71] mb-1">TASK ANALYSIS</p>
+          <div class="chart-wrapper"><canvas id="taskShareChart"></canvas><i class="fa-solid fa-gears chart-icon-center"></i></div>
+        </div>
+        <div class="bi-card flex-1">
+          <p class="text-[10px] font-bold text-[#6b8f71] mb-1">OPERATOR SHARE</p>
+          <div class="chart-wrapper"><canvas id="operatorShareChart"></canvas><i class="fa-solid fa-user chart-icon-center"></i></div>
+        </div>
+      </div>
+
+      <div class="bi-main-col">
+        <div id="machineTabs" class="machine-tabs"></div>
+        <div class="kpi-row">
+          <div class="kpi-card"><p class="text-[9px]">Hours</p><p class="val" id="kpi-hours">0.0<span class="unit">h</span></p></div>
+          <div class="kpi-card"><p class="text-[9px]">Fuel</p><p class="val" id="kpi-fuel">0<span class="unit">L</span></p></div>
+          <div class="kpi-card"><p class="text-[9px]">L/h</p><p class="val" id="kpi-avg">0.0</p></div>
+          <div class="kpi-card"><p class="text-[9px]">Days</p><p class="val" id="kpi-days">0</p></div>
+          <div class="kpi-card bg-[#4a6b50]"><p class="text-[9px]">Maint</p><p class="val">OK</p></div>
+        </div>
+        <div class="bi-card h-48">
+          <p class="text-xs font-bold mb-2">月別稼働推移</p>
+          <canvas id="detailChart"></canvas>
+        </div>
+        <div class="bi-card flex-1">
+          <p class="text-xs font-bold mb-2">作業工程比率</p>
+          <canvas id="gradientBarChart"></canvas>
         </div>
       </div>
 
       <div class="bi-right-col">
-        <div class="bi-card text-center">
+        <div class="bi-card flex-1 text-center justify-center">
           <p class="text-xs font-bold mb-4 text-[#6b8f71]">前年同期比 (YoY)</p>
-          <div class="h-28 relative"><canvas id="yearComparisonGauge"></canvas></div>
-          <p id="detailCompareValue" class="text-2xl font-black mt-[-20px] text-[#6b8f71]">--%</p>
+          <div class="relative h-24 mb-2"><canvas id="yearComparisonGauge"></canvas></div>
+          <p id="detailCompareValue" class="text-2xl font-black text-[#6b8f71]">--%</p>
         </div>
-        <div class="bi-card flex-1 overflow-hidden">
-          <p class="text-xs font-bold mb-4">メンテナンス履歴</p>
-          <div class="space-y-3 text-xs opacity-70">
-            <p>2026-01-10 オイル交換</p>
-            <p>2025-12-15 爪交換</p>
-            <p>2025-11-20 洗車・点検</p>
+        <div class="bi-card flex-[1.5]">
+          <p class="text-xs font-bold mb-3 border-b pb-1">メンテナンス履歴</p>
+          <div class="space-y-3 text-[11px] opacity-70 overflow-y-auto" id="maintList">
+            <div class="flex justify-between"><span>2026-01-10</span><span>オイル交換</span></div>
+            <div class="flex justify-between"><span>2025-12-15</span><span>爪交換</span></div>
+            <div class="flex justify-between"><span>2025-11-20</span><span>シーズン点検</span></div>
           </div>
         </div>
-        <button onclick="switchView('inputView')" class="btn-main">TOPへ戻る</button>
       </div>
     </div>
   </div>
+
+  <div id="todayView" class="view px-4 max-w-xl mx-auto"><h2 class="text-xl font-bold py-6">本日の稼働状況</h2><div id="todayLogList" class="space-y-4"></div></div>
+  <div id="historyView" class="view px-4 max-w-xl mx-auto"><h2 class="text-xl font-bold py-6">稼働履歴</h2><div id="historyLogList" class="space-y-4"></div></div>
 </div>
 
 <div id="savePopup" class="hidden fixed inset-0 flex items-center justify-center z-[10001]"><div class="px-6 py-3 rounded-lg text-white bg-[#2f5d3a] shadow-xl font-bold">保存しました</div></div>
@@ -201,131 +174,159 @@
   const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
   const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  let currentMachineId = null;
+  let allMachines = [];
+  let currentMachineId = 'all';
   window.charts = {};
 
-  // --- メニュー操作 ---
-  const sideMenu = document.getElementById("sideMenu");
-  const overlay = document.getElementById("overlay");
-  
-  function openMenu() { sideMenu.style.left = "0px"; overlay.style.display = "block"; }
-  function closeMenu() { sideMenu.style.left = "-280px"; overlay.style.display = "none"; }
-
-  document.getElementById("menuBtn").onclick = openMenu;
+  // --- メニュー ---
+  function openMenu() { document.getElementById("sideMenu").style.left = "0px"; document.getElementById("overlay").style.display = "block"; }
+  function closeMenu() { document.getElementById("sideMenu").style.left = "-280px"; document.getElementById("overlay").style.display = "none"; }
   document.getElementById("closeMenuBtn").onclick = closeMenu;
-  overlay.onclick = closeMenu;
+  document.getElementById("overlay").onclick = closeMenu;
 
-  // --- 画面切り替え ---
   function switchView(id) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    
-    const header = document.getElementById("pageHeader");
-    if (id === 'dashboard') {
-      header.style.display = 'none';
-      loadDashboardData();
-    } else {
-      header.style.display = 'flex';
-    }
+    document.getElementById("pageHeader").style.display = (id === 'dashboard') ? 'none' : 'flex';
     closeMenu();
-    if (id === 'todayView') loadTodayLogs();
-    if (id === 'historyView') loadHistoryLogs();
+    if (id === 'dashboard') renderDashboard('all');
+    if (id === 'todayView') loadLogs("todayLogList", true);
+    if (id === 'historyView') loadLogs("historyLogList", false);
   }
 
   // --- 初期化 ---
   document.addEventListener("DOMContentLoaded", async () => {
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-    await loadMachines();
+    const { data } = await client.from("machines").select("*").order("name");
+    allMachines = data;
+    const select = document.getElementById("machineSelect");
+    select.innerHTML = '<option value="">選択してください</option>' + data.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+    
+    // タブ生成
+    const tabs = document.getElementById("machineTabs");
+    tabs.innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体分析</button>` + 
+                     data.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
+
     const now = new Date();
     document.getElementById("workDate").value = new Date(now.getTime() + 9*60*60*1000).toISOString().split('T')[0];
   });
 
-  async function loadMachines() {
-    const { data } = await client.from("machines").select("*").order("name");
-    const select = document.getElementById("machineSelect");
-    select.innerHTML = '<option value="">選択してください</option>' + data.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
-    
-    // ダッシュボード用タブ
-    const tabs = document.getElementById("machineTabs");
-    tabs.innerHTML = data.map(m => `<button onclick="renderMachineDetail(${m.id}, '${m.name}')" class="px-4 py-2 bg-white rounded-full text-xs font-bold shadow-sm whitespace-nowrap">${m.name}</button>`).join("");
-  }
-
-  // 作業内容の連動
-  const taskOptions = { "水稲": ["あぜ塗り", "起耕", "粗代", "本代", "ロール運搬", "その他"], "そば": ["起耕", "その他"], "保全会": ["ハンマーモア", "スライドモア", "その他"], "小規模工事": ["整地", "掘削", "その他"], "その他": ["その他"] };
+  // --- 入力制御 ---
+  const tasks = { "水稲": ["あぜ塗り", "起耕", "粗代", "本代", "ロール運搬"], "そば": ["起耕", "播種"], "保全会": ["ハンマーモア", "スライドモア"], "小規模工事": ["整地", "掘削"] };
   document.getElementById("categorySelect").onchange = function() {
-    document.getElementById("taskSelect").innerHTML = (taskOptions[this.value] || []).map(t => `<option value="${t}">${t}</option>`).join("");
+    document.getElementById("taskSelect").innerHTML = (tasks[this.value] || ["その他"]).map(t => `<option value="${t}">${t}</option>`).join("");
   };
-
-  // 稼働時間計算
   document.getElementById("hourAfter").oninput = () => {
     const diff = (parseFloat(document.getElementById("hourAfter").value) || 0) - (parseFloat(document.getElementById("hourBefore").value) || 0);
     document.getElementById("hourDiffDisplay").textContent = `稼働時間: ${diff.toFixed(1)} h`;
   };
 
-  // 保存
+  // 保存処理
   document.getElementById("saveBtn").onclick = async () => {
     const mId = document.getElementById("machineSelect").value;
     const hA = parseFloat(document.getElementById("hourAfter").value);
-    if (!mId || isNaN(hA)) return alert("入力してください");
-
+    if (!mId || isNaN(hA)) return alert("機械と稼働後アワーは必須です");
     const { error } = await client.from("hour_logs").insert([{
       machine_id: mId, date: document.getElementById("workDate").value, operator: document.getElementById("operatorSelect").value,
       category: document.getElementById("categorySelect").value, task: document.getElementById("taskSelect").value,
       start_hour: parseFloat(document.getElementById("hourBefore").value) || 0, end_hour: hA,
       fuel_amount: parseFloat(document.getElementById("fuelAmount").value) || 0, memo: document.getElementById("memoInput").value
     }]);
-
-    if (!error) {
-      document.getElementById("savePopup").classList.remove("hidden");
-      setTimeout(() => location.reload(), 1500);
-    }
+    if (!error) { document.getElementById("savePopup").classList.remove("hidden"); setTimeout(() => location.reload(), 1500); }
   };
 
-  // --- ダッシュボード描画ロジック ---
-  async function loadDashboardData() {
-    const { data } = await client.from("machines").select("*").limit(1);
-    if (data[0]) renderMachineDetail(data[0].id, data[0].name);
-  }
-
-  async function renderMachineDetail(mId, mName) {
+  // --- DASHBOARD ロジック ---
+  async function renderDashboard(mId) {
     currentMachineId = mId;
-    const { data: logs } = await client.from("hour_logs").select("*").eq("machine_id", mId);
+    // タブ表示切り替え
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.className = "tab-btn inactive");
+    document.getElementById(`tab-${mId}`).className = "tab-btn active";
+    document.getElementById("currentViewLabel").innerText = mId === 'all' ? 'ALL MACHINES' : allMachines.find(m => m.id == mId).name.toUpperCase();
+
+    let query = client.from("hour_logs").select("*");
+    if (mId !== 'all') query = query.eq("machine_id", mId);
+    const { data: logs } = await query;
+    
     const logs26 = logs.filter(l => l.date.startsWith("2026"));
     const logs25 = logs.filter(l => l.date.startsWith("2025"));
 
+    // 集計
     const totalH = logs26.reduce((s,l) => s + (l.end_hour - l.start_hour), 0);
     const totalF = logs26.reduce((s,l) => s + (l.fuel_amount || 0), 0);
-    
-    document.getElementById("kpi-hours").innerText = totalH.toFixed(1);
-    document.getElementById("kpi-fuel").innerText = Math.floor(totalF);
-    document.getElementById("kpi-avg").innerText = totalH > 0 ? (totalF/totalH).toFixed(1) : "0.0";
-    document.getElementById("kpi-days").innerText = new Set(logs26.map(l => l.date)).size;
+    const days = new Set(logs26.map(l => l.date)).size;
 
-    drawCharts(logs26, logs25);
+    document.getElementById("kpi-hours").innerHTML = `${totalH.toFixed(1)}<span class="unit">h</span>`;
+    document.getElementById("kpi-fuel").innerHTML = `${Math.floor(totalF)}<span class="unit">L</span>`;
+    document.getElementById("kpi-avg").innerText = totalH > 0 ? (totalF/totalH).toFixed(1) : "0.0";
+    document.getElementById("kpi-days").innerText = days;
+
+    // グラフ用データ
+    const catData = {}; const taskData = {}; const opData = {};
+    const monthlyH = Array(12).fill(0);
+    logs26.forEach(l => {
+      const h = l.end_hour - l.start_hour;
+      catData[l.category || "他"] = (catData[l.category || "他"] || 0) + h;
+      taskData[l.task || "他"] = (taskData[l.task || "他"] || 0) + h;
+      opData[l.operator || "他"] = (opData[l.operator || "他"] || 0) + h;
+      monthlyH[parseInt(l.date.split("-")[1])-1] += h;
+    });
+
+    drawCharts(catData, taskData, opData, monthlyH, totalH, logs25);
   }
 
-  function drawCharts(logs26, logs25) {
+  function drawCharts(cat, task, op, monthly, totalH, logs25) {
     Object.values(window.charts).forEach(c => { if(c) c.destroy(); });
-    const ctxLine = document.getElementById('detailChart').getContext('2d');
-    window.charts.line = new Chart(ctxLine, { type: 'line', data: { labels: ['4','5','6','7','8','9','10'], datasets: [{ label:'h', data:[10,40,65,30,20,80,10], borderColor:'#6b8f71', tension:0.4 }] }, options: { maintainAspectRatio:false } });
+    const isDark = document.body.classList.contains('dark-mode');
+    const chartColor = '#6b8f71';
 
-    const donutCfg = { type: 'doughnut', options: { cutout:'70%', plugins:{legend:{display:false}} } };
-    window.charts.c1 = new Chart(document.getElementById('categoryShareChart'), { ...donutCfg, data:{ datasets:[{data:[60,40], backgroundColor:['#2d4031','#a3b18a']}] } });
-    window.charts.c2 = new Chart(document.getElementById('taskShareChart'), { ...donutCfg, data:{ datasets:[{data:[30,70], backgroundColor:['#6b8f71','#dad7cd']}] } });
-    window.charts.c3 = new Chart(document.getElementById('operatorShareChart'), { ...donutCfg, data:{ datasets:[{data:[50,50], backgroundColor:['#588157','#6b8f71']}] } });
+    const donutCfg = (data) => ({
+      type: 'doughnut',
+      data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: ['#2d4031', '#6b8f71', '#a3b18a', '#dad7cd', '#588157'], borderWidth: 0 }] },
+      options: { cutout: '75%', maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
 
-    const ctxGauge = document.getElementById('yearComparisonGauge').getContext('2d');
-    window.charts.gauge = new Chart(ctxGauge, { type:'doughnut', data:{ datasets:[{data:[75,25], backgroundColor:['#6b8f71','#eee']}] }, options:{ rotation:-90, circumference:180, cutout:'80%', plugins:{legend:{display:false}} } });
-    document.getElementById("detailCompareValue").innerText = "75%";
+    window.charts.c1 = new Chart(document.getElementById('categoryShareChart'), donutCfg(cat));
+    window.charts.c2 = new Chart(document.getElementById('taskShareChart'), donutCfg(task));
+    window.charts.c3 = new Chart(document.getElementById('operatorShareChart'), donutCfg(op));
+
+    // 月別
+    window.charts.line = new Chart(document.getElementById('detailChart'), {
+      type: 'line',
+      data: { labels: ['1','2','3','4','5','6','7','8','9','10','11','12'], datasets: [{ data: monthly, borderColor: chartColor, backgroundColor: 'rgba(107,143,113,0.1)', fill: true, tension: 0.4 }] },
+      options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+
+    // 横棒
+    window.charts.bar = new Chart(document.getElementById('gradientBarChart'), {
+      type: 'bar',
+      data: { labels: Object.keys(task), datasets: [{ data: Object.values(task), backgroundColor: chartColor, borderRadius: 5 }] },
+      options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+
+    // ゲージ
+    const lastH = logs25.reduce((s,l) => s + (l.end_hour - l.start_hour), 0) || 1;
+    const ratio = Math.min(100, (totalH / lastH) * 100);
+    window.charts.gauge = new Chart(document.getElementById('yearComparisonGauge'), {
+      type: 'doughnut',
+      data: { datasets: [{ data: [ratio, 100 - ratio], backgroundColor: [chartColor, isDark ? '#333' : '#eee'], borderWidth: 0 }] },
+      options: { rotation: -90, circumference: 180, cutout: '80%', maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+    document.getElementById("detailCompareValue").innerText = ratio.toFixed(1) + "%";
+  }
+
+  async function loadLogs(elId, todayOnly) {
+    const list = document.getElementById(elId);
+    let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
+    if (todayOnly) query = query.eq("date", new Date().toISOString().split('T')[0]);
+    const { data } = await query;
+    list.innerHTML = data.map(l => `<div class="bi-card"><b>${l.date} - ${l.machines.name}</b><p class="text-sm opacity-70">${l.operator} | ${l.task} (${(l.end_hour-l.start_hour).toFixed(1)}h)</p></div>`).join("");
   }
 
   function toggleDarkMode() {
-    const isDark = document.body.classList.toggle('dark-mode');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    closeMenu();
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    if (document.getElementById("dashboard").classList.contains("active")) renderDashboard(currentMachineId);
   }
-
-  async function loadTodayLogs() { /* 履歴描画ロジック */ }
 </script>
 </body>
 </html>
