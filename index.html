@@ -272,7 +272,10 @@
     const list = document.getElementById(elId);
     list.innerHTML = "<p class='text-center py-10 opacity-50'>読み込み中...</p>";
     let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
-    if (todayOnly) { query = query.eq("date", new Date().toISOString().split('T')[0]); } else {
+    
+    if (todayOnly) { 
+      query = query.eq("date", new Date().toISOString().split('T')[0]); 
+    } else {
       const month = document.getElementById("filterMonth").value;
       const mId = document.getElementById("filterMachine").value;
       const op = document.getElementById("filterOperator").value;
@@ -282,30 +285,37 @@
       if (op) query = query.eq("operator", op);
       if (tsk) query = query.eq("task", tsk);
     }
+    
     const { data } = await query;
     if(!data || data.length === 0) {
       list.innerHTML = "<p class='text-center py-10 opacity-50 text-sm'>データがありません</p>";
       if(!todayOnly) document.getElementById("historyTotalHours").innerText = "合計: 0.0 h";
       return;
     }
+    
     list.innerHTML = data.map(l => `
       <div class="card border-l-4 border-[#6b8f71] mb-4">
         <div class="flex justify-between items-start">
           <b class="text-sm">${l.date} - ${l.machines?.name}</b>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-trash-can delete-btn text-xs" onclick="deleteLog(${l.id})"></i>
-            <span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span>
+          <div class="flex items-center gap-3">
+            <span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">
+              ${(l.end_hour-l.start_hour).toFixed(1)}h
+            </span>
+            <i class="fa-solid fa-trash-can delete-btn text-xs text-red-400" onclick="deleteLog(${l.id})"></i>
           </div>
         </div>
         <p class="text-xs opacity-70 mt-1">${l.operator} | ${l.task}</p>
         ${l.memo ? `<p class="text-[10px] mt-2 italic opacity-60">📝 ${l.memo}</p>` : ''}
       </div>
     `).join("");
+
     if(!todayOnly) {
       const total = data.reduce((s,l) => s + (l.end_hour - l.start_hour), 0);
       document.getElementById("historyTotalHours").innerText = `合計: ${total.toFixed(1)} h`;
     }
   }
+
+</script>
 
   async function renderDashboard(mId) {
     currentMachineId = mId;
