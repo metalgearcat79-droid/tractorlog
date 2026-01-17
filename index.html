@@ -7,6 +7,7 @@
   <link rel="manifest" href="/tractorlog/manifest.json">
   <title>和農日向 Tractor Log</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/bold/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     /* --- 基本スタイル --- */
@@ -47,7 +48,7 @@
     .delete-btn { color: #e57373; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s; }
     .delete-btn:hover { background: rgba(229, 115, 115, 0.1); }
 
-    /* --- DASHBOARDレイアウト --- */
+    /* DASHBOARD */
     #dashboard.active { display: flex !important; flex-direction: column; height: 100vh; background-color: #e2e8e3; overflow: hidden; }
     body.dark-mode #dashboard { background-color: #121412; }
     .bi-header { height: 60px; display: flex; align-items: center; padding: 0 20px; background: #2d4031; color: white; flex-shrink: 0; }
@@ -149,30 +150,30 @@
     </div>
     <div class="bi-container">
       <div class="bi-left-col">
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">CROP SHARE</p><div class="chart-wrapper"><canvas id="categoryShareChart"></canvas><i class="fa-solid fa-wheat-awn chart-icon-center"></i></div></div>
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">TASK ANALYSIS</p><div class="chart-wrapper"><canvas id="taskShareChart"></canvas><i class="fa-solid fa-gears chart-icon-center"></i></div></div>
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">OPERATOR SHARE</p><div class="chart-wrapper"><canvas id="operatorShareChart"></canvas><i class="fa-solid fa-user chart-icon-center"></i></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">CROP SHARE</p><div class="chart-wrapper"><canvas id="categoryShareChart"></canvas></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">TASK ANALYSIS</p><div class="chart-wrapper"><canvas id="taskShareChart"></canvas></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">OPERATOR SHARE</p><div class="chart-wrapper"><canvas id="operatorShareChart"></canvas></div></div>
       </div>
       <div class="bi-main-col">
-        <div id="machineTabs" class="machine-tabs"></div>
-        <div class="grid grid-cols-5 gap-2 mb-2">
+        <div id="machineTabs" class="machine-tabs flex gap-2 overflow-x-auto pb-2"></div>
+        <div class="grid grid-cols-5 gap-2 mb-2 text-center">
           <div class="kpi-card"><p class="text-[9px]">Hours</p><p class="text-sm font-black" id="kpi-hours">0.0</p></div>
           <div class="kpi-card"><p class="text-[9px]">Fuel</p><p class="text-sm font-black" id="kpi-fuel">0</p></div>
           <div class="kpi-card"><p class="text-[9px]">L/h</p><p class="text-sm font-black" id="kpi-avg">0.0</p></div>
           <div class="kpi-card"><p class="text-[9px]">Days</p><p class="text-sm font-black" id="kpi-days">0</p></div>
           <div class="kpi-card bg-[#4a6b50]"><p class="text-[9px]">Maint</p><p class="text-sm font-black">OK</p></div>
         </div>
-        <div class="card h-48 m-0"><p class="text-xs font-bold mb-2">月別稼働推移</p><canvas id="detailChart"></canvas></div>
-        <div class="card flex-1 m-0"><p class="text-xs font-bold mb-2">作業工程比率</p><canvas id="gradientBarChart"></canvas></div>
+        <div class="card h-48 m-0"><canvas id="detailChart"></canvas></div>
+        <div class="card flex-1 m-0"><canvas id="gradientBarChart"></canvas></div>
       </div>
       <div class="bi-right-col">
         <div class="card flex-1 text-center m-0">
-          <p class="text-xs font-bold text-[#6b8f71]">前年同期比 (YoY)</p>
+          <p class="text-xs font-bold text-[#6b8f71]">YoY 比</p>
           <div class="relative h-20"><canvas id="yearComparisonGauge"></canvas></div>
           <p id="detailCompareValue" class="text-xl font-black text-[#6b8f71]">--%</p>
         </div>
         <div class="card flex-[2] m-0 overflow-y-auto">
-          <p class="text-xs font-bold mb-2 border-b pb-1">最近の作業履歴</p>
+          <p class="text-xs font-bold mb-2 border-b pb-1">最近の履歴</p>
           <div id="recentLogList" class="text-[10px] space-y-2 opacity-80"></div>
         </div>
         <button onclick="switchView('inputView')" class="btn-sub py-2 mt-0"><i class="fa-solid fa-house mr-2"></i>TOP</button>
@@ -272,10 +273,7 @@
     const list = document.getElementById(elId);
     list.innerHTML = "<p class='text-center py-10 opacity-50'>読み込み中...</p>";
     let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
-    
-    if (todayOnly) { 
-      query = query.eq("date", new Date().toISOString().split('T')[0]); 
-    } else {
+    if (todayOnly) { query = query.eq("date", new Date().toISOString().split('T')[0]); } else {
       const month = document.getElementById("filterMonth").value;
       const mId = document.getElementById("filterMachine").value;
       const op = document.getElementById("filterOperator").value;
@@ -285,22 +283,18 @@
       if (op) query = query.eq("operator", op);
       if (tsk) query = query.eq("task", tsk);
     }
-    
     const { data } = await query;
     if(!data || data.length === 0) {
       list.innerHTML = "<p class='text-center py-10 opacity-50 text-sm'>データがありません</p>";
       if(!todayOnly) document.getElementById("historyTotalHours").innerText = "合計: 0.0 h";
       return;
     }
-    
     list.innerHTML = data.map(l => `
       <div class="card border-l-4 border-[#6b8f71] mb-4">
         <div class="flex justify-between items-start">
           <b class="text-sm">${l.date} - ${l.machines?.name}</b>
           <div class="flex items-center gap-3">
-            <span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">
-              ${(l.end_hour-l.start_hour).toFixed(1)}h
-            </span>
+            <span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span>
             <i class="fa-solid fa-trash-can delete-btn text-xs text-red-400" onclick="deleteLog(${l.id})"></i>
           </div>
         </div>
@@ -308,14 +302,11 @@
         ${l.memo ? `<p class="text-[10px] mt-2 italic opacity-60">📝 ${l.memo}</p>` : ''}
       </div>
     `).join("");
-
     if(!todayOnly) {
       const total = data.reduce((s,l) => s + (l.end_hour - l.start_hour), 0);
       document.getElementById("historyTotalHours").innerText = `合計: ${total.toFixed(1)} h`;
     }
   }
-
-</script>
 
   async function renderDashboard(mId) {
     currentMachineId = mId;
