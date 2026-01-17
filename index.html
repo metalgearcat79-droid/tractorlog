@@ -48,42 +48,52 @@
     .delete-btn { color: #e57373; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s; }
     .delete-btn:hover { background: rgba(229, 115, 115, 0.1); }
 
-/* DASHBOARD - 高さを揃える調整版 */
-    #dashboard.active { display: flex !important; flex-direction: column; min-height: 100vh; background-color: #e2e8e3; overflow-x: hidden; }
+    /* DASHBOARD - 高さを揃える強化版 */
+    #dashboard.active { display: flex !important; flex-direction: column; height: 100vh; background-color: #e2e8e3; overflow: hidden; }
     body.dark-mode #dashboard { background-color: #121412; }
     .bi-header { height: 60px; display: flex; align-items: center; padding: 0 20px; background: #2d4031; color: white; flex-shrink: 0; }
     
+    /* コンテナ全体 */
     .bi-container { 
       flex: 1; 
       display: flex; 
       padding: 15px; 
       gap: 15px; 
-      align-items: stretch; /* これで左右の柱を中央に合わせる */
+      align-items: stretch;
+      min-height: 0;
     }
 
-    .bi-left-col { width: 300px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-    .bi-main-col { flex: 1.5; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-    .bi-right-col { width: 280px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-
-    /* 左右のカラム内のカードを均等に伸ばす設定 */
-    .bi-left-col .card, .bi-right-col .card { 
-      flex: 1; 
-      margin-bottom: 0 !important; 
+    /* 左右のカラム：上部に中央のボタン類と同じ分のマージンを作る */
+    .bi-left-col, .bi-right-col { 
+      width: 300px; 
       display: flex; 
       flex-direction: column; 
-      justify-content: center;
+      gap: 10px; 
+      flex-shrink: 0;
+      /* 中央のタブ(約40px) + KPIカード(約60px) + gap(10px) = 約110pxの余白 */
+      padding-top: 105px; 
     }
 
-    .kpi-card { background: #6b8f71; color: white; padding: 8px 4px; border-radius: 12px; text-align: center; }
-    .tab-btn { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; white-space: nowrap; cursor: pointer; }
-    .tab-btn.active { background: #2d4031; color: white; }
-    .tab-btn.inactive { background: white; color: #6b8f71; }
+    .bi-main-col { 
+      flex: 1.5; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      min-width: 0; 
+    }
+
+    /* カードを伸ばす設定 */
+    .bi-left-col > .card, .bi-right-col > .card, .bi-main-col > .card { 
+      flex: 1 !important; 
+      display: flex !important; 
+      flex-direction: column !important;
+      margin-bottom: 0 !important;
+      min-height: 0;
+    }
 
     @media (max-width: 1024px) {
-      #dashboard.active { overflow-y: auto; height: auto; }
-      .bi-container { flex-direction: column; height: auto; align-items: initial; }
-      .bi-left-col, .bi-main-col, .bi-right-col { width: 100%; height: auto; }
-      .bi-left-col .card, .bi-right-col .card { flex: none; }
+      .bi-left-col, .bi-right-col { padding-top: 0; } /* スマホでは余白を消す */
+      .bi-container { flex-direction: column; height: auto; overflow-y: auto; }
     }
   </style>
 </head>
