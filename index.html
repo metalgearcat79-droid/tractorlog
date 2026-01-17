@@ -163,62 +163,65 @@
         </div>
       </div>
 
-      <div id="analysisDetail" class="hidden space-y-3 px-2">
-        <div class="card bg-[#6b8f71] text-white p-6 text-center rounded-2xl shadow-lg">
+      <div id="analysisDetail" class="hidden space-y-4 px-2">
+        <div class="card bg-[#6b8f71] text-white p-5 text-center rounded-2xl shadow-lg">
           <p class="text-[10px] font-bold opacity-80 mb-1" id="detailMachineName">機械名</p>
           <div class="flex items-baseline justify-center">
-            <h2 class="text-6xl font-black" id="detailTotalHours">0.0</h2>
-            <span class="text-xl ml-1">h</span>
+            <h2 class="text-6xl font-black" id="detailTotalHours">0.0</h2><span class="text-2xl ml-1">h</span>
           </div>
-          <div class="inline-block mt-1 px-2 py-0.5 bg-white/20 rounded-full text-[10px] font-bold">
+          <div class="inline-block mt-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold">
             前年比: <span id="detailCompareValue">--</span>
           </div>
         </div>
-  
+
         <div class="grid grid-cols-2 gap-2">
-          <div class="card p-2 flex justify-between items-center">
-            <span class="text-[10px] font-bold text-gray-400">給油</span>
+          <div class="card p-3 flex justify-between items-center">
+            <span class="text-[10px] font-bold text-gray-400">給油量</span>
             <span class="text-lg font-black"><span id="detailTotalFuel">0.0</span><span class="text-[10px] ml-0.5 opacity-50">L</span></span>
           </div>
-          <div class="card p-2 flex justify-between items-center">
-            <span class="text-[10px] font-bold text-gray-400">燃費</span>
+          <div class="card p-3 flex justify-between items-center">
+            <span class="text-[10px] font-bold text-gray-400">平均燃費</span>
             <span class="text-lg font-black"><span id="detailAvgFuel">0.0</span><span class="text-[10px] ml-0.5 opacity-50">L/h</span></span>
           </div>
         </div>
 
-        <div class="card p-3">
-          <h4 class="text-[10px] font-bold mb-1 opacity-50 uppercase">稼働推移</h4>
-          <div style="position: relative; height:200px;"><canvas id="detailChart"></canvas></div>
+        <div class="card p-4">
+          <h4 class="text-xs font-bold mb-2 opacity-50 uppercase tracking-wider">月別稼働推移</h4>
+          <div style="position: relative; height:160px;"><canvas id="detailChart"></canvas></div>
         </div>
-  
+
         <div class="grid grid-cols-2 gap-2">
-          <div class="card p-2">
-            <h4 class="text-[10px] font-bold mb-1 opacity-50">作業種別</h4>
-            <div style="position: relative; height:100px;"><canvas id="taskShareChart"></canvas></div>
+          <div class="card p-3 col-span-2">
+            <h4 class="text-[10px] font-bold mb-2 opacity-50">作物種別 (水稲・そば等)</h4>
+            <div style="position: relative; height:110px;"><canvas id="categoryShareChart"></canvas></div>
           </div>
-          <div class="card p-2">
-            <h4 class="text-[10px] font-bold mb-1 opacity-50">オペレーター</h4>
-            <div style="position: relative; height:100px;"><canvas id="operatorShareChart"></canvas></div>
+          <div class="card p-3">
+            <h4 class="text-[10px] font-bold mb-2 opacity-50">作業工程</h4>
+            <div style="position: relative; height:140px;"><canvas id="taskShareChart"></canvas></div>
+          </div>
+          <div class="card p-3">
+            <h4 class="text-[10px] font-bold mb-2 opacity-50">担当者</h4>
+            <div style="position: relative; height:140px;"><canvas id="operatorShareChart"></canvas></div>
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-          <div class="card p-2 border-t-2 border-red-400">
+          <div class="card p-3 border-t-2 border-red-400">
             <h4 class="text-[10px] font-bold text-red-500">累計修理費</h4>
             <p class="text-lg font-black">¥0</p>
           </div>
-          <div class="card p-2 border-t-2 border-blue-400">
+          <div class="card p-3 border-t-2 border-blue-400">
             <h4 class="text-[10px] font-bold text-blue-500">メンテナンス</h4>
             <p class="text-[10px] font-bold truncate">記録なし</p>
           </div>
         </div>
 
-        <button onclick="switchView('inputView')" class="w-full py-3 btn-back-light rounded-xl font-bold text-sm flex items-center justify-center">
-          <i class="fa-solid fa-circle-arrow-left mr-2"></i>TOPに戻る
-        </button>
-      </div>
-    </div>
+  <div class="pt-2 pb-10">
+    <button onclick="switchView('inputView')" class="w-full py-4 btn-back-light rounded-xl font-bold text-sm flex items-center justify-center shadow-sm">
+      <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
+    </button>
   </div>
+</div>
 
   <div id="todayView" class="view">
     <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6">
@@ -412,26 +415,30 @@
     renderOperatorChart(opData);
   }
 
-  function renderHistoryChart(logs2026, logs2025) {
-    const canvas = document.getElementById('detailChart'); if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (window.charts.history) window.charts.history.destroy();
-    const getMonthly = (logs) => {
-      const m = Array(12).fill(0);
-      logs.forEach(l => { const mon = parseInt(l.date.split('-')[1]) - 1; m[mon] += (l.end_hour - l.start_hour); });
-      return m;
-    };
-    const isDark = document.body.classList.contains('dark-mode');
-    window.charts.history = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
-        datasets: [
-          { label: '2026年', data: getMonthly(logs2026), borderColor: isDark ? '#00ff9f' : '#6b8f71', backgroundColor: 'rgba(107,143,113,0.1)', fill: true, tension: 0.4 },
-          { label: '2025年', data: getMonthly(logs2025), borderColor: 'rgba(156, 163, 175, 0.5)', borderDash: [5, 5], fill: false, tension: 0.4 }
-        ]
+  function renderCategoryChart(dataObj) {
+     const canvas = document.getElementById('categoryShareChart');
+     if (window.charts.category) window.charts.category.destroy();
+     const isDark = document.body.classList.contains('dark-mode');
+     window.charts.category = new Chart(canvas.getContext('2d'), {
+       type: 'doughnut',
+       data: { 
+        labels: Object.keys(dataObj), 
+        datasets: [{ 
+           data: Object.values(dataObj), 
+           backgroundColor: ['#6b8f71', '#9ab59f', '#c2d1c5', '#4a6b50'],
+           borderWidth: 0 
+         }] 
       },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#fff' : '#000' } } }, scales: { y: { ticks: { color: isDark ? '#fff' : '#000' }, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' } }, x: { ticks: { color: isDark ? '#fff' : '#000' }, grid: { display: false } } } }
+      options: { 
+         responsive: true, 
+        maintainAspectRatio: false, 
+         plugins: { 
+          legend: { 
+             position: 'right', // ドーナツの横にラベルを表示
+            labels: { color: isDark ? '#fff' : '#000', font: { size: 10 }, boxWidth: 10 } 
+          } 
+        } 
+      }
     });
   }
 
