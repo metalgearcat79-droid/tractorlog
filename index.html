@@ -21,27 +21,24 @@
     body.dark-mode #sideMenu { background-color: #1a1a1a; color: #e0e0e0; }
     #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
 
+    /* メニュー項目のホバー色修正 */
+    .menu-item { width: 100%; text-align: left; padding: 1rem; border-radius: 0.5rem; font-weight: bold; color: #6b8f71; display: flex; align-items: center; transition: background-color 0.2s; }
+    
+    /* ライトモードのホバー: 優しいグリーン */
+    .menu-item:hover { background-color: #f0f4f0; } 
+    /* ダークモードのホバー: 深いグレーグリーン */
+    body.dark-mode .menu-item:hover { background-color: #2d352d; }
+
     /* カード・入力項目（ダークモード対応） */
     .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 16px; }
     body.dark-mode .card { background: #2d2d2d; color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 
-    /* 入力フォーム・セレクトボックス */
-    input, select, textarea { 
-      background-color: white; 
-      color: #3a3a3a; 
-      border: 1px solid #ddd;
-      transition: background-color 0.2s, color 0.2s;
-    }
-    body.dark-mode input, body.dark-mode select, body.dark-mode textarea { 
-      background-color: #3d3d3d; 
-      color: #ffffff; 
-      border-color: #555; 
-    }
+    input, select, textarea { background-color: white; color: #3a3a3a; border: 1px solid #ddd; transition: background-color 0.2s, color 0.2s; }
+    body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background-color: #3d3d3d; color: #ffffff; border-color: #555; }
     select { appearance: none; -webkit-appearance: none; }
 
     /* ボタン共通 */
     .btn-main { background-color: #6b8f71; color: white; padding: 14px; border-radius: 12px; text-align: center; font-weight: bold; width: 100%; display: block; }
-    /* TOPに戻るボタンの色をロゴ色(#6b8f71)に統一 */
     .btn-sub { background-color: #6b8f71; color: white; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; width: 100%; margin-top: 20px; display: block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     body.dark-mode .btn-sub { background-color: #4a5d44; }
 
@@ -75,12 +72,12 @@
     <h2 class="font-bold text-xl text-[#6b8f71]">メニュー</h2>
     <button id="closeMenuBtn" class="text-3xl text-gray-400">&times;</button>
   </div>
-  <nav class="space-y-2">
-    <button onclick="switchView('inputView')" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-pen-to-square mr-3"></i>ログ入力</button>
-    <button onclick="switchView('todayView')" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-calendar-day mr-3"></i>本日の稼働状況</button>
-    <button onclick="switchView('historyView')" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-magnifying-glass mr-3"></i>稼働履歴・検索</button>
-    <button onclick="switchView('dashboard')" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-chart-line mr-3"></i>DASHBOARD</button>
-    <button onclick="toggleDarkMode()" class="w-full text-left p-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-moon mr-3"></i>モード切替</button>
+  <nav class="space-y-1">
+    <button onclick="switchView('inputView')" class="menu-item"><i class="fa-solid fa-pen-to-square w-8"></i>ログ入力</button>
+    <button onclick="switchView('todayView')" class="menu-item"><i class="fa-solid fa-calendar-day w-8"></i>本日の稼働状況</button>
+    <button onclick="switchView('historyView')" class="menu-item"><i class="fa-solid fa-magnifying-glass w-8"></i>稼働履歴・検索</button>
+    <button onclick="switchView('dashboard')" class="menu-item"><i class="fa-solid fa-chart-line w-8"></i>DASHBOARD</button>
+    <button onclick="toggleDarkMode()" class="menu-item"><i class="fa-solid fa-moon w-8"></i>モード切替</button>
   </nav>
 </div>
 
@@ -130,9 +127,7 @@
         <select id="filterOperator" class="p-2 border rounded-lg w-full">
           <option value="">すべての担当</option><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option>
         </select>
-        <select id="filterTask" class="p-2 border rounded-lg w-full">
-          <option value="">すべての作業内容</option>
-          </select>
+        <select id="filterTask" class="p-2 border rounded-lg w-full"><option value="">すべての作業内容</option></select>
       </div>
       <button onclick="loadLogs('historyLogList', false)" class="btn-main py-2">検索を実行</button>
     </div>
@@ -209,22 +204,16 @@
     if (id === 'historyView') loadLogs("historyLogList", false);
   }
 
-  // 初期ロード
   document.addEventListener("DOMContentLoaded", async () => {
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-    
     const { data: machines } = await client.from("machines").select("*").order("name");
     allMachines = machines || [];
-    
     document.getElementById("machineSelect").innerHTML = '<option value="">選択してください</option>' + allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
     document.getElementById("filterMachine").innerHTML = '<option value="">すべての機械</option>' + allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
     document.getElementById("machineTabs").innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体分析</button>` + 
                      allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
-
-    // 検索項目の作業内容をセット
     const allTaskOptions = ["あぜ塗り", "起耕", "粗代", "本代", "ロール運搬", "代かき", "田植え", "溝切り", "草刈り", "防除", "追肥", "稲刈り", "秋耕", "播種", "刈取り", "ハンマーモア", "スライドモア", "整地", "掘削", "運搬"];
     document.getElementById("filterTask").innerHTML = '<option value="">すべての作業内容</option>' + allTaskOptions.sort().map(t => `<option value="${t}">${t}</option>`).join("");
-
     const now = new Date();
     document.getElementById("workDate").value = new Date(now.getTime() + 9*60*60*1000).toISOString().split('T')[0];
     document.getElementById("filterMonth").value = document.getElementById("workDate").value.substring(0, 7);
@@ -267,10 +256,7 @@
     const list = document.getElementById(elId);
     list.innerHTML = "<p class='text-center py-10 opacity-50'>読み込み中...</p>";
     let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
-    
-    if (todayOnly) { 
-      query = query.eq("date", new Date().toISOString().split('T')[0]); 
-    } else {
+    if (todayOnly) { query = query.eq("date", new Date().toISOString().split('T')[0]); } else {
       const month = document.getElementById("filterMonth").value;
       const mId = document.getElementById("filterMachine").value;
       const op = document.getElementById("filterOperator").value;
@@ -280,23 +266,13 @@
       if (op) query = query.eq("operator", op);
       if (tsk) query = query.eq("task", tsk);
     }
-    
     const { data } = await query;
     if(!data || data.length === 0) {
       list.innerHTML = "<p class='text-center py-10 opacity-50 text-sm'>データがありません</p>";
       if(!todayOnly) document.getElementById("historyTotalHours").innerText = "合計: 0.0 h";
       return;
     }
-    list.innerHTML = data.map(l => `
-      <div class="card border-l-4 border-[#6b8f71] mb-4">
-        <div class="flex justify-between items-start">
-          <b class="text-sm">${l.date} - ${l.machines?.name}</b>
-          <span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span>
-        </div>
-        <p class="text-xs opacity-70 mt-1">${l.operator} | ${l.category} | ${l.task}</p>
-        ${l.memo ? `<p class="text-[10px] mt-2 italic opacity-60">📝 ${l.memo}</p>` : ''}
-      </div>
-    `).join("");
+    list.innerHTML = data.map(l => `<div class="card border-l-4 border-[#6b8f71] mb-4"><div class="flex justify-between items-start"><b class="text-sm">${l.date} - ${l.machines?.name}</b><span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span></div><p class="text-xs opacity-70 mt-1">${l.operator} | ${l.task}</p>${l.memo ? `<p class="text-[10px] mt-2 italic opacity-60">📝 ${l.memo}</p>` : ''}</div>`).join("");
     if(!todayOnly) {
       const total = data.reduce((s,l) => s + (l.end_hour - l.start_hour), 0);
       document.getElementById("historyTotalHours").innerText = `合計: ${total.toFixed(1)} h`;
