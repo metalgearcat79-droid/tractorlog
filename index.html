@@ -91,6 +91,10 @@
     <div class="card mb-4"><label class="block text-sm font-medium text-gray-500 mb-1">作業内容</label><select id="taskSelect" class="w-full p-3 border rounded-lg outline-none"></select></div>
     <div class="card mb-4"><div class="flex space-x-4"><div class="flex-1"><label class="block text-sm font-medium text-gray-500 mb-1">稼働前</label><input type="number" id="hourBefore" class="w-full p-3 border rounded-lg mt-1" step="0.1" /></div><div class="flex-1"><label class="block text-sm font-medium text-gray-500 mb-1">稼働後</label><input type="number" id="hourAfter" class="w-full p-3 border rounded-lg mt-1" step="0.1" /></div></div></div>
     <div id="hourDiffDisplay" class="text-right font-bold text-[#6b8f71] mb-6 text-lg">稼働時間: 0.0 h</div>
+    <div class="card mb-4">
+    <label class="block text-sm font-medium text-gray-500 mb-1">給油量 (L)</label>
+    <input type="number" id="fuelAmount" class="w-full p-3 border rounded-lg outline-none focus:border-[#6b8f71]" step="0.1" placeholder="給油した場合は入力" />
+</div>
     <div class="card mb-6"><label class="block text-sm font-medium text-gray-500 mb-1">メモ</label><textarea id="memoInput" class="w-full p-3 border rounded-lg outline-none" rows="3"></textarea></div>
     <button id="saveBtn" class="btn-main text-base py-3">保存する</button>
   </div>
@@ -244,11 +248,12 @@
     const mId = document.getElementById("machineSelect").value;
     const hA = parseFloat(document.getElementById("hourAfter").value);
     const op = document.getElementById("operatorSelect").value;
+    const fuel = parseFloat(document.getElementById("fuelAmount").value) || 0;
     if (!mId || isNaN(hA) || op === "選択してください") { alert("必須項目を入力してください"); return; }
     const { error } = await client.from("hour_logs").insert([{
       machine_id: mId, date: document.getElementById("workDate").value, operator: op,
       category: document.getElementById("categorySelect").value, task: document.getElementById("taskSelect").value,
-      start_hour: parseFloat(document.getElementById("hourBefore").value) || 0, end_hour: hA, memo: document.getElementById("memoInput").value
+      start_hour: parseFloat(document.getElementById("hourBefore").value) || 0, end_hour: hA,fuel_amount: fuel, memo: document.getElementById("memoInput").value
     }]);
     if (error) alert("保存失敗: " + error.message);
     else { showSavePopup(); setTimeout(() => location.reload(), 1500); }
@@ -295,20 +300,26 @@
       card.className = "card flex flex-col items-center hover:shadow-2xl transition-all";
       const target = 300;
       const percent = Math.min(100, (m.hours / target) * 100);
+      // stats.forEach(m => { ... } の中を修正)
       card.innerHTML = `
         <div class="relative w-full h-32 flex justify-center mb-6">
           <canvas id="chart-${m.id}"></canvas>
           <div class="absolute inset-0 flex flex-col items-center justify-center pt-4">
-            <div class="flex items-baseline"><span class="text-3xl font-black">${m.hours.toFixed(1)}</span><span class="text-sm ml-1 font-bold opacity-40">h</span></div>
+           <div class="flex items-baseline"><span class="text-3xl font-black">${m.hours.toFixed(1)}</span><span class="text-sm ml-1 font-bold opacity-40">h</span></div>
           </div>
         </div>
         <div class="w-full text-center">
           <p class="text-[10px] font-black text-[#6b8f71] dark:text-[#00ff9f] uppercase tracking-[0.2em] mb-1">${m.manufacturer}</p>
           <h4 class="text-lg font-bold leading-tight mb-4">${m.name}</h4>
+    
+          <button onclick="openAnalysisPage(${m.id}, '${m.name}')" class="w-full py-2 mb-4 bg-gray-100 dark:bg-white/5 rounded-lg text-xs font-bold hover:bg-[#6b8f71] hover:text-white transition-colors">
+            詳細分析を表示
+          </button>
+
           <div class="w-full bg-gray-100 dark:bg-gray-800 h-1 rounded-full overflow-hidden">
             <div class="h-full rounded-full" style="width: ${percent}%; background-color: ${chartColor}"></div>
           </div>
-        </div>`;
+       </div>`;
       grid.appendChild(card);
 
       setTimeout(() => {
@@ -367,6 +378,19 @@
     document.getElementById("deleteModal").classList.add("hidden");
     loadTodayLogs(); loadHistoryLogs();
   };
+  
+   // 分析ページを開くための関数
+  function openAnalysisPage(machineId, machineName) {
+    // どの機械を選んだかを一時的に保存（あとで計算に使うため）
+    window.selectedMachineId = machineId;
+    window.selectedMachineName = machineName;
+
+    // 今はまだ画面がないので、メッセージを出すだけ
+    alert(machineName + " (ID: " + machineId + ") の分析ページへ移動します。\n※画面は手順③で作成します！");
+
+    // 手順③で analysisView を作った後は、ここを有効にします
+    // switchView('analysisView');
+  }
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register('/tractorlog/sw.js');
 </script>
