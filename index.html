@@ -134,7 +134,7 @@
         <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-12"></div>
       </div>
 
-<div id="analysisDetail" class="hidden animate-fade-in pb-20">
+    <div id="analysisDetail" class="hidden animate-fade-in pb-20">
       
       <div class="card bg-[#6b8f71] dark:bg-[#00ff9f]/20 text-white p-8 text-center rounded-3xl shadow-xl relative overflow-hidden mb-6">
         <p class="text-sm font-bold opacity-80 mb-2 uppercase tracking-widest" id="detailMachineName">機械名</p>
@@ -146,7 +146,6 @@
           <span class="opacity-70 mr-1">前年同期比:</span>
           <span id="detailCompareValue">--</span>
         </div>
-        <p class="text-[10px] mt-4 opacity-50">※2026年度 累計稼働時間</p>
       </div>
 
       <div class="grid grid-cols-2 gap-4 mb-6">
@@ -168,66 +167,61 @@
 
       <div class="card p-6 mb-6">
         <h4 class="text-sm font-bold mb-4 opacity-60">稼働推移 (前年比較)</h4>
-        <div class="h-64 w-full">
-          <canvas id="detailChart"></canvas>
-        </div>
+        <div class="h-64 w-full"><canvas id="detailChart"></canvas></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div class="card p-6">
-          <h4 class="text-sm font-bold mb-4 opacity-60 flex items-center">
-            <i class="fa-solid fa-mound mr-2"></i>作業種別・内容
-          </h4>
-          <div class="h-64">
-            <canvas id="taskShareChart"></canvas>
-          </div>
+          <h4 class="text-sm font-bold mb-4 opacity-60 flex items-center"><i class="fa-solid fa-mound mr-2"></i>作業種別・内容</h4>
+          <div class="h-64"><canvas id="taskShareChart"></canvas></div>
         </div>
-
         <div class="card p-6">
-          <h4 class="text-sm font-bold mb-4 opacity-60 flex items-center">
-            <i class="fa-solid fa-users mr-2"></i>オペレーター比率
-          </h4>
-          <div class="h-64">
-            <canvas id="operatorShareChart"></canvas>
-          </div>
+          <h4 class="text-sm font-bold mb-4 opacity-60 flex items-center"><i class="fa-solid fa-users mr-2"></i>オペレーター比率</h4>
+          <div class="h-64"><canvas id="operatorShareChart"></canvas></div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"> <div class="card p-6 border-t-4 border-red-400">
-          <h4 class="text-sm font-bold mb-2 opacity-60 text-red-500">累計修理費 (2026)</h4>
-          <div class="flex items-baseline">
-            <span class="text-xs mr-1 text-gray-400">¥</span>
-            <span class="text-3xl font-black" id="detailTotalRepair">0</span>
-          </div>
-          <p class="text-[10px] mt-2 text-gray-400">※修理履歴から自動集計</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div class="card p-6 border-t-4 border-red-400">
+          <h4 class="text-sm font-bold mb-2 opacity-60 text-red-500">累計修理費</h4>
+          <div class="flex items-baseline">¥<span class="text-3xl font-black" id="detailTotalRepair">0</span></div>
         </div>
-    
         <div class="card p-6 border-t-4 border-blue-400">
           <h4 class="text-sm font-bold mb-2 opacity-60 text-blue-500">直近のメンテナンス</h4>
           <div id="lastMaintenance" class="text-sm font-bold">記録なし</div>
-          <p class="text-[10px] mt-2 text-gray-400">次回：エンジンオイル交換（あと 50h）</p>
         </div>
       </div>
 
-      <div class="max-w-md mx-auto px-4 mt-12 mb-10"> <button onclick="selectAnalysis('all', '全体')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-2xl font-bold flex items-center justify-center shadow-md active:scale-95 transition-all">
+      <div class="max-w-md mx-auto px-4 mt-12 mb-10">
+        <button onclick="selectAnalysis('all', '全体')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 rounded-2xl font-bold flex items-center justify-center shadow-md active:scale-95 transition-all">
           <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>マシン一覧に戻る
         </button>
       </div>
+
+    </div> <div id="todayView" class="view">
+      <div id="todayLogList" class="space-y-4"></div>
+    </div>
+
+    <div id="historyView" class="view">
+      <div class="card mb-6 p-4">
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-bold">稼働履歴</h3>
+          <span id="historyTotalHours" class="text-xs font-bold text-[#6b8f71]">合計: 0.0 h</span>
+        </div>
+      </div>
+      <div id="historyLogList" class="space-y-4"></div>
+    </div>
+
+  </div> <div id="deleteModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl w-full max-w-sm shadow-2xl">
+      <h3 class="text-xl font-black mb-4">削除しますか？</h3>
+      <p class="text-sm opacity-60 mb-8">この操作は取り消せません。</p>
+      <div class="flex space-x-4">
+        <button id="cancelDelete" class="flex-1 py-4 bg-gray-100 dark:bg-gray-700 font-bold rounded-2xl">戻る</button>
+        <button id="confirmDelete" class="flex-1 py-4 bg-red-500 text-white font-bold rounded-2xl shadow-lg">削除</button>
+      </div>
     </div>
   </div>
-
-  <div id="todayView" class="view">
-    <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6"><h2 class="text-xl font-bold text-[#6b8f71]">本日の稼働状況</h2><button onclick="loadTodayLogs()" class="text-sm bg-white dark:bg-gray-800 px-3 py-1 rounded-lg shadow"><i class="fa-solid fa-rotate"></i> 更新</button></div>
-    <div id="todayLogList" class="space-y-4 mb-10"></div>
-    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
-  </div>
-  
-  <div id="historyView" class="view">
-    <div class="flex justify-between items-center border-b-2 border-[#6b8f71] pb-3 mb-6"><h2 class="text-xl font-bold text-[#6b8f71]">稼働履歴・検索</h2><div id="historyTotalHours" class="text-sm font-bold bg-[#6b8f71] text-white px-3 py-1 rounded-full">合計: 0.0 h</div></div>
-    <div id="historyLogList" class="space-y-4 mb-10"></div>
-    <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
-  </div>
-</div>
 
 <div id="savePopup" class="hidden fixed inset-0 flex items-center justify-center z-[10001]"><div class="px-6 py-3 rounded-lg text-white bg-[#2f5d3a] shadow-xl font-bold">保存しました</div></div>
 <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[10000]"><div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl max-w-sm w-full mx-4 text-center"><p class="text-lg font-bold mb-6">ログを削除しますか？</p><div class="flex space-x-4"><button id="cancelDelete" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold">キャンセル</button><button id="confirmDelete" class="flex-1 py-3 bg-red-500 text-white rounded-lg font-bold">削除する</button></div></div></div>
