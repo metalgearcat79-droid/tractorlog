@@ -150,25 +150,25 @@
     </div>
     <div class="bi-container">
       <div class="bi-left-col">
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">CROP SHARE</p><div class="chart-wrapper"><canvas id="categoryShareChart"></canvas></div></div>
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">TASK ANALYSIS</p><div class="chart-wrapper"><canvas id="taskShareChart"></canvas></div></div>
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">OPERATOR SHARE</p><div class="chart-wrapper"><canvas id="operatorShareChart"></canvas></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[12px] font-bold text-[#6b8f71] mb-1">CROP SHARE</p><div class="chart-wrapper"><canvas id="categoryShareChart"></canvas></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[12px] font-bold text-[#6b8f71] mb-1">TASK ANALYSIS</p><div class="chart-wrapper"><canvas id="taskShareChart"></canvas></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[12px] font-bold text-[#6b8f71] mb-1">オペレーター</p><div class="chart-wrapper"><canvas id="operatorShareChart"></canvas></div></div>
       </div>
       <div class="bi-main-col">
         <div id="machineTabs" class="machine-tabs flex gap-2 overflow-x-auto pb-2"></div>
         <div class="grid grid-cols-5 gap-2 mb-2 text-center">
-          <div class="kpi-card"><p class="text-[11px]">稼働時間</p><p class="text-sm font-black" id="kpi-hours">0.0</p></div>
-          <div class="kpi-card"><p class="text-[11px]">給油量</p><p class="text-sm font-black" id="kpi-fuel">0</p></div>
-          <div class="kpi-card"><p class="text-[11px]">燃費</p><p class="text-sm font-black" id="kpi-avg">0.0</p></div>
-          <div class="kpi-card"><p class="text-[11px]">稼働日数</p><p class="text-sm font-black" id="kpi-days">0</p></div>
-          <div class="kpi-card bg-[#4a6b50]"><p class="text-[9px]">Maint</p><p class="text-sm font-black">OK</p></div>
+          <div class="kpi-card"><p class="text-[12px]">稼働時間</p><p class="text-sm font-black" id="kpi-hours">0.0</p></div>
+          <div class="kpi-card"><p class="text-[12px]">給油量</p><p class="text-sm font-black" id="kpi-fuel">0</p></div>
+          <div class="kpi-card"><p class="text-[12px]">燃費</p><p class="text-sm font-black" id="kpi-avg">0.0</p></div>
+          <div class="kpi-card"><p class="text-[12px]">稼働日数</p><p class="text-sm font-black" id="kpi-days">0</p></div>
+          <div class="kpi-card bg-[#4a6b50]"><p class="text-[12px]">メンテナンス</p><p class="text-sm font-black">OK</p></div>
         </div>
         <div class="card h-48 m-0"><canvas id="detailChart"></canvas></div>
         <div class="card flex-1 m-0"><canvas id="gradientBarChart"></canvas></div>
       </div>
       <div class="bi-right-col">
         <div class="card flex-1 text-center m-0">
-          <p class="text-xs font-bold text-[#6b8f71]">YoY 比</p>
+          <p class="text-m font-bold text-[#6b8f71]">前年比(h)</p>
           <div class="relative h-20"><canvas id="yearComparisonGauge"></canvas></div>
           <p id="detailCompareValue" class="text-xl font-black text-[#6b8f71]">--%</p>
         </div>
