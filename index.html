@@ -114,6 +114,15 @@
         </button>
       </div>
 
+      <div class="px-4 mb-6">
+        <div class="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl overflow-x-auto no-scrollbar">
+         <button onclick="selectAnalysis('all')" id="tab-all" class="flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all bg-white dark:bg-[#6b8f71] shadow-sm">
+           全体
+         </button>
+         <div id="machineTabs" class="flex space-x-1"></div>
+       </div>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
         <div class="bg-gradient-to-br from-[#4a6b50] to-[#2d4031] text-white p-8 rounded-xl shadow-2xl relative overflow-hidden min-h-[200px] flex flex-col justify-between">
           <div class="relative z-10"><p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">年間総稼働時間</p></div>
@@ -253,7 +262,7 @@
     const { error } = await client.from("hour_logs").insert([{
       machine_id: mId, date: document.getElementById("workDate").value, operator: op,
       category: document.getElementById("categorySelect").value, task: document.getElementById("taskSelect").value,
-      start_hour: parseFloat(document.getElementById("hourBefore").value) || 0, end_hour: hA,fuel_amount: fuel, memo: document.getElementById("memoInput").value
+      start_hour: parseFloat(document.getElementById("hourBefore").value) || 0, end_hour: hA, fuel_amount: fuel, memo: document.getElementById("memoInput").value
     }]);
     if (error) alert("保存失敗: " + error.message);
     else { showSavePopup(); setTimeout(() => location.reload(), 1500); }
@@ -261,15 +270,56 @@
 
   function showSavePopup() { const p = document.getElementById("savePopup"); p.classList.remove("hidden"); setTimeout(() => p.classList.add("hidden"), 1500); }
 
+  // ★修正：タブ切り替えと分析対象の管理
+  function selectAnalysis(machineId, machineName) {
+    window.selectedMachineId = machineId;
+    window.selectedMachineName = machineName;
+
+    // タブの見た目を更新
+    const allTabs = document.querySelectorAll('.analysis-tab');
+    allTabs.forEach(tab => {
+      tab.classList.remove('bg-white', 'dark:bg-[#6b8f71]', 'shadow-sm', 'text-[#6b8f71]', 'dark:text-white');
+      tab.classList.add('text-gray-500');
+    });
+
+    const activeTab = document.getElementById(`tab-${machineId}`);
+    if (activeTab) {
+      activeTab.classList.remove('text-gray-500');
+      activeTab.classList.add('bg-white', 'dark:bg-[#6b8f71]', 'shadow-sm', 'text-[#6b8f71]', 'dark:text-white');
+    }
+
+    if (machineId === 'all') {
+      console.log("全体分析モード");
+      // 将来的に全体用表示に切り替える処理をここに
+    } else {
+      console.log(machineName + " 個別分析モード");
+      // 将来的に個別用表示に切り替える処理をここに
+    }
+  }
+
+  // ★修正：loadDashboardでタブを動的生成
   async function loadDashboard() {
     const grid = document.getElementById("tractorGrid");
     const top3List = document.getElementById("top3List");
+    const tabContainer = document.getElementById("machineTabs"); // HTML側に追加が必要
+
     grid.innerHTML = "<p class='col-span-full text-center py-10'>読み込み中...</p>";
     top3List.innerHTML = "";
     
     const { data: machines } = await client.from("machines").select("*").order("manufacturer");
     const { data: logs } = await client.from("hour_logs").select("*, machines(name, manufacturer)");
     if (!machines || !logs) return;
+
+    // --- タブの生成 ---
+    if (tabContainer) {
+      tabContainer.innerHTML = `
+        <button onclick="selectAnalysis('all', '全体')" id="tab-all" class="analysis-tab flex-1 py-2 px-6 rounded-lg text-sm font-bold transition-all bg-white dark:bg-[#6b8f71] shadow-sm text-[#6b8f71] dark:text-white">全体</button>
+      ` + machines.map(m => `
+        <button onclick="selectAnalysis(${m.id}, '${m.name}')" id="tab-${m.id}" class="analysis-tab whitespace-nowrap py-2 px-6 rounded-lg text-sm font-bold transition-all text-gray-500 hover:text-[#6b8f71]">
+          ${m.name}
+        </button>
+      `).join("");
+    }
 
     const yearLogs = logs.filter(l => new Date(l.date).getFullYear() === 2026);
     const totalH = yearLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
@@ -297,33 +347,32 @@
 
     stats.forEach(m => {
       const card = document.createElement("div");
-      card.className = "card flex flex-col items-center hover:shadow-2xl transition-all";
+      card.className = "card flex flex-col items-center hover:shadow-2xl transition-all cursor-pointer";
+      // カード自体をクリックしても個別分析へ飛べるように設定
+      card.onclick = () => selectAnalysis(m.id, m.name);
+
       const target = 300;
       const percent = Math.min(100, (m.hours / target) * 100);
-      // stats.forEach(m => { ... } の中を修正)
       card.innerHTML = `
-        <div class="relative w-full h-32 flex justify-center mb-6">
+        <div class="relative w-full h-32 flex justify-center mb-6 pointer-events-none">
           <canvas id="chart-${m.id}"></canvas>
           <div class="absolute inset-0 flex flex-col items-center justify-center pt-4">
-           <div class="flex items-baseline"><span class="text-3xl font-black">${m.hours.toFixed(1)}</span><span class="text-sm ml-1 font-bold opacity-40">h</span></div>
+            <div class="flex items-baseline"><span class="text-3xl font-black">${m.hours.toFixed(1)}</span><span class="text-sm ml-1 font-bold opacity-40">h</span></div>
           </div>
         </div>
         <div class="w-full text-center">
           <p class="text-[10px] font-black text-[#6b8f71] dark:text-[#00ff9f] uppercase tracking-[0.2em] mb-1">${m.manufacturer}</p>
           <h4 class="text-lg font-bold leading-tight mb-4">${m.name}</h4>
-    
-          <button onclick="openAnalysisPage(${m.id}, '${m.name}')" class="w-full py-2 mb-4 bg-gray-100 dark:bg-white/5 rounded-lg text-xs font-bold hover:bg-[#6b8f71] hover:text-white transition-colors">
-            詳細分析を表示
-          </button>
-
           <div class="w-full bg-gray-100 dark:bg-gray-800 h-1 rounded-full overflow-hidden">
             <div class="h-full rounded-full" style="width: ${percent}%; background-color: ${chartColor}"></div>
           </div>
-       </div>`;
+        </div>`;
       grid.appendChild(card);
 
       setTimeout(() => {
-        const ctx = document.getElementById(`chart-${m.id}`).getContext("2d");
+        const el = document.getElementById(`chart-${m.id}`);
+        if (!el) return;
+        const ctx = el.getContext("2d");
         new Chart(ctx, {
           type: 'doughnut',
           data: { datasets: [{ data: [m.hours, Math.max(0.1, target - m.hours)], backgroundColor: [chartColor, chartBg], borderWidth: 0, cutout: '85%' }] },
@@ -343,21 +392,18 @@
           <button onclick="openDeleteModal(${log.id})" class="absolute top-4 right-4 text-red-500 dark:text-red-400 opacity-80 hover:opacity-100 p-2">
             <i class="fa-solid fa-trash"></i>
           </button>
-          
           <div class="flex items-center space-x-3 mb-2">
             <span class="text-xs font-bold opacity-50">${log.date}</span>
             <span class="bg-[#f7f4ef] dark:bg-white/10 text-[#6b8f71] dark:text-[#00ff9f] px-2 py-0.5 rounded text-xs font-black ring-1 ring-[#6b8f71]/20">
               ${diff} h
             </span>
           </div>
-
           <div class="font-bold pr-10">${log.machines?.name || '不明'} / ${log.operator}</div>
           <div class="text-sm opacity-60">${log.category} - ${log.task}</div>
           ${log.memo ? `<div class="text-xs mt-2 opacity-50 bg-black/5 dark:bg-white/5 p-2 rounded">${log.memo}</div>` : ""}
         </div>`;
     });
   }
-
 
   async function loadTodayLogs() {
     const { data } = await client.from("hour_logs").select("*, machines(name)").eq("date", new Date().toISOString().split("T")[0]).order("created_at", { ascending: false });
@@ -378,19 +424,6 @@
     document.getElementById("deleteModal").classList.add("hidden");
     loadTodayLogs(); loadHistoryLogs();
   };
-  
-   // 分析ページを開くための関数
-  function openAnalysisPage(machineId, machineName) {
-    // どの機械を選んだかを一時的に保存（あとで計算に使うため）
-    window.selectedMachineId = machineId;
-    window.selectedMachineName = machineName;
-
-    // 今はまだ画面がないので、メッセージを出すだけ
-    alert(machineName + " (ID: " + machineId + ") の分析ページへ移動します。\n※画面は手順③で作成します！");
-
-    // 手順③で analysisView を作った後は、ここを有効にします
-    // switchView('analysisView');
-  }
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register('/tractorlog/sw.js');
 </script>
