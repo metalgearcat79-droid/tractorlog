@@ -25,7 +25,7 @@
     .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 16px; }
     body.dark-mode .card { background: #2d2d2d; color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 
-    /* 入力フォーム・セレクトボックスの修正 */
+    /* 入力フォーム・セレクトボックス */
     input, select, textarea { 
       background-color: white; 
       color: #3a3a3a; 
@@ -37,12 +37,12 @@
       color: #ffffff; 
       border-color: #555; 
     }
-    /* iOS Safari等のデフォルトスタイル対策 */
     select { appearance: none; -webkit-appearance: none; }
 
     /* ボタン共通 */
     .btn-main { background-color: #6b8f71; color: white; padding: 14px; border-radius: 12px; text-align: center; font-weight: bold; width: 100%; display: block; }
-    .btn-sub { background-color: #a3b18a; color: white; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; width: 100%; margin-top: 20px; display: block; }
+    /* TOPに戻るボタンの色をロゴ色(#6b8f71)に統一 */
+    .btn-sub { background-color: #6b8f71; color: white; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; width: 100%; margin-top: 20px; display: block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     body.dark-mode .btn-sub { background-color: #4a5d44; }
 
     /* --- DASHBOARDレイアウト --- */
@@ -121,11 +121,20 @@
 
   <div id="historyView" class="view px-4 max-w-xl mx-auto pb-10">
     <div class="flex justify-between items-center mb-4"><h2 class="text-xl font-bold text-[#6b8f71]">稼働履歴・検索</h2><div id="historyTotalHours" class="text-sm font-black opacity-60">合計: 0.0 h</div></div>
-    <div class="card grid grid-cols-2 gap-2 text-sm">
-      <input type="month" id="filterMonth" class="p-2 border rounded-lg">
-      <select id="filterMachine" class="p-2 border rounded-lg"><option value="">すべての機械</option></select>
-      <select id="filterOperator" class="p-2 border rounded-lg"><option value="">すべての担当</option><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option></select>
-      <button onclick="loadLogs('historyLogList', false)" class="bg-[#6b8f71] text-white rounded-lg font-bold p-2">検索</button>
+    <div class="card space-y-2 text-sm">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="month" id="filterMonth" class="p-2 border rounded-lg w-full">
+        <select id="filterMachine" class="p-2 border rounded-lg w-full"><option value="">すべての機械</option></select>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <select id="filterOperator" class="p-2 border rounded-lg w-full">
+          <option value="">すべての担当</option><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option>
+        </select>
+        <select id="filterTask" class="p-2 border rounded-lg w-full">
+          <option value="">すべての作業内容</option>
+          </select>
+      </div>
+      <button onclick="loadLogs('historyLogList', false)" class="btn-main py-2">検索を実行</button>
     </div>
     <div id="historyLogList" class="space-y-4"></div>
     <button onclick="switchView('inputView')" class="btn-sub"><i class="fa-solid fa-arrow-left mr-2"></i>TOPに戻る</button>
@@ -139,9 +148,9 @@
     </div>
     <div class="bi-container">
       <div class="bi-left-col">
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1 uppercase">Crop Share</p><div class="chart-wrapper"><canvas id="categoryShareChart"></canvas><i class="fa-solid fa-wheat-awn chart-icon-center"></i></div></div>
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1 uppercase">Task Share</p><div class="chart-wrapper"><canvas id="taskShareChart"></canvas><i class="fa-solid fa-gears chart-icon-center"></i></div></div>
-        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1 uppercase">Operator Share</p><div class="chart-wrapper"><canvas id="operatorShareChart"></canvas><i class="fa-solid fa-user chart-icon-center"></i></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">CROP SHARE</p><div class="chart-wrapper"><canvas id="categoryShareChart"></canvas><i class="fa-solid fa-wheat-awn chart-icon-center"></i></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">TASK ANALYSIS</p><div class="chart-wrapper"><canvas id="taskShareChart"></canvas><i class="fa-solid fa-gears chart-icon-center"></i></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">OPERATOR SHARE</p><div class="chart-wrapper"><canvas id="operatorShareChart"></canvas><i class="fa-solid fa-user chart-icon-center"></i></div></div>
       </div>
       <div class="bi-main-col">
         <div id="machineTabs" class="machine-tabs"></div>
@@ -153,11 +162,11 @@
           <div class="kpi-card bg-[#4a6b50]"><p class="text-[9px]">Maint</p><p class="text-sm font-black">OK</p></div>
         </div>
         <div class="card h-48 m-0"><p class="text-xs font-bold mb-2">月別稼働推移</p><canvas id="detailChart"></canvas></div>
-        <div class="card flex-1 m-0"><p class="text-xs font-bold mb-2">作業比率分析</p><canvas id="gradientBarChart"></canvas></div>
+        <div class="card flex-1 m-0"><p class="text-xs font-bold mb-2">作業工程比率</p><canvas id="gradientBarChart"></canvas></div>
       </div>
       <div class="bi-right-col">
         <div class="card flex-1 text-center m-0">
-          <p class="text-xs font-bold text-[#6b8f71]">前年比 (YoY)</p>
+          <p class="text-xs font-bold text-[#6b8f71]">前年同期比 (YoY)</p>
           <div class="relative h-20"><canvas id="yearComparisonGauge"></canvas></div>
           <p id="detailCompareValue" class="text-xl font-black text-[#6b8f71]">--%</p>
         </div>
@@ -200,9 +209,9 @@
     if (id === 'historyView') loadLogs("historyLogList", false);
   }
 
+  // 初期ロード
   document.addEventListener("DOMContentLoaded", async () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') document.body.classList.add('dark-mode');
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     
     const { data: machines } = await client.from("machines").select("*").order("name");
     allMachines = machines || [];
@@ -212,12 +221,15 @@
     document.getElementById("machineTabs").innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体分析</button>` + 
                      allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
 
+    // 検索項目の作業内容をセット
+    const allTaskOptions = ["あぜ塗り", "起耕", "粗代", "本代", "ロール運搬", "代かき", "田植え", "溝切り", "草刈り", "防除", "追肥", "稲刈り", "秋耕", "播種", "刈取り", "ハンマーモア", "スライドモア", "整地", "掘削", "運搬"];
+    document.getElementById("filterTask").innerHTML = '<option value="">すべての作業内容</option>' + allTaskOptions.sort().map(t => `<option value="${t}">${t}</option>`).join("");
+
     const now = new Date();
     document.getElementById("workDate").value = new Date(now.getTime() + 9*60*60*1000).toISOString().split('T')[0];
     document.getElementById("filterMonth").value = document.getElementById("workDate").value.substring(0, 7);
   });
 
-  // 最新アワー取得
   document.getElementById("machineSelect").onchange = async function() {
     if (!this.value) return;
     const { data } = await client.from("hour_logs").select("end_hour").eq("machine_id", this.value).order("date", {ascending:false}).order("end_hour", {ascending:false}).limit(1);
@@ -255,14 +267,20 @@
     const list = document.getElementById(elId);
     list.innerHTML = "<p class='text-center py-10 opacity-50'>読み込み中...</p>";
     let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
-    if (todayOnly) { query = query.eq("date", new Date().toISOString().split('T')[0]); } else {
+    
+    if (todayOnly) { 
+      query = query.eq("date", new Date().toISOString().split('T')[0]); 
+    } else {
       const month = document.getElementById("filterMonth").value;
       const mId = document.getElementById("filterMachine").value;
       const op = document.getElementById("filterOperator").value;
+      const tsk = document.getElementById("filterTask").value;
       if (month) query = query.gte("date", `${month}-01`).lte("date", `${month}-31`);
       if (mId) query = query.eq("machine_id", mId);
       if (op) query = query.eq("operator", op);
+      if (tsk) query = query.eq("task", tsk);
     }
+    
     const { data } = await query;
     if(!data || data.length === 0) {
       list.innerHTML = "<p class='text-center py-10 opacity-50 text-sm'>データがありません</p>";
@@ -275,7 +293,8 @@
           <b class="text-sm">${l.date} - ${l.machines?.name}</b>
           <span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span>
         </div>
-        <p class="text-xs opacity-70 mt-1">${l.operator} | ${l.task}</p>
+        <p class="text-xs opacity-70 mt-1">${l.operator} | ${l.category} | ${l.task}</p>
+        ${l.memo ? `<p class="text-[10px] mt-2 italic opacity-60">📝 ${l.memo}</p>` : ''}
       </div>
     `).join("");
     if(!todayOnly) {
@@ -290,26 +309,20 @@
       btn.classList.replace('active', 'inactive');
       if (btn.id === `tab-${mId}`) btn.classList.replace('inactive', 'active');
     });
-    
     let query = client.from("hour_logs").select("*, machines(name)");
     if (mId !== 'all') query = query.eq("machine_id", mId);
     const { data: logs } = await query;
     if(!logs) return;
-
     const logs26 = logs.filter(l => l.date.startsWith("2026"));
     const logs25 = logs.filter(l => l.date.startsWith("2025"));
-    
-    // 右カラムの簡易履歴を更新
     const recentList = document.getElementById("recentLogList");
-    recentList.innerHTML = logs26.slice(0, 5).map(l => `<div class="flex justify-between border-b border-gray-100 dark:border-gray-800 pb-1"><span>${l.date.substring(5)} ${l.machines?.name}</span><span class="font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span></div>`).join("");
-
+    recentList.innerHTML = logs26.slice(0, 8).map(l => `<div class="flex justify-between border-b border-gray-100 dark:border-gray-800 pb-1"><span>${l.date.substring(5)} ${l.machines?.name}</span><span class="font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span></div>`).join("");
     const totalH = logs26.reduce((s,l) => s + (l.end_hour - l.start_hour), 0);
     const totalF = logs26.reduce((s,l) => s + (l.fuel_amount || 0), 0);
     document.getElementById("kpi-hours").innerText = totalH.toFixed(1);
     document.getElementById("kpi-fuel").innerText = Math.floor(totalF);
     document.getElementById("kpi-avg").innerText = totalH > 0 ? (totalF/totalH).toFixed(1) : "0.0";
     document.getElementById("kpi-days").innerText = new Set(logs26.map(l => l.date)).size;
-
     const cat = {}; const tsk = {}; const opr = {}; const monthly = Array(12).fill(0);
     logs26.forEach(l => {
       const h = l.end_hour - l.start_hour;
@@ -326,15 +339,12 @@
     const isDark = document.body.classList.contains('dark-mode');
     const color = '#6b8f71';
     const textColor = isDark ? '#e0e0e0' : '#3a3a3a';
-    
     const donut = (ctx, data) => new Chart(ctx, { type:'doughnut', data:{labels:Object.keys(data), datasets:[{data:Object.values(data), backgroundColor:['#2d4031','#6b8f71','#a3b18a','#dad7cd','#588157'], borderWidth:0}]}, options:{cutout:'75%', maintainAspectRatio:false, plugins:{legend:{display:false}}}});
     window.charts.c1 = donut(document.getElementById('categoryShareChart'), cat);
     window.charts.c2 = donut(document.getElementById('taskShareChart'), task);
     window.charts.c3 = donut(document.getElementById('operatorShareChart'), op);
-    
     window.charts.line = new Chart(document.getElementById('detailChart'), { type:'line', data:{labels:['1','2','3','4','5','6','7','8','9','10','11','12'], datasets:[{data:monthly, borderColor:color, backgroundColor:'rgba(107,143,113,0.1)', fill:true, tension:0.4}]}, options:{maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false},ticks:{color:textColor}},y:{grid:{color:isDark?'#444':'#eee'},ticks:{color:textColor}}}}});
     window.charts.bar = new Chart(document.getElementById('gradientBarChart'), { type:'bar', data:{labels:Object.keys(task), datasets:[{data:Object.values(task), backgroundColor:color, borderRadius:5}]}, options:{indexAxis:'y', maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{color:isDark?'#444':'#eee'},ticks:{color:textColor}},y:{grid:{display:false},ticks:{color:textColor}}}}});
-    
     const lastH = logs25.reduce((s,l) => s + (l.end_hour - l.start_hour), 0) || 1;
     const ratio = Math.min(100, (totalH / lastH) * 100);
     window.charts.gauge = new Chart(document.getElementById('yearComparisonGauge'), { type:'doughnut', data:{datasets:[{data:[ratio, 100-ratio], backgroundColor:[color, isDark?'#333':'#eee'], borderWidth:0}]}, options:{rotation:-90, circumference:180, cutout:'80%', maintainAspectRatio:false, plugins:{legend:{display:false}}}});
