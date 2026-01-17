@@ -25,7 +25,7 @@
     color: #e0e0e0;
   }
 
-  /* --- カード設定（重複を統合） --- */
+  /* --- カード設定 --- */
   .card { 
     background: #ffffff; 
     border-radius: 12px; 
@@ -33,7 +33,7 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.08); 
     position: relative; 
     transition: all 0.3s; 
-    border: 1px solid transparent; /* ライトモードでは枠線なし */
+    border: 1px solid transparent;
   }
   
   body.dark-mode .card {
@@ -49,10 +49,9 @@
   .btn-main { background-color: #6b8f71; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; width: 100%; transition: all 0.2s; }
   .btn-main:active { background-color: #587a5f; transform: scale(0.98); }
 
-  /* 「戻る」ボタン専用（ライトモードで黒くなるのを防ぐ） */
   .btn-back-light {
-    background-color: #e5e7eb !important; /* Tailwindのgray-200相当 */
-    color: #374151 !important; /* gray-700相当 */
+    background-color: #e5e7eb !important;
+    color: #374151 !important;
   }
   body.dark-mode .btn-back-light {
     background-color: #374151 !important;
@@ -63,9 +62,8 @@
   #sideMenu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 9999; transition: left 0.3s ease; padding: 20px; padding-top: 60px; }
   body.dark-mode #sideMenu { background-color: #1a1a1a; color: #e0e0e0; }
 
-  /* メニューのホバー色修正 */
   #sideMenu button:hover {
-    background-color: rgba(107, 143, 113, 0.1) !important; /* ほんのり和農グリーン */
+    background-color: rgba(107, 143, 113, 0.1) !important;
   }
   body.dark-mode #sideMenu button:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
@@ -82,11 +80,10 @@
   #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
   .view { display: none; padding: 20px; }
   .view.active { display: block; }
-  .hidden { display: none; }
   #mainContainer { width: 100%; max-width: 672px; transition: max-width 0.3s ease; margin: 0 auto; }
   #mainContainer.dashboard-active { max-width: 95% !important; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
-</style>
+  </style>
 </head>
 
 <body class="pb-10">
@@ -134,7 +131,10 @@
         <div class="flex items-center min-w-0">
           <button onclick="document.getElementById('menuBtn').click()" class="mr-2 sm:mr-4 text-3xl text-[#6b8f71] p-2 flex-shrink-0"><i class="fa-solid fa-bars"></i></button>
           <div class="min-w-0">
-            <h2 class="text-xl sm:text-3xl font-black text-[#4a6b50] dark:text-[#00ff9f] flex items-center tracking-tighter truncate"><i class="fa-solid fa-chart-pie mr-2 sm:mr-4"></i>DASHBOARD</h2>
+            <h2 class="text-xl sm:text-3xl font-black text-[#4a6b50] dark:text-[#00ff9f] flex items-center tracking-tighter truncate">
+              <i class="fa-solid fa-chart-pie mr-2 sm:mr-4"></i>OPERATION DASHBOARD
+            </h2>
+            <p class="text-[10px] sm:text-xs text-gray-500 font-bold ml-10 sm:ml-14 uppercase tracking-widest">2026年度 リアルタイム分析</p>
           </div>
         </div>
         <button onclick="loadDashboard()" class="bg-[#6b8f71] text-white px-4 py-2 rounded-lg font-bold text-sm">更新</button>
@@ -156,8 +156,7 @@
           </div>
         </div>
         <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 px-4"></div>
-        
-        <div class="max-w-md mx-auto pt-6 pb-20 px-4">
+        <div class="w-full pt-6 pb-20">
           <button onclick="switchView('inputView')" class="w-full py-4 btn-back-light rounded-xl font-bold flex items-center justify-center shadow-sm">
             <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
           </button>
@@ -170,11 +169,23 @@
           <div class="flex items-baseline justify-center"><h2 class="text-7xl font-black" id="detailTotalHours">0.0</h2><span class="text-2xl ml-2">h</span></div>
           <div class="inline-flex items-center mt-4 px-3 py-1 bg-white/20 rounded-full text-xs font-bold">前年同期比: <span id="detailCompareValue">--</span></div>
         </div>
-        <div class="card p-6"><h4 class="text-sm font-bold mb-4 opacity-60">稼働推移</h4><div class="h-64"><canvas id="detailChart"></canvas></div></div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div class="card p-4 text-center">
+            <p class="text-[10px] font-bold text-gray-400 uppercase">給油累計</p>
+            <div class="flex items-baseline justify-center"><span class="text-2xl font-black" id="detailTotalFuel">0.0</span><span class="text-[10px] ml-0.5 opacity-50">L</span></div>
+          </div>
+          <div class="card p-4 text-center">
+            <p class="text-[10px] font-bold text-gray-400 uppercase">平均燃費</p>
+            <div class="flex items-baseline justify-center"><span class="text-2xl font-black" id="detailAvgFuel">0.0</span><span class="text-[10px] ml-0.5 opacity-50">L/h</span></div>
+          </div>
+        </div>
+
+        <div class="card p-6"><h4 class="text-sm font-bold mb-4 opacity-60">稼働推移</h4><div style="position: relative; height:250px;"><canvas id="detailChart"></canvas></div></div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="card p-6"><h4 class="text-sm font-bold mb-4 opacity-60">作業種別</h4><div class="h-64"><canvas id="taskShareChart"></canvas></div></div>
-          <div class="card p-6"><h4 class="text-sm font-bold mb-4 opacity-60">オペレーター比率</h4><div class="h-64"><canvas id="operatorShareChart"></canvas></div></div>
+          <div class="card p-6"><h4 class="text-sm font-bold mb-4 opacity-60">作業種別</h4><div style="position: relative; height:250px;"><canvas id="taskShareChart"></canvas></div></div>
+          <div class="card p-6"><h4 class="text-sm font-bold mb-4 opacity-60">オペレーター比率</h4><div style="position: relative; height:250px;"><canvas id="operatorShareChart"></canvas></div></div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
@@ -186,7 +197,7 @@
             <h4 class="text-sm font-bold mb-2 opacity-60 text-blue-500">直近のメンテナンス</h4>
             <div class="text-sm font-bold">記録なし</div>
           </div>
-          <div class="col-span-full max-w-md mx-auto pt-10">
+          <div class="col-span-full pt-10">
             <button onclick="switchView('inputView')" class="w-full py-4 btn-back-light rounded-xl font-bold flex items-center justify-center shadow-sm">
               <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
             </button>
@@ -202,7 +213,7 @@
       <button onclick="loadTodayLogs()" class="text-sm bg-white border px-3 py-1 rounded-lg">更新</button>
     </div>
     <div id="todayLogList" class="space-y-4 mb-10"></div>
-    <div class="max-w-md mx-auto pb-20 px-4">
+    <div class="pb-20">
       <button onclick="switchView('inputView')" class="w-full py-4 btn-back-light rounded-xl font-bold flex items-center justify-center shadow-sm">
         <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
       </button>
@@ -215,7 +226,7 @@
       <div id="historyTotalHours" class="text-sm font-bold bg-[#6b8f71] text-white px-3 py-1 rounded-full">合計: 0.0 h</div>
     </div>
     <div id="historyLogList" class="space-y-4 mb-10"></div>
-    <div class="max-w-md mx-auto pb-20 px-4">
+    <div class="pb-20">
       <button onclick="switchView('inputView')" class="w-full py-4 btn-back-light rounded-xl font-bold flex items-center justify-center shadow-sm">
         <i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る
       </button>
@@ -238,34 +249,23 @@
   const overlay = document.getElementById("overlay");
   let deleteTargetId = null;
 
-  // グラフオブジェクト保持用
-  window.charts = {
-    history: null,
-    task: null,
-    operator: null
-  };
+  window.charts = { history: null, task: null, operator: null };
 
-  // --- 初期化 ---
   document.addEventListener("DOMContentLoaded", () => {
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     const now = new Date();
-    now.setHours(now.getHours() + 9);
-    document.getElementById("workDate").value = now.toISOString().split("T")[0];
+    const jstNow = new Date(now.getTime() + (9 * 60 * 60 * 1000));
+    document.getElementById("workDate").value = jstNow.toISOString().split("T")[0];
     loadMachines();
   });
 
   function toggleDarkMode() {
     const isDark = document.body.classList.toggle('dark-mode');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    
-    // ダッシュボード表示中ならグラフも更新
     if (document.getElementById('dashboard').classList.contains('active')) {
       if (!document.getElementById('analysisDetail').classList.contains('hidden')) {
-        // 個別詳細表示中なら再描画
         renderMachineDetail(window.selectedMachineId, window.selectedMachineName);
-      } else {
-        loadDashboard();
-      }
+      } else { loadDashboard(); }
     }
     closeMenu();
   }
@@ -279,10 +279,8 @@
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     closeMenu();
-    
     const container = document.getElementById("mainContainer");
     const header = document.getElementById("pageHeader");
-    
     if (id === 'dashboard') {
       container.classList.add("dashboard-active");
       if (header) header.style.display = 'none';
@@ -291,7 +289,6 @@
       container.classList.remove("dashboard-active");
       if (header) header.style.display = 'flex';
     }
-    
     if (id === 'todayView') loadTodayLogs();
     if (id === 'historyView') loadHistoryLogs();
     window.scrollTo(0, 0);
@@ -348,13 +345,9 @@
 
   function showSavePopup() { const p = document.getElementById("savePopup"); p.classList.remove("hidden"); setTimeout(() => p.classList.add("hidden"), 1500); }
 
-  // --- DASHBOARDロジック ---
-
   async function selectAnalysis(machineId, machineName) {
     window.selectedMachineId = machineId;
     window.selectedMachineName = machineName;
-
-    // タブの見た目更新
     document.querySelectorAll('.analysis-tab').forEach(tab => {
       tab.classList.remove('bg-white', 'dark:bg-[#6b8f71]', 'shadow-sm', 'text-[#6b8f71]', 'dark:text-white');
       tab.classList.add('text-gray-500');
@@ -364,17 +357,15 @@
       activeTab.classList.remove('text-gray-500');
       activeTab.classList.add('bg-white', 'dark:bg-[#6b8f71]', 'shadow-sm', 'text-[#6b8f71]', 'dark:text-white');
     }
-
     const allArea = document.getElementById("allAnalysisArea");
     const detailArea = document.getElementById("analysisDetail");
-
     if (machineId === 'all') {
       allArea.classList.remove("hidden");
       detailArea.classList.add("hidden");
     } else {
       allArea.classList.add("hidden");
       detailArea.classList.remove("hidden");
-      await renderMachineDetail(machineId, machineName);
+      setTimeout(() => renderMachineDetail(machineId, machineName), 50);
     }
   }
 
@@ -382,53 +373,39 @@
     document.getElementById("detailMachineName").innerText = mName;
     const { data: allLogs } = await client.from("hour_logs").select("*").eq("machine_id", mId).order("date", { ascending: true });
     if (!allLogs) return;
-
     const logs2026 = allLogs.filter(l => l.date.startsWith('2026'));
     const logs2025 = allLogs.filter(l => l.date.startsWith('2025'));
-
     const totalH2026 = logs2026.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
     const totalF2026 = logs2026.reduce((s, l) => s + (parseFloat(l.fuel_amount) || 0), 0);
     const avgF2026 = totalH2026 > 0 ? (totalF2026 / totalH2026).toFixed(2) : "0.00";
     const totalH2025 = logs2025.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
-
     document.getElementById("detailTotalHours").innerText = totalH2026.toFixed(1);
     document.getElementById("detailTotalFuel").innerText = totalF2026.toFixed(1);
     document.getElementById("detailAvgFuel").innerText = avgF2026;
-
     const compareEl = document.getElementById("detailCompareValue");
     if (totalH2025 > 0) {
       const ratio = ((totalH2026 / totalH2025) * 100).toFixed(1);
       const diff = (totalH2026 - totalH2025).toFixed(1);
       compareEl.innerText = `${ratio}% (${diff >= 0 ? '+' : ''}${diff}h)`;
-    } else {
-      compareEl.innerText = "前年データなし";
-    }
-
-    const taskData = {};
-    const opData = {};
+    } else { compareEl.innerText = "前年データなし"; }
+    const taskData = {}; const opData = {};
     logs2026.forEach(l => {
       const h = l.end_hour - l.start_hour;
-      const task = l.task || "未分類";
-      const op = l.operator || "不明";
-      taskData[task] = (taskData[task] || 0) + h;
-      opData[op] = (opData[op] || 0) + h;
+      taskData[l.task || "未分類"] = (taskData[l.task || "未分類"] || 0) + h;
+      opData[l.operator || "不明"] = (opData[l.operator || "不明"] || 0) + h;
     });
-
     renderHistoryChart(logs2026, logs2025);
     renderTaskChart(taskData);
     renderOperatorChart(opData);
   }
 
   function renderHistoryChart(logs2026, logs2025) {
-    const ctx = document.getElementById('detailChart').getContext('2d');
+    const canvas = document.getElementById('detailChart'); if (!canvas) return;
+    const ctx = canvas.getContext('2d');
     if (window.charts.history) window.charts.history.destroy();
     const getMonthly = (logs) => {
       const m = Array(12).fill(0);
-      logs.forEach(l => { 
-        const parts = l.date.split('-');
-        const mon = parseInt(parts[1]) - 1; 
-        m[mon] += (l.end_hour - l.start_hour); 
-      });
+      logs.forEach(l => { const mon = parseInt(l.date.split('-')[1]) - 1; m[mon] += (l.end_hour - l.start_hour); });
       return m;
     };
     const isDark = document.body.classList.contains('dark-mode');
@@ -441,65 +418,29 @@
           { label: '2025年', data: getMonthly(logs2025), borderColor: 'rgba(156, 163, 175, 0.5)', borderDash: [5, 5], fill: false, tension: 0.4 }
         ]
       },
-      options: { 
-        responsive: true, 
-        maintainAspectRatio: false, 
-        plugins: { legend: { labels: { color: isDark ? '#fff' : '#000' } } },
-        scales: {
-          y: { ticks: { color: isDark ? '#fff' : '#000' }, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' } },
-          x: { ticks: { color: isDark ? '#fff' : '#000' }, grid: { display: false } }
-        }
-      }
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#fff' : '#000' } } }, scales: { y: { ticks: { color: isDark ? '#fff' : '#000' }, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' } }, x: { ticks: { color: isDark ? '#fff' : '#000' }, grid: { display: false } } } }
     });
   }
 
   function renderTaskChart(dataObj) {
-    const ctx = document.getElementById('taskShareChart').getContext('2d');
+    const canvas = document.getElementById('taskShareChart'); if (!canvas) return;
     if (window.charts.task) window.charts.task.destroy();
     const isDark = document.body.classList.contains('dark-mode');
-    window.charts.task = new Chart(ctx, {
+    window.charts.task = new Chart(canvas.getContext('2d'), {
       type: 'doughnut',
-      data: {
-        labels: Object.keys(dataObj),
-        datasets: [{
-          data: Object.values(dataObj).map(v => v.toFixed(1)),
-          backgroundColor: ['#6b8f71', '#9ab59f', '#c2d1c5', '#4a6b50', '#a3b18a', '#dce2d5'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'right', labels: { color: isDark ? '#fff' : '#000', boxWidth: 12, font: { size: 10 } } } }
-      }
+      data: { labels: Object.keys(dataObj), datasets: [{ data: Object.values(dataObj).map(v => v.toFixed(1)), backgroundColor: ['#6b8f71', '#9ab59f', '#c2d1c5', '#4a6b50', '#a3b18a', '#dce2d5'], borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: isDark ? '#fff' : '#000', boxWidth: 12, font: { size: 10 } } } } }
     });
   }
 
   function renderOperatorChart(dataObj) {
-    const ctx = document.getElementById('operatorShareChart').getContext('2d');
+    const canvas = document.getElementById('operatorShareChart'); if (!canvas) return;
     if (window.charts.operator) window.charts.operator.destroy();
     const isDark = document.body.classList.contains('dark-mode');
-    window.charts.operator = new Chart(ctx, {
+    window.charts.operator = new Chart(canvas.getContext('2d'), {
       type: 'bar',
-      data: {
-        labels: Object.keys(dataObj),
-        datasets: [{
-          label: '稼働時間(h)',
-          data: Object.values(dataObj).map(v => v.toFixed(1)),
-          backgroundColor: isDark ? '#00ff9f' : '#6b8f71',
-          borderRadius: 4
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: { beginAtZero: true, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { color: isDark ? '#fff' : '#000' } },
-          y: { ticks: { color: isDark ? '#fff' : '#000' } }
-        },
-        plugins: { legend: { display: false } }
-      }
+      data: { labels: Object.keys(dataObj), datasets: [{ label: '稼働時間(h)', data: Object.values(dataObj).map(v => v.toFixed(1)), backgroundColor: isDark ? '#00ff9f' : '#6b8f71', borderRadius: 4 }] },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { color: isDark ? '#fff' : '#000' } }, y: { ticks: { color: isDark ? '#fff' : '#000' } } }, plugins: { legend: { display: false } } }
     });
   }
 
@@ -507,53 +448,38 @@
     const grid = document.getElementById("tractorGrid");
     const top3List = document.getElementById("top3List");
     const tabContainer = document.getElementById("machineTabs");
-
     grid.innerHTML = "<p class='col-span-full text-center py-10'>読み込み中...</p>";
     top3List.innerHTML = "";
-    
     const { data: machines } = await client.from("machines").select("*").order("manufacturer");
     const { data: logs } = await client.from("hour_logs").select("*, machines(name, manufacturer)");
     if (!machines || !logs) return;
-
     tabContainer.innerHTML = `<button onclick="selectAnalysis('all', '全体')" id="tab-all" class="analysis-tab flex-1 py-2 px-6 rounded-lg text-sm font-bold transition-all bg-white dark:bg-[#6b8f71] shadow-sm text-[#6b8f71] dark:text-white">全体</button>` + 
       machines.map(m => `<button onclick="selectAnalysis(${m.id}, '${m.name}')" id="tab-${m.id}" class="analysis-tab whitespace-nowrap py-2 px-6 rounded-lg text-sm font-bold transition-all text-gray-500 hover:text-[#6b8f71]">${m.name}</button>`).join("");
-
     const yearLogs = logs.filter(l => l.date.startsWith('2026'));
     const totalH = yearLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
     document.getElementById("totalYearHours").innerHTML = `${totalH.toFixed(1)}<span class="text-4xl sm:text-5xl ml-2 font-bold opacity-100">h</span>`;
-
     const stats = machines.map(m => {
       const h = yearLogs.filter(l => l.machine_id === m.id).reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
       return { ...m, hours: h };
     }).sort((a, b) => b.hours - a.hours);
-
     stats.slice(0, 3).forEach((m, i) => {
       const colors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
       top3List.innerHTML += `<div class="text-center p-2 sm:p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-b-4 border-gray-200 dark:border-gray-700"><p class="text-[10px] sm:text-xs font-black ${colors[i]} uppercase">Rank ${i+1}</p><p class="font-bold truncate text-xs sm:text-sm mb-1">${m.name}</p><p class="text-lg sm:text-2xl font-black leading-none">${m.hours.toFixed(1)}<span class="text-[10px] sm:text-xs ml-0.5">h</span></p></div>`;
     });
-
     grid.innerHTML = "";
     const isDark = document.body.classList.contains('dark-mode');
     const chartColor = isDark ? '#00ff9f' : '#6b8f71';
     const chartBg = isDark ? 'rgba(255,255,255,0.05)' : '#f3f4f6';
-
     stats.forEach(m => {
       const card = document.createElement("div");
       card.className = "card flex flex-col items-center hover:shadow-2xl transition-all cursor-pointer";
       card.onclick = () => selectAnalysis(m.id, m.name);
-      const target = 300;
-      const percent = Math.min(100, (m.hours / target) * 100);
+      const target = 300; const percent = Math.min(100, (m.hours / target) * 100);
       card.innerHTML = `<div class="relative w-full h-32 flex justify-center mb-6 pointer-events-none"><canvas id="chart-${m.id}"></canvas><div class="absolute inset-0 flex flex-col items-center justify-center pt-4"><div class="flex items-baseline"><span class="text-3xl font-black">${m.hours.toFixed(1)}</span><span class="text-sm ml-1 font-bold opacity-40">h</span></div></div></div><div class="w-full text-center"><p class="text-[10px] font-black text-[#6b8f71] dark:text-[#00ff9f] uppercase tracking-[0.2em] mb-1">${m.manufacturer}</p><h4 class="text-lg font-bold leading-tight mb-4">${m.name}</h4><div class="w-full bg-gray-100 dark:bg-gray-800 h-1 rounded-full overflow-hidden"><div class="h-full rounded-full" style="width: ${percent}%; background-color: ${chartColor}"></div></div></div>`;
       grid.appendChild(card);
-      
       setTimeout(() => {
-        const el = document.getElementById(`chart-${m.id}`);
-        if (!el) return;
-        new Chart(el.getContext("2d"), { 
-          type: 'doughnut', 
-          data: { datasets: [{ data: [m.hours, Math.max(0.1, target - m.hours)], backgroundColor: [chartColor, chartBg], borderWidth: 0, cutout: '85%' }] }, 
-          options: { rotation: -120, circumference: 240, plugins: { legend: { display: false }, tooltip: { enabled: false } }, maintainAspectRatio: false } 
-        });
+        const el = document.getElementById(`chart-${m.id}`); if (!el) return;
+        new Chart(el.getContext("2d"), { type: 'doughnut', data: { datasets: [{ data: [m.hours, Math.max(0.1, target - m.hours)], backgroundColor: [chartColor, chartBg], borderWidth: 0, cutout: '85%' }] }, options: { rotation: -120, circumference: 240, plugins: { legend: { display: false }, tooltip: { enabled: false } }, maintainAspectRatio: false } });
       }, 100);
     });
   }
@@ -563,7 +489,8 @@
     list.innerHTML = data?.length ? "" : "<p class='text-center opacity-40'>データがありません</p>";
     data?.forEach(log => {
       const diff = (log.end_hour - log.start_hour).toFixed(1);
-      list.innerHTML += `<div class="card border-l-4 border-[#6b8f71] relative mb-4"><button onclick="openDeleteModal(${log.id})" class="absolute top-4 right-4 text-red-500 dark:text-red-400 opacity-80 hover:opacity-100 p-2"><i class="fa-solid fa-trash"></i></button><div class="flex items-center space-x-3 mb-2"><span class="text-xs font-bold opacity-50">${log.date}</span><span class="bg-[#f7f4ef] dark:bg-white/10 text-[#6b8f71] dark:text-[#00ff9f] px-2 py-0.5 rounded text-xs font-black ring-1 ring-[#6b8f71]/20">${diff} h</span></div><div class="font-bold pr-10">${log.machines?.name || '不明'} / ${log.operator}</div><div class="text-sm opacity-60">${log.category} - ${log.task}</div>${log.memo ? `<div class="text-xs mt-2 opacity-50 bg-black/5 dark:bg-white/5 p-2 rounded">${log.memo}</div>` : ""}</div>`;
+      const fuelTag = (log.fuel_amount > 0) ? `<span class="ml-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded text-xs font-black ring-1 ring-blue-500/20"><i class="fa-solid fa-gas-pump mr-1"></i>${log.fuel_amount} L</span>` : "";
+      list.innerHTML += `<div class="card border-l-4 border-[#6b8f71] relative mb-4"><button onclick="openDeleteModal(${log.id})" class="absolute top-4 right-4 text-red-500 dark:text-red-400 opacity-80 hover:opacity-100 p-2"><i class="fa-solid fa-trash"></i></button><div class="flex items-center space-x-2 mb-2"><span class="text-xs font-bold opacity-50">${log.date}</span><span class="bg-[#f7f4ef] dark:bg-white/10 text-[#6b8f71] dark:text-[#00ff9f] px-2 py-0.5 rounded text-xs font-black ring-1 ring-[#6b8f71]/20">${diff} h</span>${fuelTag}</div><div class="font-bold pr-10">${log.machines?.name || '不明'} / ${log.operator}</div><div class="text-sm opacity-60">${log.category} - ${log.task}</div>${log.memo ? `<div class="text-xs mt-2 opacity-50 bg-black/5 dark:bg-white/5 p-2 rounded">${log.memo}</div>` : ""}</div>`;
     });
   }
 
@@ -572,6 +499,7 @@
   function openDeleteModal(id) { deleteTargetId = id; document.getElementById("deleteModal").classList.remove("hidden"); }
   document.getElementById("cancelDelete").onclick = () => document.getElementById("deleteModal").classList.add("hidden");
   document.getElementById("confirmDelete").onclick = async () => { await client.from("hour_logs").delete().eq("id", deleteTargetId); document.getElementById("deleteModal").classList.add("hidden"); loadTodayLogs(); loadHistoryLogs(); };
-
   if ("serviceWorker" in navigator) navigator.serviceWorker.register('/tractorlog/sw.js');
 </script>
+</body>
+</html>
