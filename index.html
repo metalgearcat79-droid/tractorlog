@@ -48,12 +48,11 @@
     .delete-btn { color: #e57373; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s; }
     .delete-btn:hover { background: rgba(229, 115, 115, 0.1); }
 
-    /* DASHBOARD - 高さを揃える強化版 */
+    /* DASHBOARD - 高さ・パーツ形状 修正版 */
     #dashboard.active { display: flex !important; flex-direction: column; height: 100vh; background-color: #e2e8e3; overflow: hidden; }
     body.dark-mode #dashboard { background-color: #121412; }
     .bi-header { height: 60px; display: flex; align-items: center; padding: 0 20px; background: #2d4031; color: white; flex-shrink: 0; }
     
-    /* コンテナ全体 */
     .bi-container { 
       flex: 1; 
       display: flex; 
@@ -63,17 +62,17 @@
       min-height: 0;
     }
 
-    /* 左右のカラム：上部に中央のボタン類と同じ分のマージンを作る */
+    /* 左右のカラム：上部に余白を確保 */
     .bi-left-col, .bi-right-col { 
       width: 300px; 
       display: flex; 
       flex-direction: column; 
       gap: 10px; 
       flex-shrink: 0;
-      /* 中央のタブ(約40px) + KPIカード(約60px) + gap(10px) = 約110pxの余白 */
       padding-top: 105px; 
     }
 
+    /* 中央のカラム */
     .bi-main-col { 
       flex: 1.5; 
       display: flex; 
@@ -82,8 +81,8 @@
       min-width: 0; 
     }
 
-    /* カードを伸ばす設定 */
-    .bi-left-col > .card, .bi-right-col > .card, .bi-main-col > .card { 
+    /* 【修正】左右のカラムのカードは「すべて」伸ばす */
+    .bi-left-col > .card, .bi-right-col > .card { 
       flex: 1 !important; 
       display: flex !important; 
       flex-direction: column !important;
@@ -91,9 +90,25 @@
       min-height: 0;
     }
 
+    /* 【修正】中央のカラムは「グラフのカードだけ」伸ばす */
+    .bi-main-col > .card { 
+      flex: 1; /* 中央のカード（グラフ）だけが余った高さを埋める */
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0 !important;
+    }
+
+    /* ボタンやKPIは「中身のサイズ」に固定して枠を維持 */
+    #machineTabs, .grid-cols-5 {
+      flex: none !important; 
+    }
+
+    .kpi-card { background: #6b8f71; color: white; padding: 8px 4px; border-radius: 12px; text-align: center; flex: none; }
+    
     @media (max-width: 1024px) {
-      .bi-left-col, .bi-right-col { padding-top: 0; } /* スマホでは余白を消す */
+      .bi-left-col, .bi-right-col { padding-top: 0; }
       .bi-container { flex-direction: column; height: auto; overflow-y: auto; }
+      .bi-left-col > .card, .bi-right-col > .card { flex: none !important; }
     }
   </style>
 </head>
