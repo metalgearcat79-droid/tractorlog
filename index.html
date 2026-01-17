@@ -18,14 +18,12 @@
       transition: background 0.3s, color 0.3s;
     }
     
-    /* --- ダークモード定義 --- */
     body.dark-mode {
       background: radial-gradient(circle at top right, #1b3022, #000000);
       background-attachment: fixed;
       color: #e0e0e0;
     }
 
-    /* ガラス風カード（Glassmorphism） */
     .card { background: #ffffff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); position: relative; transition: all 0.3s; }
     
     body.dark-mode .card {
@@ -44,7 +42,6 @@
       border-color: #444 !important;
     }
 
-    /* アニメーション & その他 */
     .hidden { display: none; }
     .btn-main { background-color: #6b8f71; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; width: 100%; transition: all 0.2s; }
     .btn-main:active { background-color: #587a5f; transform: scale(0.98); }
@@ -54,6 +51,7 @@
     .view.active { display: block; }
     #mainContainer { width: 100%; max-width: 672px; transition: max-width 0.3s ease; margin: 0 auto; }
     #mainContainer.dashboard-active { max-width: 95% !important; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
   </style>
 </head>
 
@@ -92,9 +90,9 @@
     <div class="card mb-4"><div class="flex space-x-4"><div class="flex-1"><label class="block text-sm font-medium text-gray-500 mb-1">稼働前</label><input type="number" id="hourBefore" class="w-full p-3 border rounded-lg mt-1" step="0.1" /></div><div class="flex-1"><label class="block text-sm font-medium text-gray-500 mb-1">稼働後</label><input type="number" id="hourAfter" class="w-full p-3 border rounded-lg mt-1" step="0.1" /></div></div></div>
     <div id="hourDiffDisplay" class="text-right font-bold text-[#6b8f71] mb-6 text-lg">稼働時間: 0.0 h</div>
     <div class="card mb-4">
-    <label class="block text-sm font-medium text-gray-500 mb-1">給油量 (L)</label>
-    <input type="number" id="fuelAmount" class="w-full p-3 border rounded-lg outline-none focus:border-[#6b8f71]" step="0.1" placeholder="給油した場合は入力" />
-</div>
+      <label class="block text-sm font-medium text-gray-500 mb-1">給油量 (L)</label>
+      <input type="number" id="fuelAmount" class="w-full p-3 border rounded-lg outline-none focus:border-[#6b8f71]" step="0.1" placeholder="給油した場合は入力" />
+    </div>
     <div class="card mb-6"><label class="block text-sm font-medium text-gray-500 mb-1">メモ</label><textarea id="memoInput" class="w-full p-3 border rounded-lg outline-none" rows="3"></textarea></div>
     <button id="saveBtn" class="btn-main text-base py-3">保存する</button>
   </div>
@@ -115,30 +113,65 @@
       </div>
 
       <div class="px-4 mb-6">
-        <div class="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl overflow-x-auto no-scrollbar">
-         <button onclick="selectAnalysis('all')" id="tab-all" class="flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all bg-white dark:bg-[#6b8f71] shadow-sm">
-           全体
-         </button>
-         <div id="machineTabs" class="flex space-x-1"></div>
-       </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-        <div class="bg-gradient-to-br from-[#4a6b50] to-[#2d4031] text-white p-8 rounded-xl shadow-2xl relative overflow-hidden min-h-[200px] flex flex-col justify-between">
-          <div class="relative z-10"><p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">年間総稼働時間</p></div>
-          <div class="relative z-10 flex items-baseline justify-center md:justify-end">
-            <h3 id="totalYearHours" class="text-6xl sm:text-7xl font-black flex items-baseline leading-none">0.0<span class="text-4xl sm:text-5xl ml-2 font-bold opacity-100" style="font-style: normal;">h</span></h3>
+        <div id="machineTabs" class="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl overflow-x-auto no-scrollbar space-x-1">
           </div>
-          <i class="fa-solid fa-calendar-check absolute -left-4 -top-4 text-9xl opacity-10"></i>
+      </div>
+
+      <div id="allAnalysisArea">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+          <div class="bg-gradient-to-br from-[#4a6b50] to-[#2d4031] text-white p-8 rounded-xl shadow-2xl relative overflow-hidden min-h-[200px] flex flex-col justify-between">
+            <div class="relative z-10"><p class="text-lg font-bold opacity-70 tracking-widest uppercase mb-1">年間総稼働時間</p></div>
+            <div class="relative z-10 flex items-baseline justify-center md:justify-end">
+              <h3 id="totalYearHours" class="text-6xl sm:text-7xl font-black flex items-baseline leading-none">0.0<span class="text-4xl sm:text-5xl ml-2 font-bold" style="font-style: normal;">h</span></h3>
+            </div>
+            <i class="fa-solid fa-calendar-check absolute -left-4 -top-4 text-9xl opacity-10"></i>
+          </div>
+          <div class="col-span-2 card p-4 sm:p-8">
+            <p class="text-gray-500 dark:text-gray-400 text-sm font-black mb-6 flex items-center tracking-widest uppercase"><i class="fa-solid fa-crown text-yellow-500 mr-2"></i>年間稼働ランキング</p>
+            <div id="top3List" class="grid grid-cols-3 gap-2 sm:gap-6"></div>
+          </div>
+        </div>
+        <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-12"></div>
+      </div>
+
+      <div id="analysisDetail" class="hidden space-y-6 mb-12">
+        <div class="card bg-[#6b8f71] dark:bg-[#00ff9f]/20 text-white p-8 text-center rounded-3xl shadow-xl relative overflow-hidden">
+          <p class="text-sm font-bold opacity-80 mb-2 uppercase tracking-widest" id="detailMachineName">機械名</p>
+          <div class="flex items-baseline justify-center">
+            <h2 class="text-7xl font-black" id="detailTotalHours">0.0</h2>
+            <span class="text-2xl ml-2 font-bold opacity-70">h</span>
+          </div>
+          <div id="compareYearTag" class="inline-flex items-center mt-4 px-3 py-1 bg-white/20 rounded-full text-xs font-bold">
+            <span class="opacity-70 mr-1">前年同期比:</span>
+            <span id="detailCompareValue">--</span>
+          </div>
+          <p class="text-[10px] mt-4 opacity-50">※2026年度 累計稼働時間</p>
         </div>
 
-        <div class="col-span-2 card p-4 sm:p-8">
-          <p class="text-gray-500 dark:text-gray-400 text-sm font-black mb-6 flex items-center tracking-widest uppercase"><i class="fa-solid fa-crown text-yellow-500 mr-2"></i>年間稼働ランキング</p>
-          <div id="top3List" class="grid grid-cols-3 gap-2 sm:gap-6"></div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="card p-4 text-center">
+            <p class="text-[10px] font-bold text-gray-400 uppercase">給油累計</p>
+            <div class="flex items-baseline justify-center">
+              <span class="text-2xl font-black" id="detailTotalFuel">0.0</span>
+              <span class="text-[10px] ml-0.5 opacity-50">L</span>
+            </div>
+          </div>
+          <div class="card p-4 text-center">
+            <p class="text-[10px] font-bold text-gray-400 uppercase">平均燃費</p>
+            <div class="flex items-baseline justify-center">
+              <span class="text-2xl font-black" id="detailAvgFuel">0.0</span>
+              <span class="text-[10px] ml-0.5 opacity-50">L/h</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <h4 class="text-sm font-bold mb-4 opacity-60">稼働推移 (前年比較)</h4>
+          <div class="h-64 w-full">
+            <canvas id="detailChart"></canvas>
+          </div>
         </div>
       </div>
-      
-      <div id="tractorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-12"></div>
 
       <div class="max-w-md mx-auto pb-20 px-4">
         <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300">
@@ -159,9 +192,6 @@
     <div id="historyLogList" class="space-y-4 mb-10"></div>
     <button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button>
   </div>
-
-  <div id="maintenanceView" class="view"><h2 class="text-xl font-bold text-[#6b8f71]">メンテナンス情報</h2><div class="card text-center py-20 text-gray-500 font-bold">準備中です...</div><button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button></div>
-  <div id="repairView" class="view"><h2 class="text-xl font-bold text-[#6b8f71]">故障・修理履歴</h2><div class="card text-center py-20 text-gray-500 font-bold">準備中です...</div><button onclick="switchView('inputView')" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded-xl font-bold flex items-center justify-center shadow-sm active:bg-gray-300"><i class="fa-solid fa-circle-arrow-left mr-2 text-xl"></i>TOPに戻る</button></div>
 </div>
 
 <div id="savePopup" class="hidden fixed inset-0 flex items-center justify-center z-[10001]"><div class="px-6 py-3 rounded-lg text-white bg-[#2f5d3a] shadow-xl font-bold">保存しました</div></div>
@@ -270,12 +300,12 @@
 
   function showSavePopup() { const p = document.getElementById("savePopup"); p.classList.remove("hidden"); setTimeout(() => p.classList.add("hidden"), 1500); }
 
-  // ★修正：タブ切り替えと分析対象の管理
-  function selectAnalysis(machineId, machineName) {
+  // --- DASHBOARDロジック ---
+
+  async function selectAnalysis(machineId, machineName) {
     window.selectedMachineId = machineId;
     window.selectedMachineName = machineName;
 
-    // タブの見た目を更新
     const allTabs = document.querySelectorAll('.analysis-tab');
     allTabs.forEach(tab => {
       tab.classList.remove('bg-white', 'dark:bg-[#6b8f71]', 'shadow-sm', 'text-[#6b8f71]', 'dark:text-white');
@@ -288,20 +318,73 @@
       activeTab.classList.add('bg-white', 'dark:bg-[#6b8f71]', 'shadow-sm', 'text-[#6b8f71]', 'dark:text-white');
     }
 
+    const allArea = document.getElementById("allAnalysisArea");
+    const detailArea = document.getElementById("analysisDetail");
+
     if (machineId === 'all') {
-      console.log("全体分析モード");
-      // 将来的に全体用表示に切り替える処理をここに
+      allArea.classList.remove("hidden");
+      detailArea.classList.add("hidden");
     } else {
-      console.log(machineName + " 個別分析モード");
-      // 将来的に個別用表示に切り替える処理をここに
+      allArea.classList.add("hidden");
+      detailArea.classList.remove("hidden");
+      await renderMachineDetail(machineId, machineName);
     }
   }
 
-  // ★修正：loadDashboardでタブを動的生成
+  async function renderMachineDetail(mId, mName) {
+    document.getElementById("detailMachineName").innerText = mName;
+    const { data: allLogs } = await client.from("hour_logs").select("*").eq("machine_id", mId).order("date", { ascending: true });
+    if (!allLogs) return;
+
+    const logs2026 = allLogs.filter(l => l.date.startsWith('2026'));
+    const logs2025 = allLogs.filter(l => l.date.startsWith('2025'));
+
+    const totalH2026 = logs2026.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
+    const totalF2026 = logs2026.reduce((s, l) => s + (parseFloat(l.fuel_amount) || 0), 0);
+    const avgF2026 = totalH2026 > 0 ? (totalF2026 / totalH2026).toFixed(2) : "0.00";
+    const totalH2025 = logs2025.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
+
+    document.getElementById("detailTotalHours").innerText = totalH2026.toFixed(1);
+    document.getElementById("detailTotalFuel").innerText = totalF2026.toFixed(1);
+    document.getElementById("detailAvgFuel").innerText = avgF2026;
+
+    const compareEl = document.getElementById("detailCompareValue");
+    if (totalH2025 > 0) {
+      const ratio = ((totalH2026 / totalH2025) * 100).toFixed(1);
+      const diff = (totalH2026 - totalH2025).toFixed(1);
+      compareEl.innerText = `${ratio}% (${diff >= 0 ? '+' : ''}${diff}h)`;
+    } else {
+      compareEl.innerText = "前年データなし";
+    }
+
+    // グラフ描画
+    const ctx = document.getElementById('detailChart').getContext('2d');
+    if (window.myDetailChart) window.myDetailChart.destroy();
+
+    const getMonthly = (logs) => {
+      const m = Array(12).fill(0);
+      logs.forEach(l => { const mon = parseInt(l.date.split('-')[1]) - 1; m[mon] += (l.end_hour - l.start_hour); });
+      return m;
+    };
+
+    const isDark = document.body.classList.contains('dark-mode');
+    window.myDetailChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+        datasets: [
+          { label: '2026年', data: getMonthly(logs2026), borderColor: isDark ? '#00ff9f' : '#6b8f71', backgroundColor: 'rgba(107,143,113,0.1)', fill: true, tension: 0.4 },
+          { label: '2025年', data: getMonthly(logs2025), borderColor: 'rgba(156, 163, 175, 0.5)', borderDash: [5, 5], fill: false, tension: 0.4 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#fff' : '#000' } } } }
+    });
+  }
+
   async function loadDashboard() {
     const grid = document.getElementById("tractorGrid");
     const top3List = document.getElementById("top3List");
-    const tabContainer = document.getElementById("machineTabs"); // HTML側に追加が必要
+    const tabContainer = document.getElementById("machineTabs");
 
     grid.innerHTML = "<p class='col-span-full text-center py-10'>読み込み中...</p>";
     top3List.innerHTML = "";
@@ -310,20 +393,12 @@
     const { data: logs } = await client.from("hour_logs").select("*, machines(name, manufacturer)");
     if (!machines || !logs) return;
 
-    // --- タブの生成 ---
-    if (tabContainer) {
-      tabContainer.innerHTML = `
-        <button onclick="selectAnalysis('all', '全体')" id="tab-all" class="analysis-tab flex-1 py-2 px-6 rounded-lg text-sm font-bold transition-all bg-white dark:bg-[#6b8f71] shadow-sm text-[#6b8f71] dark:text-white">全体</button>
-      ` + machines.map(m => `
-        <button onclick="selectAnalysis(${m.id}, '${m.name}')" id="tab-${m.id}" class="analysis-tab whitespace-nowrap py-2 px-6 rounded-lg text-sm font-bold transition-all text-gray-500 hover:text-[#6b8f71]">
-          ${m.name}
-        </button>
-      `).join("");
-    }
+    tabContainer.innerHTML = `<button onclick="selectAnalysis('all', '全体')" id="tab-all" class="analysis-tab flex-1 py-2 px-6 rounded-lg text-sm font-bold transition-all bg-white dark:bg-[#6b8f71] shadow-sm text-[#6b8f71] dark:text-white">全体</button>` + 
+      machines.map(m => `<button onclick="selectAnalysis(${m.id}, '${m.name}')" id="tab-${m.id}" class="analysis-tab whitespace-nowrap py-2 px-6 rounded-lg text-sm font-bold transition-all text-gray-500 hover:text-[#6b8f71]">${m.name}</button>`).join("");
 
     const yearLogs = logs.filter(l => new Date(l.date).getFullYear() === 2026);
     const totalH = yearLogs.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
-    document.getElementById("totalYearHours").innerHTML = `${totalH.toFixed(1)}<span class="text-5xl ml-4 font-bold">h</span>`;
+    document.getElementById("totalYearHours").innerHTML = `${totalH.toFixed(1)}<span class="text-4xl sm:text-5xl ml-2 font-bold opacity-100">h</span>`;
 
     const stats = machines.map(m => {
       const h = yearLogs.filter(l => l.machine_id === m.id).reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
@@ -332,12 +407,7 @@
 
     stats.slice(0, 3).forEach((m, i) => {
       const colors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
-      top3List.innerHTML += `
-        <div class="text-center p-2 sm:p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-b-4 border-gray-200 dark:border-gray-700">
-          <p class="text-[10px] sm:text-xs font-black ${colors[i]} uppercase">Rank ${i+1}</p>
-          <p class="font-bold truncate text-xs sm:text-sm mb-1">${m.name}</p>
-          <p class="text-lg sm:text-2xl font-black leading-none">${m.hours.toFixed(1)}<span class="text-[10px] sm:text-xs ml-0.5">h</span></p>
-        </div>`;
+      top3List.innerHTML += `<div class="text-center p-2 sm:p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-b-4 border-gray-200 dark:border-gray-700"><p class="text-[10px] sm:text-xs font-black ${colors[i]} uppercase">Rank ${i+1}</p><p class="font-bold truncate text-xs sm:text-sm mb-1">${m.name}</p><p class="text-lg sm:text-2xl font-black leading-none">${m.hours.toFixed(1)}<span class="text-[10px] sm:text-xs ml-0.5">h</span></p></div>`;
     });
 
     grid.innerHTML = "";
@@ -348,36 +418,15 @@
     stats.forEach(m => {
       const card = document.createElement("div");
       card.className = "card flex flex-col items-center hover:shadow-2xl transition-all cursor-pointer";
-      // カード自体をクリックしても個別分析へ飛べるように設定
       card.onclick = () => selectAnalysis(m.id, m.name);
-
       const target = 300;
       const percent = Math.min(100, (m.hours / target) * 100);
-      card.innerHTML = `
-        <div class="relative w-full h-32 flex justify-center mb-6 pointer-events-none">
-          <canvas id="chart-${m.id}"></canvas>
-          <div class="absolute inset-0 flex flex-col items-center justify-center pt-4">
-            <div class="flex items-baseline"><span class="text-3xl font-black">${m.hours.toFixed(1)}</span><span class="text-sm ml-1 font-bold opacity-40">h</span></div>
-          </div>
-        </div>
-        <div class="w-full text-center">
-          <p class="text-[10px] font-black text-[#6b8f71] dark:text-[#00ff9f] uppercase tracking-[0.2em] mb-1">${m.manufacturer}</p>
-          <h4 class="text-lg font-bold leading-tight mb-4">${m.name}</h4>
-          <div class="w-full bg-gray-100 dark:bg-gray-800 h-1 rounded-full overflow-hidden">
-            <div class="h-full rounded-full" style="width: ${percent}%; background-color: ${chartColor}"></div>
-          </div>
-        </div>`;
+      card.innerHTML = `<div class="relative w-full h-32 flex justify-center mb-6 pointer-events-none"><canvas id="chart-${m.id}"></canvas><div class="absolute inset-0 flex flex-col items-center justify-center pt-4"><div class="flex items-baseline"><span class="text-3xl font-black">${m.hours.toFixed(1)}</span><span class="text-sm ml-1 font-bold opacity-40">h</span></div></div></div><div class="w-full text-center"><p class="text-[10px] font-black text-[#6b8f71] dark:text-[#00ff9f] uppercase tracking-[0.2em] mb-1">${m.manufacturer}</p><h4 class="text-lg font-bold leading-tight mb-4">${m.name}</h4><div class="w-full bg-gray-100 dark:bg-gray-800 h-1 rounded-full overflow-hidden"><div class="h-full rounded-full" style="width: ${percent}%; background-color: ${chartColor}"></div></div></div>`;
       grid.appendChild(card);
-
       setTimeout(() => {
         const el = document.getElementById(`chart-${m.id}`);
         if (!el) return;
-        const ctx = el.getContext("2d");
-        new Chart(ctx, {
-          type: 'doughnut',
-          data: { datasets: [{ data: [m.hours, Math.max(0.1, target - m.hours)], backgroundColor: [chartColor, chartBg], borderWidth: 0, cutout: '85%' }] },
-          options: { rotation: -120, circumference: 240, plugins: { legend: { display: false }, tooltip: { enabled: false } }, maintainAspectRatio: false }
-        });
+        new Chart(el.getContext("2d"), { type: 'doughnut', data: { datasets: [{ data: [m.hours, Math.max(0.1, target - m.hours)], backgroundColor: [chartColor, chartBg], borderWidth: 0, cutout: '85%' }] }, options: { rotation: -120, circumference: 240, plugins: { legend: { display: false }, tooltip: { enabled: false } }, maintainAspectRatio: false } });
       }, 100);
     });
   }
@@ -387,43 +436,15 @@
     list.innerHTML = data?.length ? "" : "<p class='text-center opacity-40'>データがありません</p>";
     data?.forEach(log => {
       const diff = (log.end_hour - log.start_hour).toFixed(1);
-      list.innerHTML += `
-        <div class="card border-l-4 border-[#6b8f71] relative mb-4">
-          <button onclick="openDeleteModal(${log.id})" class="absolute top-4 right-4 text-red-500 dark:text-red-400 opacity-80 hover:opacity-100 p-2">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-          <div class="flex items-center space-x-3 mb-2">
-            <span class="text-xs font-bold opacity-50">${log.date}</span>
-            <span class="bg-[#f7f4ef] dark:bg-white/10 text-[#6b8f71] dark:text-[#00ff9f] px-2 py-0.5 rounded text-xs font-black ring-1 ring-[#6b8f71]/20">
-              ${diff} h
-            </span>
-          </div>
-          <div class="font-bold pr-10">${log.machines?.name || '不明'} / ${log.operator}</div>
-          <div class="text-sm opacity-60">${log.category} - ${log.task}</div>
-          ${log.memo ? `<div class="text-xs mt-2 opacity-50 bg-black/5 dark:bg-white/5 p-2 rounded">${log.memo}</div>` : ""}
-        </div>`;
+      list.innerHTML += `<div class="card border-l-4 border-[#6b8f71] relative mb-4"><button onclick="openDeleteModal(${log.id})" class="absolute top-4 right-4 text-red-500 dark:text-red-400 opacity-80 hover:opacity-100 p-2"><i class="fa-solid fa-trash"></i></button><div class="flex items-center space-x-3 mb-2"><span class="text-xs font-bold opacity-50">${log.date}</span><span class="bg-[#f7f4ef] dark:bg-white/10 text-[#6b8f71] dark:text-[#00ff9f] px-2 py-0.5 rounded text-xs font-black ring-1 ring-[#6b8f71]/20">${diff} h</span></div><div class="font-bold pr-10">${log.machines?.name || '不明'} / ${log.operator}</div><div class="text-sm opacity-60">${log.category} - ${log.task}</div>${log.memo ? `<div class="text-xs mt-2 opacity-50 bg-black/5 dark:bg-white/5 p-2 rounded">${log.memo}</div>` : ""}</div>`;
     });
   }
 
-  async function loadTodayLogs() {
-    const { data } = await client.from("hour_logs").select("*, machines(name)").eq("date", new Date().toISOString().split("T")[0]).order("created_at", { ascending: false });
-    renderLogs(data, "todayLogList");
-  }
-
-  async function loadHistoryLogs() {
-    const { data } = await client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
-    renderLogs(data, "historyLogList");
-    const total = (data || []).reduce((sum, log) => sum + (log.end_hour - log.start_hour), 0);
-    document.getElementById("historyTotalHours").textContent = `合計: ${total.toFixed(1)} h`;
-  }
-
+  async function loadTodayLogs() { const { data } = await client.from("hour_logs").select("*, machines(name)").eq("date", new Date().toISOString().split("T")[0]).order("created_at", { ascending: false }); renderLogs(data, "todayLogList"); }
+  async function loadHistoryLogs() { const { data } = await client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false }); renderLogs(data, "historyLogList"); const total = (data || []).reduce((sum, log) => sum + (log.end_hour - log.start_hour), 0); document.getElementById("historyTotalHours").textContent = `合計: ${total.toFixed(1)} h`; }
   function openDeleteModal(id) { deleteTargetId = id; document.getElementById("deleteModal").classList.remove("hidden"); }
   document.getElementById("cancelDelete").onclick = () => document.getElementById("deleteModal").classList.add("hidden");
-  document.getElementById("confirmDelete").onclick = async () => {
-    await client.from("hour_logs").delete().eq("id", deleteTargetId);
-    document.getElementById("deleteModal").classList.add("hidden");
-    loadTodayLogs(); loadHistoryLogs();
-  };
+  document.getElementById("confirmDelete").onclick = async () => { await client.from("hour_logs").delete().eq("id", deleteTargetId); document.getElementById("deleteModal").classList.add("hidden"); loadTodayLogs(); loadHistoryLogs(); };
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register('/tractorlog/sw.js');
 </script>
