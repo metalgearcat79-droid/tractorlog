@@ -12,7 +12,6 @@
     /* --- 基本スタイル --- */
     body { background-color: #f7f4ef; color: #3a3a3a; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; margin: 0; }
     body.dark-mode { background: #1a1c1e; color: #e0e0e0; }
-
     .view { display: none; }
     .view.active { display: block; }
 
@@ -21,34 +20,27 @@
     body.dark-mode #sideMenu { background-color: #1a1a1a; color: #e0e0e0; }
     #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
 
-    /* 共通カードスタイル */
+    /* カードスタイル */
     .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 16px; }
     body.dark-mode .card { background: #2d2d2d; color: #fff; }
 
     /* --- DASHBOARD専用レイアウト --- */
     #dashboard.active { display: flex !important; flex-direction: column; height: 100vh; background-color: #e2e8e3; overflow: hidden; }
     body.dark-mode #dashboard { background-color: #121412; }
-
     .bi-header { height: 60px; display: flex; align-items: center; padding: 0 20px; background: #2d4031; color: white; flex-shrink: 0; }
     .bi-container { flex: 1; display: flex; padding: 15px; gap: 15px; overflow: hidden; }
     .bi-left-col { width: 300px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
     .bi-main-col { flex: 1.2; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
     .bi-right-col { width: 280px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-
-    /* KPIカード */
     .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 5px; }
     .kpi-card { background: #6b8f71; color: white; padding: 8px 4px; border-radius: 12px; text-align: center; }
     .kpi-card .val { font-size: 14px; font-weight: 900; }
     .kpi-card .unit { font-size: 10px; opacity: 0.8; }
-
-    /* チャート内アイコン */
     .chart-wrapper { position: relative; flex: 1; min-height: 80px; }
     .chart-icon-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #6b8f71; font-size: 16px; pointer-events: none; }
-
-    /* タブ */
     .machine-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
     .tab-btn { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; white-space: nowrap; cursor: pointer; }
-    .tab-btn.active { background: #2d4031; color: white; shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .tab-btn.active { background: #2d4031; color: white; }
     .tab-btn.inactive { background: white; color: #6b8f71; }
 
     @media (max-width: 1024px) {
@@ -70,7 +62,7 @@
   <nav class="space-y-2">
     <button onclick="switchView('inputView')" class="w-full text-left p-4 hover:bg-gray-100 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-pen-to-square mr-3"></i>ログ入力</button>
     <button onclick="switchView('todayView')" class="w-full text-left p-4 hover:bg-gray-100 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-calendar-day mr-3"></i>本日の稼働状況</button>
-    <button onclick="switchView('historyView')" class="w-full text-left p-4 hover:bg-gray-100 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-magnifying-glass mr-3"></i>稼働履歴</button>
+    <button onclick="switchView('historyView')" class="w-full text-left p-4 hover:bg-gray-100 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-magnifying-glass mr-3"></i>稼働履歴・検索</button>
     <button onclick="switchView('dashboard')" class="w-full text-left p-4 hover:bg-gray-100 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-chart-line mr-3"></i>DASHBOARD</button>
     <button onclick="toggleDarkMode()" class="w-full text-left p-4 hover:bg-gray-100 rounded-lg font-bold text-[#6b8f71] flex items-center"><i class="fa-solid fa-moon mr-3"></i>モード切替</button>
   </nav>
@@ -86,19 +78,38 @@
   <div id="inputView" class="view active px-4 max-w-xl mx-auto pb-10">
     <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label><select id="machineSelect" class="w-full p-3 border rounded-lg bg-white outline-none"></select></div>
     <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">作業日</label><input type="date" id="workDate" class="w-full p-3 border rounded-lg outline-none" /></div>
-    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">オペレーター</label><select id="operatorSelect" class="w-full p-3 border rounded-lg outline-none"><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option><option>その他</option></select></div>
+    <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">オペレーター</label>
+      <select id="operatorSelect" class="w-full p-3 border rounded-lg outline-none">
+        <option value="">選択してください</option><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option><option>その他</option>
+      </select>
+    </div>
     <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">種別</label><select id="categorySelect" class="w-full p-3 border rounded-lg outline-none"><option value="">選択してください</option><option value="水稲">水稲</option><option value="そば">そば</option><option value="保全会">保全会</option><option value="小規模工事">小規模工事</option></select></div>
     <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">作業内容</label><select id="taskSelect" class="w-full p-3 border rounded-lg outline-none"></select></div>
-    <div class="card"><div class="flex space-x-4"><div><label class="block text-xs font-bold text-gray-400 mb-1">稼働前</label><input type="number" id="hourBefore" class="w-full p-3 border rounded-lg" step="0.1" /></div><div><label class="block text-xs font-bold text-gray-400 mb-1">稼働後</label><input type="number" id="hourAfter" class="w-full p-3 border rounded-lg" step="0.1" /></div></div></div>
+    <div class="card">
+      <div class="flex space-x-4">
+        <div class="flex-1"><label class="block text-xs font-bold text-gray-400 mb-1">稼働前</label><input type="number" id="hourBefore" class="w-full p-3 border rounded-lg" step="0.1" /></div>
+        <div class="flex-1"><label class="block text-xs font-bold text-gray-400 mb-1">稼働後</label><input type="number" id="hourAfter" class="w-full p-3 border rounded-lg" step="0.1" /></div>
+      </div>
+    </div>
     <div id="hourDiffDisplay" class="text-right font-black text-[#6b8f71] mb-6 text-xl">稼働時間: 0.0 h</div>
     <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">給油量 (L)</label><input type="number" id="fuelAmount" class="w-full p-3 border rounded-lg" placeholder="給油した場合のみ" /></div>
     <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">メモ</label><textarea id="memoInput" class="w-full p-3 border rounded-lg" rows="2"></textarea></div>
     <button id="saveBtn" class="w-full bg-[#6b8f71] text-white p-4 rounded-xl font-bold shadow-lg">ログを保存する</button>
   </div>
 
-  <div id="todayView" class="view px-4 max-w-xl mx-auto"><h2 class="text-xl font-bold text-[#6b8f71] mb-4">本日の稼働状況</h2><div id="todayLogList" class="space-y-4"></div></div>
-  <div id="historyView" class="view px-4 max-w-xl mx-auto">
-    <div class="flex justify-between items-center mb-4"><h2 class="text-xl font-bold text-[#6b8f71]">稼働履歴</h2><div id="historyTotalHours" class="text-sm font-black opacity-60">合計: 0.0 h</div></div>
+  <div id="todayView" class="view px-4 max-w-xl mx-auto pb-10">
+    <h2 class="text-xl font-bold text-[#6b8f71] mb-4">本日の稼働状況</h2>
+    <div id="todayLogList" class="space-y-4"></div>
+  </div>
+
+  <div id="historyView" class="view px-4 max-w-xl mx-auto pb-10">
+    <div class="flex justify-between items-center mb-4"><h2 class="text-xl font-bold text-[#6b8f71]">稼働履歴・検索</h2><div id="historyTotalHours" class="text-sm font-black opacity-60">合計: 0.0 h</div></div>
+    <div class="card grid grid-cols-2 gap-2 text-sm">
+      <input type="month" id="filterMonth" class="p-2 border rounded-lg">
+      <select id="filterMachine" class="p-2 border rounded-lg"><option value="">すべての機械</option></select>
+      <select id="filterOperator" class="p-2 border rounded-lg"><option value="">すべての担当</option><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option></select>
+      <button onclick="loadLogs('historyLogList', false)" class="bg-[#6b8f71] text-white rounded-lg font-bold">検索</button>
+    </div>
     <div id="historyLogList" class="space-y-4"></div>
   </div>
 
@@ -110,18 +121,9 @@
     </div>
     <div class="bi-container">
       <div class="bi-left-col">
-        <div class="card flex-1 flex flex-col m-0">
-          <p class="text-[10px] font-bold text-[#6b8f71] mb-1">CROP SHARE</p>
-          <div class="chart-wrapper"><canvas id="categoryShareChart"></canvas><i class="fa-solid fa-wheat-awn chart-icon-center"></i></div>
-        </div>
-        <div class="card flex-1 flex flex-col m-0">
-          <p class="text-[10px] font-bold text-[#6b8f71] mb-1">TASK ANALYSIS</p>
-          <div class="chart-wrapper"><canvas id="taskShareChart"></canvas><i class="fa-solid fa-gears chart-icon-center"></i></div>
-        </div>
-        <div class="card flex-1 flex flex-col m-0">
-          <p class="text-[10px] font-bold text-[#6b8f71] mb-1">OPERATOR SHARE</p>
-          <div class="chart-wrapper"><canvas id="operatorShareChart"></canvas><i class="fa-solid fa-user chart-icon-center"></i></div>
-        </div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">CROP SHARE</p><div class="chart-wrapper"><canvas id="categoryShareChart"></canvas><i class="fa-solid fa-wheat-awn chart-icon-center"></i></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">TASK ANALYSIS</p><div class="chart-wrapper"><canvas id="taskShareChart"></canvas><i class="fa-solid fa-gears chart-icon-center"></i></div></div>
+        <div class="card flex-1 flex flex-col m-0"><p class="text-[10px] font-bold text-[#6b8f71] mb-1">OPERATOR SHARE</p><div class="chart-wrapper"><canvas id="operatorShareChart"></canvas><i class="fa-solid fa-user chart-icon-center"></i></div></div>
       </div>
       <div class="bi-main-col">
         <div id="machineTabs" class="machine-tabs"></div>
@@ -167,7 +169,7 @@
   let currentMachineId = 'all';
   window.charts = {};
 
-  // メニュー
+  // --- 共通UI操作 ---
   function openMenu() { document.getElementById("sideMenu").style.left = "0px"; document.getElementById("overlay").style.display = "block"; }
   function closeMenu() { document.getElementById("sideMenu").style.left = "-280px"; document.getElementById("overlay").style.display = "none"; }
   document.getElementById("closeMenuBtn").onclick = closeMenu;
@@ -183,54 +185,119 @@
     if (id === 'historyView') loadLogs("historyLogList", false);
   }
 
+  // --- 初期化 ---
   document.addEventListener("DOMContentLoaded", async () => {
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     const { data: machines } = await client.from("machines").select("*").order("name");
     allMachines = machines || [];
-    const select = document.getElementById("machineSelect");
-    select.innerHTML = '<option value="">選択してください</option>' + allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
-    const tabs = document.getElementById("machineTabs");
-    tabs.innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体分析</button>` + 
+    
+    // 各セレクトボックスに機械をセット
+    const mSelect = document.getElementById("machineSelect");
+    mSelect.innerHTML = '<option value="">選択してください</option>' + allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+    document.getElementById("filterMachine").innerHTML = '<option value="">すべての機械</option>' + allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+    
+    // ダッシュボードのタブ
+    document.getElementById("machineTabs").innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体分析</button>` + 
                      allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
+
     const now = new Date();
     document.getElementById("workDate").value = new Date(now.getTime() + 9*60*60*1000).toISOString().split('T')[0];
+    document.getElementById("filterMonth").value = document.getElementById("workDate").value.substring(0, 7);
   });
 
-  // 作業内容連動
-  const tasks = { "水稲": ["あぜ塗り", "起耕", "粗代", "本代", "ロール運搬"], "そば": ["起耕", "播種"], "保全会": ["ハンマーモア", "スライドモア"], "小規模工事": ["整地", "掘削"] };
+  // --- ログ入力ロジック ---
+  // 機械選択時に最新アワーを取得
+  document.getElementById("machineSelect").onchange = async function() {
+    if (!this.value) return;
+    const { data } = await client.from("hour_logs").select("end_hour").eq("machine_id", this.value).order("date", {ascending:false}).order("end_hour", {ascending:false}).limit(1);
+    document.getElementById("hourBefore").value = (data && data.length > 0) ? data[0].end_hour : 0;
+    calcDiff();
+  };
+
+  const tasks = { "水稲": ["あぜ塗り", "起耕", "粗代", "本代", "ロール運搬", "代かき", "田植え", "溝切り", "草刈り", "防除", "追肥", "稲刈り", "秋耕"], "そば": ["起耕", "播種", "防除", "刈取り"], "保全会": ["ハンマーモア", "スライドモア", "草刈り"], "小規模工事": ["整地", "掘削", "運搬"] };
   document.getElementById("categorySelect").onchange = function() {
     document.getElementById("taskSelect").innerHTML = (tasks[this.value] || ["その他"]).map(t => `<option value="${t}">${t}</option>`).join("");
   };
 
-  document.getElementById("hourAfter").oninput = () => {
+  function calcDiff() {
     const diff = (parseFloat(document.getElementById("hourAfter").value) || 0) - (parseFloat(document.getElementById("hourBefore").value) || 0);
-    document.getElementById("hourDiffDisplay").textContent = `稼働時間: ${diff.toFixed(1)} h`;
-  };
+    document.getElementById("hourDiffDisplay").textContent = `稼働時間: ${diff > 0 ? diff.toFixed(1) : "0.0"} h`;
+  }
+  document.getElementById("hourAfter").oninput = calcDiff;
+  document.getElementById("hourBefore").oninput = calcDiff;
 
   document.getElementById("saveBtn").onclick = async () => {
     const mId = document.getElementById("machineSelect").value;
+    const op = document.getElementById("operatorSelect").value;
+    const hB = parseFloat(document.getElementById("hourBefore").value);
     const hA = parseFloat(document.getElementById("hourAfter").value);
-    if (!mId || isNaN(hA)) return alert("機械と稼働後アワーは必須です");
+    if (!mId || !op || isNaN(hA)) return alert("機械、オペレーター、稼働後アワーは必須です");
+    
     const { error } = await client.from("hour_logs").insert([{
-      machine_id: mId, date: document.getElementById("workDate").value, operator: document.getElementById("operatorSelect").value,
+      machine_id: mId, date: document.getElementById("workDate").value, operator: op,
       category: document.getElementById("categorySelect").value, task: document.getElementById("taskSelect").value,
-      start_hour: parseFloat(document.getElementById("hourBefore").value) || 0, end_hour: hA,
+      start_hour: hB || 0, end_hour: hA,
       fuel_amount: parseFloat(document.getElementById("fuelAmount").value) || 0, memo: document.getElementById("memoInput").value
     }]);
     if (!error) { document.getElementById("savePopup").classList.remove("hidden"); setTimeout(() => location.reload(), 1200); }
+    else { alert("エラー: " + error.message); }
   };
 
-  // DASHBOARD ロジック
+  // --- 履歴表示・検索ロジック ---
+  async function loadLogs(elId, todayOnly) {
+    const list = document.getElementById(elId);
+    list.innerHTML = "<p class='text-center py-10 opacity-50'>読み込み中...</p>";
+    
+    let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
+    
+    if (todayOnly) {
+      query = query.eq("date", new Date().toISOString().split('T')[0]);
+    } else {
+      const month = document.getElementById("filterMonth").value;
+      const mId = document.getElementById("filterMachine").value;
+      const op = document.getElementById("filterOperator").value;
+      if (month) query = query.gte("date", `${month}-01`).lte("date", `${month}-31`);
+      if (mId) query = query.eq("machine_id", mId);
+      if (op) query = query.eq("operator", op);
+    }
+
+    const { data, error } = await query;
+    if(error || !data || data.length === 0) {
+      list.innerHTML = "<p class='text-center py-10 opacity-50'>データがありません</p>";
+      if(!todayOnly) document.getElementById("historyTotalHours").innerText = "合計: 0.0 h";
+      return;
+    }
+    
+    list.innerHTML = data.map(l => `
+      <div class="card border-l-4 border-[#6b8f71] mb-4">
+        <div class="flex justify-between items-start">
+          <b>${l.date} - ${l.machines?.name || '不明'}</b>
+          <span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span>
+        </div>
+        <p class="text-sm opacity-70 mt-1">${l.operator} | ${l.category} - ${l.task}</p>
+        ${l.memo ? `<p class="text-[11px] bg-gray-50 dark:bg-black/20 p-2 mt-2 rounded">📝 ${l.memo}</p>` : ''}
+      </div>
+    `).join("");
+
+    if(!todayOnly) {
+      const total = data.reduce((s,l) => s + (l.end_hour - l.start_hour), 0);
+      document.getElementById("historyTotalHours").innerText = `合計: ${total.toFixed(1)} h`;
+    }
+  }
+
+  // --- DASHBOARD ロジック ---
   async function renderDashboard(mId) {
     currentMachineId = mId;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.className = "tab-btn inactive");
-    document.getElementById(`tab-${mId}`).className = "tab-btn active";
-    document.getElementById("currentViewLabel").innerText = mId === 'all' ? 'All Machines' : allMachines.find(m => m.id == mId).name;
+    const targetTab = document.getElementById(`tab-${mId}`);
+    if(targetTab) targetTab.className = "tab-btn active";
+    document.getElementById("currentViewLabel").innerText = mId === 'all' ? 'All Machines' : allMachines.find(m => m.id == mId)?.name;
 
     let query = client.from("hour_logs").select("*");
     if (mId !== 'all') query = query.eq("machine_id", mId);
     const { data: logs } = await query;
     if(!logs) return;
+    
     const logs26 = logs.filter(l => l.date.startsWith("2026"));
     const logs25 = logs.filter(l => l.date.startsWith("2025"));
 
@@ -247,7 +314,7 @@
       cat[l.category || "他"] = (cat[l.category || "他"] || 0) + h;
       tsk[l.task || "他"] = (tsk[l.task || "他"] || 0) + h;
       opr[l.operator || "他"] = (opr[l.operator || "他"] || 0) + h;
-      monthly[parseInt(l.date.split("-")[1])-1] += h;
+      if(l.date.split("-")[1]) monthly[parseInt(l.date.split("-")[1])-1] += h;
     });
     drawCharts(cat, tsk, opr, monthly, totalH, logs25);
   }
@@ -268,16 +335,6 @@
     const ratio = Math.min(100, (totalH / lastH) * 100);
     window.charts.gauge = new Chart(document.getElementById('yearComparisonGauge'), { type:'doughnut', data:{datasets:[{data:[ratio, 100-ratio], backgroundColor:[color, isDark?'#333':'#eee'], borderWidth:0}]}, options:{rotation:-90, circumference:180, cutout:'80%', maintainAspectRatio:false, plugins:{legend:{display:false}}}});
     document.getElementById("detailCompareValue").innerText = ratio.toFixed(1) + "%";
-  }
-
-  async function loadLogs(elId, todayOnly) {
-    const list = document.getElementById(elId);
-    let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
-    if (todayOnly) query = query.eq("date", new Date().toISOString().split('T')[0]);
-    const { data } = await query;
-    if(!data) return;
-    list.innerHTML = data.map(l => `<div class="card border-l-4 border-[#6b8f71] mb-4"><b>${l.date} - ${l.machines?.name}</b><p class="text-sm opacity-70">${l.operator} | ${l.task} (${(l.end_hour-l.start_hour).toFixed(1)}h)</p></div>`).join("");
-    if(!todayOnly) document.getElementById("historyTotalHours").innerText = `合計: ${data.reduce((s,l)=>s+(l.end_hour-l.start_hour), 0).toFixed(1)} h`;
   }
 
   function toggleDarkMode() {
