@@ -21,26 +21,31 @@
     body.dark-mode #sideMenu { background-color: #1a1a1a; color: #e0e0e0; }
     #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
 
-    /* メニュー項目のホバー色修正 */
     .menu-item { width: 100%; text-align: left; padding: 1rem; border-radius: 0.5rem; font-weight: bold; color: #6b8f71; display: flex; align-items: center; transition: background-color 0.2s; }
-    
-    /* ライトモードのホバー: 優しいグリーン */
     .menu-item:hover { background-color: #f0f4f0; } 
-    /* ダークモードのホバー: 深いグレーグリーン */
     body.dark-mode .menu-item:hover { background-color: #2d352d; }
 
-    /* カード・入力項目（ダークモード対応） */
-    .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 16px; }
+    /* ヘッダー・トラクターアイコンサイズ調整 */
+    .header-icon { font-size: 64px; color: #6b8f71; margin-bottom: 8px; transition: font-size 0.3s; }
+    @media (max-width: 640px) { .header-icon { font-size: 40px; } }
+
+    /* 区切り線 */
+    .section-title { font-size: 1.25rem; font-weight: bold; color: #6b8f71; display: flex; align-items: center; gap: 10px; padding-bottom: 8px; border-bottom: 2px solid #6b8f71; margin-bottom: 16px; }
+
+    /* カード・入力項目 */
+    .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 16px; position: relative; }
     body.dark-mode .card { background: #2d2d2d; color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 
     input, select, textarea { background-color: white; color: #3a3a3a; border: 1px solid #ddd; transition: background-color 0.2s, color 0.2s; }
     body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background-color: #3d3d3d; color: #ffffff; border-color: #555; }
-    select { appearance: none; -webkit-appearance: none; }
 
-    /* ボタン共通 */
+    /* ボタン */
     .btn-main { background-color: #6b8f71; color: white; padding: 14px; border-radius: 12px; text-align: center; font-weight: bold; width: 100%; display: block; }
-    .btn-sub { background-color: #6b8f71; color: white; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; width: 100%; margin-top: 20px; display: block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    body.dark-mode .btn-sub { background-color: #4a5d44; }
+    .btn-sub { background-color: #6b8f71; color: white; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; width: 100%; margin-top: 20px; display: block; }
+    
+    /* 削除ボタン */
+    .delete-btn { color: #e57373; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s; }
+    .delete-btn:hover { background: rgba(229, 115, 115, 0.1); }
 
     /* --- DASHBOARDレイアウト --- */
     #dashboard.active { display: flex !important; flex-direction: column; height: 100vh; background-color: #e2e8e3; overflow: hidden; }
@@ -54,7 +59,6 @@
     .tab-btn { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; white-space: nowrap; cursor: pointer; }
     .tab-btn.active { background: #2d4031; color: white; }
     .tab-btn.inactive { background: white; color: #6b8f71; }
-    body.dark-mode .tab-btn.inactive { background: #3d3d3d; color: #a3b18a; }
 
     @media (max-width: 1024px) {
       #dashboard.active { overflow-y: auto; height: auto; }
@@ -84,7 +88,7 @@
 <div id="mainContainer">
   <header id="pageHeader" class="flex flex-col items-center justify-center py-8 relative">
     <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i class="fa-solid fa-bars"></i></button>
-    <i class="fa-solid fa-tractor text-6xl text-[#6b8f71] mb-2"></i>
+    <i class="fa-solid fa-tractor header-icon"></i>
     <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 Tractor log</h1>
   </header>
 
@@ -111,22 +115,24 @@
   </div>
 
   <div id="todayView" class="view px-4 max-w-xl mx-auto pb-10">
-    <h2 class="text-xl font-bold text-[#6b8f71] mb-4">本日の稼働状況</h2>
+    <div class="section-title"><i class="fa-solid fa-calendar-day"></i> 本日の稼働状況</div>
     <div id="todayLogList" class="space-y-4"></div>
     <button onclick="switchView('inputView')" class="btn-sub"><i class="fa-solid fa-arrow-left mr-2"></i>TOPに戻る</button>
   </div>
 
   <div id="historyView" class="view px-4 max-w-xl mx-auto pb-10">
-    <div class="flex justify-between items-center mb-4"><h2 class="text-xl font-bold text-[#6b8f71]">稼働履歴・検索</h2><div id="historyTotalHours" class="text-sm font-black opacity-60">合計: 0.0 h</div></div>
+    <div class="flex justify-between items-center">
+      <div class="section-title border-none mb-0"><i class="fa-solid fa-magnifying-glass"></i> 稼働履歴・検索</div>
+      <div id="historyTotalHours" class="text-sm font-black opacity-60">合計: 0.0 h</div>
+    </div>
+    <div class="w-full h-[2px] bg-[#6b8f71] mb-4"></div>
     <div class="card space-y-2 text-sm">
       <div class="grid grid-cols-2 gap-2">
         <input type="month" id="filterMonth" class="p-2 border rounded-lg w-full">
         <select id="filterMachine" class="p-2 border rounded-lg w-full"><option value="">すべての機械</option></select>
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <select id="filterOperator" class="p-2 border rounded-lg w-full">
-          <option value="">すべての担当</option><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option>
-        </select>
+        <select id="filterOperator" class="p-2 border rounded-lg w-full"><option value="">すべての担当</option><option>阿曽 千一</option><option>阿曽 右貢</option><option>菅原 亜美</option><option>土井 達也</option><option>阿曽 文平</option><option>田中 武志</option><option>赤塚 かおり</option><option>土門 元義</option></select>
         <select id="filterTask" class="p-2 border rounded-lg w-full"><option value="">すべての作業内容</option></select>
       </div>
       <button onclick="loadLogs('historyLogList', false)" class="btn-main py-2">検索を実行</button>
@@ -252,6 +258,16 @@
     if (!error) { document.getElementById("savePopup").classList.remove("hidden"); setTimeout(() => location.reload(), 1200); }
   };
 
+  async function deleteLog(id) {
+    if (!confirm("このログを削除してもよろしいですか？")) return;
+    const { error } = await client.from("hour_logs").delete().eq("id", id);
+    if (!error) {
+      alert("削除しました");
+      loadLogs("todayLogList", true);
+      loadLogs("historyLogList", false);
+    }
+  }
+
   async function loadLogs(elId, todayOnly) {
     const list = document.getElementById(elId);
     list.innerHTML = "<p class='text-center py-10 opacity-50'>読み込み中...</p>";
@@ -272,7 +288,19 @@
       if(!todayOnly) document.getElementById("historyTotalHours").innerText = "合計: 0.0 h";
       return;
     }
-    list.innerHTML = data.map(l => `<div class="card border-l-4 border-[#6b8f71] mb-4"><div class="flex justify-between items-start"><b class="text-sm">${l.date} - ${l.machines?.name}</b><span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span></div><p class="text-xs opacity-70 mt-1">${l.operator} | ${l.task}</p>${l.memo ? `<p class="text-[10px] mt-2 italic opacity-60">📝 ${l.memo}</p>` : ''}</div>`).join("");
+    list.innerHTML = data.map(l => `
+      <div class="card border-l-4 border-[#6b8f71] mb-4">
+        <div class="flex justify-between items-start">
+          <b class="text-sm">${l.date} - ${l.machines?.name}</b>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-trash-can delete-btn text-xs" onclick="deleteLog(${l.id})"></i>
+            <span class="bg-[#6b8f71]/10 text-[#6b8f71] text-[10px] px-2 py-1 rounded font-bold">${(l.end_hour-l.start_hour).toFixed(1)}h</span>
+          </div>
+        </div>
+        <p class="text-xs opacity-70 mt-1">${l.operator} | ${l.task}</p>
+        ${l.memo ? `<p class="text-[10px] mt-2 italic opacity-60">📝 ${l.memo}</p>` : ''}
+      </div>
+    `).join("");
     if(!todayOnly) {
       const total = data.reduce((s,l) => s + (l.end_hour - l.start_hour), 0);
       document.getElementById("historyTotalHours").innerText = `合計: ${total.toFixed(1)} h`;
