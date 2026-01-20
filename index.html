@@ -386,6 +386,7 @@
       overflow-y: auto;
       height: 100vh;
     }
+
   </style>
 </head>
 
@@ -583,237 +584,237 @@
           </div>
         </div>
       </div>
+    </div>
 
+    <div id="todayView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg"><i
+          class="fa-solid fa-calendar-day"></i> 本日の稼働状況</div>
+      <div id="todayLogList" class="space-y-4"></div>
+      <button onclick="switchView('inputView')" class="btn-sub">TOPに戻る</button>
+    </div>
 
-      <div id="todayView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
-        <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg"><i
-            class="fa-solid fa-calendar-day"></i> 本日の稼働状況</div>
-        <div id="todayLogList" class="space-y-4"></div>
-        <button onclick="switchView('inputView')" class="btn-sub">TOPに戻る</button>
+    <div id="historyView" class="view px-4 py-6 max-w-3xl mx-auto pb-10">
+
+      <div
+        class="flex items-center gap-2 mb-6 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-3 text-lg w-full">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>稼働履歴</span>
       </div>
 
-      <div id="historyView" class="view px-4 py-6 max-w-3xl mx-auto pb-10">
-
-        <div
-          class="flex items-center gap-2 mb-6 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-3 text-lg w-full">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <span>稼働履歴</span>
-        </div>
-
-        <div class="card space-y-3 text-sm mb-6">
-          <div class="grid grid-cols-2 gap-3">
-            <div class="flex flex-col gap-1">
-              <label class="text-[10px] text-gray-400 font-bold ml-1">対象月</label>
-              <input type="month" id="filterMonth" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
-            </div>
-            <div class="flex flex-col gap-1">
-              <label class="text-[10px] text-gray-400 font-bold ml-1">機械</label>
-              <select id="filterMachine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
-                <option value="">すべての機械</option>
-              </select>
-            </div>
+      <div class="card space-y-3 text-sm mb-6">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-gray-400 font-bold ml-1">対象月</label>
+            <input type="month" id="filterMonth" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
           </div>
-          <div class="grid grid-cols-2 gap-3">
-            <select id="filterOperator" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
-              <option value="">全オペレーター</option>
-            </select>
-            <select id="filterCategory" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
-              <option value="">全種別</option>
-              <option>水稲</option>
+          <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-gray-400 font-bold ml-1">機械</label>
+            <select id="filterMachine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+              <option value="">すべての機械</option>
             </select>
           </div>
-          <button onclick="loadLogs('historyLogList', false)" class="btn-main mt-2 shadow-md">
-            検索を実行
-          </button>
         </div>
-
-        <div class="flex justify-end items-center mb-4 px-1">
-          <div id="historyTotalHours"
-            class="text-sm font-black text-[#6b8f71] opacity-80 bg-white px-4 py-2 rounded-full shadow-sm">
-            合計: 0.0 h
-          </div>
+        <div class="grid grid-cols-2 gap-3">
+          <select id="filterOperator" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+            <option value="">全オペレーター</option>
+          </select>
+          <select id="filterCategory" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+            <option value="">全種別</option>
+            <option>水稲</option>
+          </select>
         </div>
-
-        <div id="historyLogList" class="space-y-4"></div>
-
-        <button onclick="switchView('inputView')" class="btn-sub mt-8">
-          <i class="fa-solid fa-house mr-2"></i>TOPに戻る
+        <button onclick="loadLogs('historyLogList', false)" class="btn-main mt-2 shadow-md">
+          検索を実行
         </button>
+      </div>
+
+      <div class="flex justify-end items-center mb-4 px-1">
+        <div id="historyTotalHours"
+          class="text-sm font-black text-[#6b8f71] opacity-80 bg-white px-4 py-2 rounded-full shadow-sm">
+          合計: 0.0 h
+        </div>
+      </div>
+
+      <div id="historyLogList" class="space-y-4"></div>
+
+      <button onclick="switchView('inputView')" class="btn-sub mt-8">
+        <i class="fa-solid fa-house mr-2"></i>TOPに戻る
+      </button>
+    </div>
+  </div>
+
+  <div id="maintenanceMachineListView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+
+    <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
+      <i class="fa-solid fa-wrench"></i> メンテナンス記録
+    </div>
+
+    <div id="machineListContainer" class="grid grid-cols-1 gap-4">
+      <!-- ここに機械カードが JS で追加される -->
+    </div>
+
+    <button onclick="switchView('inputView')" class="btn-sub mt-6">TOPに戻る</button>
+  </div>
+
+  <div id="repairView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
+
+    <button onclick="switchView('invoiceOCRView')" class="btn-main w-full mb-6">
+      修理の登録</button>
+
+    <!-- 累計修理費 -->
+    <div class="text-center my-6">
+      <div class="text-sm text-gray-500">累計修理費</div>
+      <div id="totalRepairCost" class="text-3xl font-bold text-[#6b8f71]">¥ 0</div>
+    </div>
+
+    <!-- 年ごとの修理費 -->
+    <h2 class="font-bold text-lg mt-6 mb-2">年ごとの修理費</h2>
+    <div id="yearlyRepairContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+
+    <!-- 機械ごとの修理費 -->
+    <h2 class="font-bold text-lg mt-6 mb-2">機械ごとの修理費</h2>
+    <div id="machineRepairContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+
+    <!-- 最近の修理履歴 -->
+    <h2 class="font-bold text-lg mt-6 mb-2">最近の修理</h2>
+    <div id="recentRepairContainer" class="space-y-3"></div>
+
+  </div>
+
+  <div id="invoiceOCRView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
+
+    <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
+      <i class="fa-solid fa-screwdriver-wrench"></i> 修理履歴の登録
+    </div>
+
+    <!-- 請求書の読み取り -->
+    <div class="card">
+      <label class="block text-xs font-bold text-gray-400 mb-1">請求書・領収書の撮影</label>
+
+      <input type="file" id="invoiceImage" accept="image/*" capture="environment" class="hidden"
+        onchange="previewInvoice(this)">
+
+      <button onclick="document.getElementById('invoiceImage').click()"
+        class="w-full py-4 border-2 border-dashed border-[#6b8f71] rounded-lg text-[#6b8f71] flex flex-col items-center gap-2 hover:bg-[#f0f7f1] transition-colors">
+        <i class="fa-solid fa-camera text-2xl"></i>
+        <span class="text-sm font-bold">カメラを起動 / 画像を選択</span>
+      </button>
+
+      <div id="invoicePreviewArea" class="mt-4 hidden text-center">
+        <img id="invoicePreviewImg" src="" class="w-full rounded-lg shadow-md mb-2">
+        <p class="text-[10px] text-gray-500">この画像を修理履歴として保存します</p>
       </div>
     </div>
 
-    <div id="maintenanceMachineListView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+    <!-- 自動入力される項目 -->
+    <div class="card">
+      <label class="block text-xs font-bold text-gray-400 mb-1">修理日</label>
+      <input type="date" id="repairDate" class="w-full p-3 rounded-lg">
+    </div>
 
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-wrench"></i> メンテナンス記録
+    <div class="card">
+      <label class="block text-xs font-bold text-gray-400 mb-1">店舗名</label>
+      <input type="text" id="repairShop" class="w-full p-3 rounded-lg">
+    </div>
+
+    <div class="card">
+      <label class="block text-xs font-bold text-gray-400 mb-1">金額</label>
+      <input type="number" id="repairCost" class="w-full p-3 rounded-lg">
+    </div>
+
+    <div class="card">
+      <label class="block text-xs font-bold text-gray-400 mb-1">メモ（OCR全文）</label>
+      <textarea id="repairMemo" class="w-full p-3 rounded-lg" rows="3"></textarea>
+    </div>
+
+    <button id="saveRepairBtn" class="btn-main">修理履歴を保存</button>
+    <button onclick="switchView('repairView')" class="btn-sub mt-4">修理履歴へ戻る</button>
+
+  </div>
+
+  <div id="maintenanceDetailView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+
+    <!-- タイトル（機械名は JS で差し替える） -->
+    <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
+      <i class="fa-solid fa-tractor"></i>
+      <span id="maintenanceMachineName">機械名</span>
+    </div>
+
+    <!-- メンテナンス進捗（チェックリスト） -->
+    <div class="card mb-4">
+      <p class="font-bold text-sm text-gray-500 mb-2">メンテナンス項目</p>
+      <div id="maintenanceChecklist" class="space-y-2">
+        <!-- JSで項目を追加 -->
+      </div>
+      <p id="maintenanceSummary" class="text-xs text-gray-400 mt-3">未完了: -- / --</p>
+    </div>
+
+    <!-- 作業履歴タイムライン -->
+    <div class="card mb-4">
+      <p class="font-bold text-sm text-gray-500 mb-2">作業履歴</p>
+      <div id="maintenanceTimeline" class="space-y-3 text-sm">
+        <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
+      </div>
+    </div>
+
+    <!-- 新規メンテナンス追加フォーム -->
+    <div class="card mb-4">
+      <p class="font-bold text-sm text-gray-500 mb-2">メンテナンスを追加</p>
+
+      <label class="block text-xs font-bold text-gray-400 mb-1">項目名</label>
+      <input id="newMaintenanceItem" type="text" class="w-full p-2 rounded-lg mb-3">
+
+      <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
+      <input id="newMaintenanceOperator" type="text" class="w-full p-2 rounded-lg mb-3">
+
+      <label class="block text-xs font-bold text-gray-400 mb-1">状態</label>
+      <select id="newMaintenanceStatus" class="w-full p-2 rounded-lg mb-3">
+        <option value="done">完了</option>
+        <option value="progress">途中</option>
+      </select>
+
+      <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
+      <textarea id="newMaintenanceMemo" class="w-full p-2 rounded-lg mb-3" rows="2"></textarea>
+
+      <button onclick="saveMaintenanceRecord()" class="btn-main w-full">追加する</button>
+    </div>
+
+    <button onclick="switchView('maintenanceMachineListView')" class="btn-sub w-full">
+      <i class="fa-solid fa-arrow-left mr-2"></i>機械一覧に戻る
+    </button>
+
+  </div>
+
+  <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+    <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
+      <i class="fa-solid fa-code-branch"></i> バージョン情報
+    </div>
+
+    <div class="card text-sm leading-relaxed space-y-3">
+      <p><span class="font-bold">バージョン:</span> 1.0.0</p>
+      <p><span class="font-bold">最終更新日:</span> 2026-01-19</p>
+
+      <div>
+        <p class="font-bold text-[#6b8f71] mb-1">更新内容</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>初期リリース</li>
+        </ul>
       </div>
 
-      <div id="machineListContainer" class="grid grid-cols-1 gap-4">
-        <!-- ここに機械カードが JS で追加される -->
+      <div>
+        <p class="font-bold text-[#6b8f71] mb-1">使用技術</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>HTML / CSS / JavaScript</li>
+          <li>Tailwind CSS</li>
+          <li>Supabase</li>
+          <li>Chart.js</li>
+          <li>GitHub Pages</li>
+        </ul>
       </div>
 
       <button onclick="switchView('inputView')" class="btn-sub mt-6">TOPに戻る</button>
     </div>
-
-    <div id="repairView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
-
-      <button onclick="switchView('invoiceOCRView')" class="btn-main w-full mb-6">
-        修理の登録</button>
-
-      <!-- 累計修理費 -->
-      <div class="text-center my-6">
-        <div class="text-sm text-gray-500">累計修理費</div>
-        <div id="totalRepairCost" class="text-3xl font-bold text-[#6b8f71]">¥ 0</div>
-      </div>
-
-      <!-- 年ごとの修理費 -->
-      <h2 class="font-bold text-lg mt-6 mb-2">年ごとの修理費</h2>
-      <div id="yearlyRepairContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
-
-      <!-- 機械ごとの修理費 -->
-      <h2 class="font-bold text-lg mt-6 mb-2">機械ごとの修理費</h2>
-      <div id="machineRepairContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
-
-      <!-- 最近の修理履歴 -->
-      <h2 class="font-bold text-lg mt-6 mb-2">最近の修理</h2>
-      <div id="recentRepairContainer" class="space-y-3"></div>
-
-    </div>
-
-    <div id="invoiceOCRView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
-
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-screwdriver-wrench"></i> 修理履歴の登録
-      </div>
-
-      <!-- 請求書の読み取り -->
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">請求書・領収書の撮影</label>
-
-        <input type="file" id="invoiceImage" accept="image/*" capture="environment" class="hidden"
-          onchange="previewInvoice(this)">
-
-        <button onclick="document.getElementById('invoiceImage').click()"
-          class="w-full py-4 border-2 border-dashed border-[#6b8f71] rounded-lg text-[#6b8f71] flex flex-col items-center gap-2 hover:bg-[#f0f7f1] transition-colors">
-          <i class="fa-solid fa-camera text-2xl"></i>
-          <span class="text-sm font-bold">カメラを起動 / 画像を選択</span>
-        </button>
-
-        <div id="invoicePreviewArea" class="mt-4 hidden text-center">
-          <img id="invoicePreviewImg" src="" class="w-full rounded-lg shadow-md mb-2">
-          <p class="text-[10px] text-gray-500">この画像を修理履歴として保存します</p>
-        </div>
-      </div>
-
-      <!-- 自動入力される項目 -->
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">修理日</label>
-        <input type="date" id="repairDate" class="w-full p-3 rounded-lg">
-      </div>
-
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">店舗名</label>
-        <input type="text" id="repairShop" class="w-full p-3 rounded-lg">
-      </div>
-
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">金額</label>
-        <input type="number" id="repairCost" class="w-full p-3 rounded-lg">
-      </div>
-
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">メモ（OCR全文）</label>
-        <textarea id="repairMemo" class="w-full p-3 rounded-lg" rows="3"></textarea>
-      </div>
-
-      <button id="saveRepairBtn" class="btn-main">修理履歴を保存</button>
-      <button onclick="switchView('repairView')" class="btn-sub mt-4">修理履歴へ戻る</button>
-
-    </div>
-
-    <div id="maintenanceDetailView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
-
-      <!-- タイトル（機械名は JS で差し替える） -->
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-tractor"></i>
-        <span id="maintenanceMachineName">機械名</span>
-      </div>
-
-      <!-- メンテナンス進捗（チェックリスト） -->
-      <div class="card mb-4">
-        <p class="font-bold text-sm text-gray-500 mb-2">メンテナンス項目</p>
-        <div id="maintenanceChecklist" class="space-y-2">
-          <!-- JSで項目を追加 -->
-        </div>
-        <p id="maintenanceSummary" class="text-xs text-gray-400 mt-3">未完了: -- / --</p>
-      </div>
-
-      <!-- 作業履歴タイムライン -->
-      <div class="card mb-4">
-        <p class="font-bold text-sm text-gray-500 mb-2">作業履歴</p>
-        <div id="maintenanceTimeline" class="space-y-3 text-sm">
-          <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
-        </div>
-      </div>
-
-      <!-- 新規メンテナンス追加フォーム -->
-      <div class="card mb-4">
-        <p class="font-bold text-sm text-gray-500 mb-2">メンテナンスを追加</p>
-
-        <label class="block text-xs font-bold text-gray-400 mb-1">項目名</label>
-        <input id="newMaintenanceItem" type="text" class="w-full p-2 rounded-lg mb-3">
-
-        <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
-        <input id="newMaintenanceOperator" type="text" class="w-full p-2 rounded-lg mb-3">
-
-        <label class="block text-xs font-bold text-gray-400 mb-1">状態</label>
-        <select id="newMaintenanceStatus" class="w-full p-2 rounded-lg mb-3">
-          <option value="done">完了</option>
-          <option value="progress">途中</option>
-        </select>
-
-        <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
-        <textarea id="newMaintenanceMemo" class="w-full p-2 rounded-lg mb-3" rows="2"></textarea>
-
-        <button onclick="saveMaintenanceRecord()" class="btn-main w-full">追加する</button>
-      </div>
-
-      <button onclick="switchView('maintenanceMachineListView')" class="btn-sub w-full">
-        <i class="fa-solid fa-arrow-left mr-2"></i>機械一覧に戻る
-      </button>
-
-    </div>
-
-    <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-code-branch"></i> バージョン情報
-      </div>
-
-      <div class="card text-sm leading-relaxed space-y-3">
-        <p><span class="font-bold">バージョン:</span> 1.0.0</p>
-        <p><span class="font-bold">最終更新日:</span> 2026-01-19</p>
-
-        <div>
-          <p class="font-bold text-[#6b8f71] mb-1">更新内容</p>
-          <ul class="list-disc pl-5 space-y-1">
-            <li>初期リリース</li>
-          </ul>
-        </div>
-
-        <div>
-          <p class="font-bold text-[#6b8f71] mb-1">使用技術</p>
-          <ul class="list-disc pl-5 space-y-1">
-            <li>HTML / CSS / JavaScript</li>
-            <li>Tailwind CSS</li>
-            <li>Supabase</li>
-            <li>Chart.js</li>
-            <li>GitHub Pages</li>
-          </ul>
-        </div>
-
-        <button onclick="switchView('inputView')" class="btn-sub mt-6">TOPに戻る</button>
-      </div>
-    </div>
+  </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -839,14 +840,49 @@
     function closeModal() { document.getElementById("customModal").classList.remove("active"); }
 
     function switchView(id) {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.getElementById("pageHeader").style.display = (id === 'dashboard') ? 'none' : 'flex';
+      console.log("Switching to:", id); // どこに切り替えようとしているか確認
+
+      // 全てのビューからactiveを取り除く
+      document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('active');
+        v.style.display = 'none'; // 念のため非表示を確実に
+      });
+
+      // 対象のビューを取得
+      const targetView = document.getElementById(id);
+      if (targetView) {
+        targetView.classList.add('active');
+        targetView.style.display = 'block'; // 強制的に表示
+      } else {
+        console.error("エラー: ID '" + id + "' のビューが見つかりません。");
+      }
+
+      // ヘッダーの制御
+      const header = document.getElementById("pageHeader");
+      if (header) {
+        header.style.display = (id === 'dashboard') ? 'none' : 'flex';
+      }
+
       closeMenu();
-      if (id === 'dashboard') { setTimeout(() => renderDashboard('all'), 100); }
-      if (id === 'todayView') loadLogs("todayLogList", true);
-      if (id === 'historyView') loadLogs("historyLogList", false);
-      if (id === 'repairView') loadRepairDashboard();
+
+      // 各ページごとの読み込み処理
+      if (id === 'dashboard') {
+        setTimeout(() => renderDashboard('all'), 100);
+      }
+      if (id === 'todayView') {
+        console.log("本日ログ読込実行");
+        loadLogs("todayLogList", true);
+      }
+      if (id === 'historyView') {
+        console.log("履歴ログ読込実行");
+        loadLogs("historyLogList", false);
+      }
+      if (id === 'repairView') {
+        loadRepairDashboard();
+      }
+      if (id === 'maintenanceMachineListView') {
+        loadMachineList();
+      }
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
@@ -962,7 +998,7 @@
       }
     }
 
-    const tasksMap = { "水稲": ["あぜ塗り", "起耕", "粗代", "本代", "代かき", "田植え", "溝切り", "草刈り", "防除", "追肥", "稲刈り", "秋耕"], "そば": ["起耕", "播種", "防除", "刈取り"], "保全会": ["ハンマーモア", "草刈り"], "小規模工事": ["整地", "掘削", "運搬"] };
+    const tasksMap = { "水稲": ["あぜ塗り", "起耕", "粗代", "本代", "秋耕", "その他"], "そば": ["起耕", "播種", "刈取り", "その他"], "保全会": ["ハンマーモア", "草刈り", "その他"], "小規模工事": ["整地", "掘削", "運搬", "その他"], "その他": ["その他"] };
     document.getElementById("categorySelect").onchange = function () { document.getElementById("taskSelect").innerHTML = (tasksMap[this.value] || ["その他"]).map(t => `<option value="${t}">${t}</option>`).join(""); };
 
     async function autoFillHour() {
@@ -1153,6 +1189,43 @@
 
         container.appendChild(grid);
       });
+    }
+
+    // --- 不足していたメンテナンス詳細表示用の関数 ---
+    async function openMaintenanceDetail(mId) {
+      const machine = allMachines.find(m => m.id == mId);
+      if (!machine) return;
+
+      // 機械名をセット
+      document.getElementById("maintenanceMachineName").innerText = machine.name;
+
+      // 画面を切り替え
+      switchView('maintenanceDetailView');
+
+      // その機械のメンテナンス項目と履歴を読み込む
+      loadMaintenanceData(mId);
+    }
+
+    async function loadMaintenanceData(mId) {
+      // チェックリストの描画（仮の項目例）
+      const checklist = document.getElementById("maintenanceChecklist");
+      const items = ["エンジンオイル確認", "ラジエーター洗浄", "各部グリスアップ", "タイヤ/クローラー点検"];
+      checklist.innerHTML = items.map(item => `
+    <div class="flex items-center justify-between p-2 border-b border-gray-50">
+      <span class="text-sm">${item}</span>
+      <input type="checkbox" class="w-5 h-5 accent-[#6b8f71]">
+    </div>
+  `).join("");
+
+      // 履歴の描画（Supabaseから取得する場合はここに追加）
+      const timeline = document.getElementById("maintenanceTimeline");
+      timeline.innerHTML = `<p class="italic text-gray-400 text-center py-4">履歴はありません</p>`;
+    }
+
+    // メンテナンス記録の保存（ボタン用）
+    async function saveMaintenanceRecord() {
+      alert("メンテナンス情報を保存しました（シミュレーション）");
+      switchView('maintenanceMachineListView');
     }
 
     async function renderDashboard(mId) {
