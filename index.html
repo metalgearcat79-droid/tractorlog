@@ -381,12 +381,10 @@
       border-left: 4px solid #6b8f71;
     }
 
-    /* メインコンテンツがはみ出さないための重要設定 */
     .dashboard-main-content {
       overflow-y: auto;
       height: 100vh;
     }
-
   </style>
 </head>
 
@@ -433,11 +431,16 @@
     <header id="pageHeader" class="flex flex-col items-center justify-center py-8 relative">
       <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
           class="fa-solid fa-bars"></i></button>
-      <i class="fa-solid fa-tractor text-6xl text-[#6b8f71]"></i>
+      <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
       <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 Tractor log</h1>
     </header>
 
     <div id="inputView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+      <div class="flex items-center gap-2 mb-1 mt-4">
+        <i class="fa-solid fa-pen-to-square text-[#6b8f71] text-lg"></i>
+        <span class="text-lg font-bold text-[#6b8f71]">ログ入力</span>
+      </div>
+      <div class="border-t-2 border-[#6b8f71] mb-6 opacity-50"></div>
       <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label><select
           id="machineSelect" class="w-full p-3 rounded-lg" onchange="autoFillHour()"></select></div>
       <div class="card"><label class="block text-xs font-bold text-gray-400 mb-1">作業日</label><input type="date"
@@ -614,13 +617,35 @@
             </select>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-3">
-          <select id="filterOperator" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <select id="filterOperator"
+            class="p-3 rounded-lg w-full border border-gray-100 shadow-sm text-sm text-gray-600">
             <option value="">全オペレーター</option>
+            <option value="阿曽 千一">阿曽 千一</option>
+            <option value="阿曽 右貢">阿曽 右貢</option>
+            <option value="菅原 亜美">菅原 亜美</option>
+            <option value="土井 達也">土井 達也</option>
+            <option value="阿曽 文平">阿曽 文平</option>
+            <option value="田中 武志">田中 武志</option>
+            <option value="赤塚 かおり">赤塚 かおり</option>
+            <option value="土門 元義">土門 元義</option>
           </select>
-          <select id="filterCategory" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
-            <option value="">全種別</option>
-            <option>水稲</option>
+
+          <select id="filterCategory"
+            class="p-3 rounded-lg w-full border border-gray-100 shadow-sm text-sm text-gray-600">
+            <option value="">全作業内容</option>
+            <option value="あぜ塗り">あぜ塗り</option>
+            <option value="起耕">起耕</option>
+            <option value="粗代">粗代</option>
+            <option value="本代">本代</option>
+            <option value="秋耕">秋耕</option>
+            <option value="そば : 起耕">そば : 起耕</option>
+            <option value="そば : 播種">そば : 播種</option>
+            <option value="保全会 : ハンマーモア">保全会 : ハンマーモア</option>
+            <option value="小規模工事 : 整地">小規模工事 : 整地</option>
+            <option value="小規模工事 : 掘削">小規模工事 : 掘削</option>
+            <option value="小規模工事 : 運搬">小規模工事 : 運搬</option>
+            <option value="小規模工事 : その他">小規模工事 : その他</option>
           </select>
         </div>
         <button onclick="loadLogs('historyLogList', false)" class="btn-main mt-2 shadow-md">
