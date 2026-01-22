@@ -911,15 +911,24 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
-      const { data: machines } = await client.from("machines").select("*").order("name");
+      // .eq("machine_type", "tractor") を追加してトラクターだけに絞り込む
+      const { data: machines } = await client
+        .from("machines")
+        .select("*")
+        .eq("machine_type", "tractor") // ← ここを追加！
+        .order("name");
+
       allMachines = machines || [];
+
+      // 以降の処理はそのまま（取得した machines がトラクターだけになっているので、自動的に絞り込まれます）
       document.getElementById("machineSelect").innerHTML = '<option value="">選択</option>' + allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
       document.getElementById("filterMachine").innerHTML = '<option value="">すべての機械</option>' + allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
       document.getElementById("machineTabs").innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体</button>` + allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
+
       document.getElementById("workDate").value = new Date().toISOString().split('T')[0];
       document.getElementById("filterMonth").value = document.getElementById("workDate").value.substring(0, 7);
     });
-
+    
     // 修理履歴ダッシュボードを読み込む
     async function loadRepairDashboard() {
       try {
