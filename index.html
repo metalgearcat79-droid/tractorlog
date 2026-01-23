@@ -757,13 +757,6 @@
       </div>
 
       <div class="card mb-4">
-        <p class="font-bold text-sm text-gray-500 mb-2">メンテナンス進捗</p>
-        <div id="maintenanceSummary" class="text-xs mt-1">
-          未着手
-        </div>
-      </div>
-
-      <div class="card mb-4">
         <p class="font-bold text-sm text-gray-500 mb-2">点検項目</p>
         <div id="maintenanceChecklist" class="space-y-2">
         </div>
@@ -772,405 +765,416 @@
       <!-- 作業履歴タイムライン -->
       <div class="card mb-4">
         <p class="font-bold text-sm text-gray-500 mb-2">作業履歴</p>
-        <div id="maintenanceTimeline" class="space-y-3 text-sm">
+        <div id="maintenanceHistoryLog" class="space-y-3 text-sm">
           <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
         </div>
       </div>
 
-      <!-- 新規メンテナンス追加フォーム -->
-      <div class="card mb-4">
-        <p class="font-bold text-sm text-gray-500 mb-2">メンテナンスを追加</p>
+      <div class="card mb-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <p class="font-bold text-sm text-[#6b8f71] mb-4 flex items-center">
+          <i class="fas fa-tools mr-2"></i>部品交換を記録
+        </p>
 
-        <label class="block text-xs font-bold text-gray-400 mb-1">項目名</label>
-        <input id="newMaintenanceItem" type="text" class="w-full p-2 rounded-lg mb-3">
+        <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
+        <input id="newMaintenanceItem" type="text"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b8f71] outline-none"
+          placeholder="例：オイルエレメント">
 
         <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
-        <input id="newMaintenanceOperator" type="text" class="w-full p-2 rounded-lg mb-3">
+        <select id="newMaintenanceOperator"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b8f71] outline-none">
+          <option value="">担当者を選択</option>
+        </select>
 
         <label class="block text-xs font-bold text-gray-400 mb-1">状態</label>
-        <select id="newMaintenanceStatus" class="w-full p-2 rounded-lg mb-3">
+        <select id="newMaintenanceStatus"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b8f71] outline-none">
           <option value="done">完了</option>
-          <option value="progress">途中</option>
+          <option value="progress">作業中</option>
         </select>
 
         <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
-        <textarea id="newMaintenanceMemo" class="w-full p-2 rounded-lg mb-3" rows="2"></textarea>
+        <textarea id="newMaintenanceMemo" class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-4" rows="2"
+          placeholder="備考"></textarea>
 
-        <button onclick="saveMaintenanceRecord()" class="btn-main w-full">追加する</button>
+        <button onclick="saveMaintenanceRecord()"
+          class="btn-main w-full py-3 bg-[#6b8f71] text-white rounded-lg font-bold hover:bg-[#5a7a5f] transition-all shadow-md">
+          部品交換を保存する
+        </button>
       </div>
 
-      <button onclick="switchView('maintenanceView')"
-        class="flex items-center justify-center whitespace-nowrap px-3 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors w-auto min-w-max text-sm">
-        <i class="fas fa-arrow-left mr-2"></i>
-        <span>機械一覧に戻る</span>
-      </button>
-
-    </div>
-
-    <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-code-branch"></i> バージョン情報
+      <div class="flex justify-center w-full mt-6 mb-8">
+        <button onclick="switchView('maintenanceMachineListView')"
+          class="bg-gray-500 text-white px-6 py-2.5 rounded-lg hover:bg-gray-600 transition-colors whitespace-nowrap text-[13px] sm:text-sm shadow-md flex items-center justify-center">
+          <i class="fas fa-arrow-left mr-2"></i>
+          <span>機械一覧ページに戻る</span>
+        </button>
       </div>
 
-      <div class="card text-sm leading-relaxed space-y-3">
-        <p><span class="font-bold">バージョン:</span> 1.0.0</p>
-        <p><span class="font-bold">最終更新日:</span> 2026-01-19</p>
-
-        <div>
-          <p class="font-bold text-[#6b8f71] mb-1">更新内容</p>
-          <ul class="list-disc pl-5 space-y-1">
-            <li>初期リリース</li>
-          </ul>
+      <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+        <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
+          <i class="fa-solid fa-code-branch"></i> バージョン情報
         </div>
 
-        <div>
-          <p class="font-bold text-[#6b8f71] mb-1">使用技術</p>
-          <ul class="list-disc pl-5 space-y-1">
-            <li>HTML / CSS / JavaScript</li>
-            <li>Tailwind CSS</li>
-            <li>Supabase</li>
-            <li>Chart.js</li>
-            <li>GitHub Pages</li>
-          </ul>
-        </div>
+        <div class="card text-sm leading-relaxed space-y-3">
+          <p><span class="font-bold">バージョン:</span> 1.0.0</p>
+          <p><span class="font-bold">最終更新日:</span> 2026-01-19</p>
 
-        <button onclick="switchView('inputView')" class="btn-sub mt-6">TOPに戻る</button>
+          <div>
+            <p class="font-bold text-[#6b8f71] mb-1">更新内容</p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li>初期リリース</li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="font-bold text-[#6b8f71] mb-1">使用技術</p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li>HTML / CSS / JavaScript</li>
+              <li>Tailwind CSS</li>
+              <li>Supabase</li>
+              <li>Chart.js</li>
+              <li>GitHub Pages</li>
+            </ul>
+          </div>
+
+          <button onclick="switchView('inputView')" class="btn-sub mt-6">TOPに戻る</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <script>
-    const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    let allMachines = []; let currentMachineId = 'all'; window.charts = {};
+    <script>
+      const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
+      const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
+      const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      let allMachines = []; let currentMachineId = 'all'; window.charts = {};
 
-    function openMenu() { document.getElementById("sideMenu").style.left = "0px"; document.getElementById("overlay").style.display = "block"; }
-    function closeMenu() { document.getElementById("sideMenu").style.left = "-280px"; document.getElementById("overlay").style.display = "none"; }
+      function openMenu() { document.getElementById("sideMenu").style.left = "0px"; document.getElementById("overlay").style.display = "block"; }
+      function closeMenu() { document.getElementById("sideMenu").style.left = "-280px"; document.getElementById("overlay").style.display = "none"; }
 
-    function showModal(title, message, onOk) {
-      const modal = document.getElementById("customModal");
-      document.getElementById("modalTitle").innerText = title;
-      document.getElementById("modalMessage").innerText = message;
-      const okBtn = document.getElementById("modalOkBtn");
-      okBtn.onclick = () => { closeModal(); if (onOk) onOk(); };
-      modal.classList.add("active");
-    }
-    function closeModal() { document.getElementById("customModal").classList.remove("active"); }
-
-    function switchView(id) {
-      console.log("Switching to:", id); // どこに切り替えようとしているか確認
-
-      // 全てのビューからactiveを取り除く
-      document.querySelectorAll('.view').forEach(v => {
-        v.classList.remove('active');
-        v.style.display = 'none';
-      });
-
-      // 対象のビューを取得
-      const targetView = document.getElementById(id);
-      if (targetView) {
-        targetView.classList.add('active');
-        targetView.style.display = 'block'; // 強制的に表示
-      } else {
-        console.error("エラー: ID '" + id + "' のビューが見つかりません。");
+      function showModal(title, message, onOk) {
+        const modal = document.getElementById("customModal");
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        const okBtn = document.getElementById("modalOkBtn");
+        okBtn.onclick = () => { closeModal(); if (onOk) onOk(); };
+        modal.classList.add("active");
       }
+      function closeModal() { document.getElementById("customModal").classList.remove("active"); }
 
-      // ヘッダーの制御
-      const header = document.getElementById("pageHeader");
-      if (header) {
-        header.style.display = (id === 'dashboard') ? 'none' : 'flex';
-      }
+      function switchView(id) {
+        console.log("Switching to:", id); // どこに切り替えようとしているか確認
 
-      closeMenu();
-
-      // 各ページごとの読み込み処理
-      if (id === 'dashboard') {
-        setTimeout(() => renderDashboard('all'), 100);
-      }
-      if (id === 'todayView') {
-        console.log("本日ログ読込実行");
-        loadLogs("todayLogList", true);
-      }
-      if (id === 'historyView') {
-        console.log("履歴ログ読込実行");
-        loadLogs("historyLogList", false);
-      }
-      if (id === 'repairView') {
-        loadRepairDashboard();
-      }
-      if (id === 'maintenanceMachineListView') {
-        loadMachineList();
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      // 1. 機械（トラクターのみ）の取得
-      const { data: machines } = await client
-        .from("machines")
-        .select("*")
-        .eq("machine_type", "tractor")
-        .order("name");
-
-      allMachines = machines || [];
-
-      // 2. オペレーターの取得 (operators テーブルから)
-      const { data: operators } = await client
-        .from("operators")
-        .select("*")
-        .order("name");
-
-      // 3. 作業内容の取得 (work_types テーブルから)
-      const { data: workTypes } = await client
-        .from("work_types")
-        .select("*")
-        .order("name");
-
-      // --- 各画面要素への反映 ---
-
-      // 入力フォームの機械選択
-      document.getElementById("machineSelect").innerHTML = '<option value="">選択</option>' +
-        allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
-
-      // 検索条件の機械選択
-      document.getElementById("filterMachine").innerHTML = '<option value="">すべての機械</option>' +
-        allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
-
-      // ダッシュボードの機械別タブ
-      document.getElementById("machineTabs").innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体</button>` +
-        allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
-
-      // 検索条件のオペレーター選択（追加分）
-      if (operators) {
-        document.getElementById("filterOperator").innerHTML = '<option value="">全オペレーター</option>' +
-          operators.map(o => `<option value="${o.name}">${o.name}</option>`).join("");
-      }
-
-      // 検索条件の作業内容選択（追加分）
-      if (workTypes) {
-        document.getElementById("filterCategory").innerHTML = '<option value="">全作業内容</option>' +
-          workTypes.map(w => `<option value="${w.name}">${w.name}</option>`).join("");
-      }
-
-      // 日付の初期セット
-      const today = new Date().toISOString().split('T')[0];
-      if (document.getElementById("workDate")) document.getElementById("workDate").value = today;
-      if (document.getElementById("filterMonth")) document.getElementById("filterMonth").value = today.substring(0, 7);
-    });
-
-    // 修理履歴ダッシュボードを読み込む
-    async function loadRepairDashboard() {
-      try {
-        // repair_logs をすべて取得
-        const { data: logs, error } = await client
-          .from('repair_logs')
-          .select('*')
-          .order('date', { ascending: false });
-
-        if (error) {
-          console.error('Error loading repair logs:', error);
-          return;
-        }
-
-        // -----------------------------
-        // ① 累計修理費
-        // -----------------------------
-        const totalCost = logs.reduce((sum, log) => sum + (log.cost || 0), 0);
-        document.getElementById('totalRepairCost').textContent =
-          '¥ ' + totalCost.toLocaleString();
-
-        // -----------------------------
-        // ② 年ごとの修理費
-        // -----------------------------
-        const yearly = {};
-        logs.forEach(log => {
-          const year = new Date(log.date).getFullYear();
-          if (!yearly[year]) yearly[year] = 0;
-          yearly[year] += log.cost || 0;
+        // 全てのビューからactiveを取り除く
+        document.querySelectorAll('.view').forEach(v => {
+          v.classList.remove('active');
+          v.style.display = 'none';
         });
 
-        const yearlyContainer = document.getElementById('yearlyRepairContainer');
-        yearlyContainer.innerHTML = '';
+        // 対象のビューを取得
+        const targetView = document.getElementById(id);
+        if (targetView) {
+          targetView.classList.add('active');
+          targetView.style.display = 'block'; // 強制的に表示
+        } else {
+          console.error("エラー: ID '" + id + "' のビューが見つかりません。");
+        }
 
-        Object.keys(yearly)
-          .sort((a, b) => b - a)
-          .forEach(year => {
+        // ヘッダーの制御
+        const header = document.getElementById("pageHeader");
+        if (header) {
+          header.style.display = (id === 'dashboard') ? 'none' : 'flex';
+        }
+
+        closeMenu();
+
+        // 各ページごとの読み込み処理
+        if (id === 'dashboard') {
+          setTimeout(() => renderDashboard('all'), 100);
+        }
+        if (id === 'todayView') {
+          console.log("本日ログ読込実行");
+          loadLogs("todayLogList", true);
+        }
+        if (id === 'historyView') {
+          console.log("履歴ログ読込実行");
+          loadLogs("historyLogList", false);
+        }
+        if (id === 'repairView') {
+          loadRepairDashboard();
+        }
+        if (id === 'maintenanceMachineListView') {
+          loadMachineList();
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        // 1. 機械（トラクターのみ）の取得
+        const { data: machines } = await client
+          .from("machines")
+          .select("*")
+          .eq("machine_type", "tractor")
+          .order("name");
+
+        allMachines = machines || [];
+
+        // 2. オペレーターの取得 (operators テーブルから)
+        const { data: operators } = await client
+          .from("operators")
+          .select("*")
+          .order("name");
+
+        // 3. 作業内容の取得 (work_types テーブルから)
+        const { data: workTypes } = await client
+          .from("work_types")
+          .select("*")
+          .order("name");
+
+        // --- 各画面要素への反映 ---
+
+        // 入力フォームの機械選択
+        document.getElementById("machineSelect").innerHTML = '<option value="">選択</option>' +
+          allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+
+        // 検索条件の機械選択
+        document.getElementById("filterMachine").innerHTML = '<option value="">すべての機械</option>' +
+          allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+
+        // ダッシュボードの機械別タブ
+        document.getElementById("machineTabs").innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体</button>` +
+          allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
+
+        // 検索条件のオペレーター選択（追加分）
+        if (operators) {
+          document.getElementById("filterOperator").innerHTML = '<option value="">全オペレーター</option>' +
+            operators.map(o => `<option value="${o.name}">${o.name}</option>`).join("");
+        }
+
+        // 検索条件の作業内容選択（追加分）
+        if (workTypes) {
+          document.getElementById("filterCategory").innerHTML = '<option value="">全作業内容</option>' +
+            workTypes.map(w => `<option value="${w.name}">${w.name}</option>`).join("");
+        }
+
+        // 日付の初期セット
+        const today = new Date().toISOString().split('T')[0];
+        if (document.getElementById("workDate")) document.getElementById("workDate").value = today;
+        if (document.getElementById("filterMonth")) document.getElementById("filterMonth").value = today.substring(0, 7);
+      });
+
+      // 修理履歴ダッシュボードを読み込む
+      async function loadRepairDashboard() {
+        try {
+          // repair_logs をすべて取得
+          const { data: logs, error } = await client
+            .from('repair_logs')
+            .select('*')
+            .order('date', { ascending: false });
+
+          if (error) {
+            console.error('Error loading repair logs:', error);
+            return;
+          }
+
+          // -----------------------------
+          // ① 累計修理費
+          // -----------------------------
+          const totalCost = logs.reduce((sum, log) => sum + (log.cost || 0), 0);
+          document.getElementById('totalRepairCost').textContent =
+            '¥ ' + totalCost.toLocaleString();
+
+          // -----------------------------
+          // ② 年ごとの修理費
+          // -----------------------------
+          const yearly = {};
+          logs.forEach(log => {
+            const year = new Date(log.date).getFullYear();
+            if (!yearly[year]) yearly[year] = 0;
+            yearly[year] += log.cost || 0;
+          });
+
+          const yearlyContainer = document.getElementById('yearlyRepairContainer');
+          yearlyContainer.innerHTML = '';
+
+          Object.keys(yearly)
+            .sort((a, b) => b - a)
+            .forEach(year => {
+              const card = document.createElement('div');
+              card.className =
+                'p-3 bg-white rounded shadow text-center border border-gray-100';
+              card.innerHTML = `
+          <div class="text-sm text-gray-500">${year}年</div>
+          <div class="text-lg font-bold text-[#6b8f71]">¥ ${yearly[year].toLocaleString()}</div>
+        `;
+              yearlyContainer.appendChild(card);
+            });
+
+          // -----------------------------
+          // ③ 機械ごとの修理費
+          // -----------------------------
+          const machineTotals = {};
+
+          logs.forEach(log => {
+            if (!machineTotals[log.machine_id]) machineTotals[log.machine_id] = 0;
+            machineTotals[log.machine_id] += log.cost || 0;
+          });
+
+          // machines テーブルから名前を取得
+          const { data: machines } = await client.from('machines').select('*');
+
+          const machineContainer = document.getElementById('machineRepairContainer');
+          machineContainer.innerHTML = '';
+
+          Object.keys(machineTotals).forEach(machineId => {
+            const machine = machines.find(m => m.id === Number(machineId));
+            const name = machine ? machine.name : '不明な機械';
+
             const card = document.createElement('div');
             card.className =
               'p-3 bg-white rounded shadow text-center border border-gray-100';
             card.innerHTML = `
-          <div class="text-sm text-gray-500">${year}年</div>
-          <div class="text-lg font-bold text-[#6b8f71]">¥ ${yearly[year].toLocaleString()}</div>
-        `;
-            yearlyContainer.appendChild(card);
-          });
-
-        // -----------------------------
-        // ③ 機械ごとの修理費
-        // -----------------------------
-        const machineTotals = {};
-
-        logs.forEach(log => {
-          if (!machineTotals[log.machine_id]) machineTotals[log.machine_id] = 0;
-          machineTotals[log.machine_id] += log.cost || 0;
-        });
-
-        // machines テーブルから名前を取得
-        const { data: machines } = await client.from('machines').select('*');
-
-        const machineContainer = document.getElementById('machineRepairContainer');
-        machineContainer.innerHTML = '';
-
-        Object.keys(machineTotals).forEach(machineId => {
-          const machine = machines.find(m => m.id === Number(machineId));
-          const name = machine ? machine.name : '不明な機械';
-
-          const card = document.createElement('div');
-          card.className =
-            'p-3 bg-white rounded shadow text-center border border-gray-100';
-          card.innerHTML = `
         <div class="text-sm text-gray-500">${name}</div>
         <div class="text-lg font-bold text-[#6b8f71]">¥ ${machineTotals[machineId].toLocaleString()}</div>
       `;
-          machineContainer.appendChild(card);
-        });
+            machineContainer.appendChild(card);
+          });
 
-        // -----------------------------
-        // ④ 最近の修理履歴（最新5件）
-        // -----------------------------
-        const recentContainer = document.getElementById('recentRepairContainer');
-        recentContainer.innerHTML = '';
+          // -----------------------------
+          // ④ 最近の修理履歴（最新5件）
+          // -----------------------------
+          const recentContainer = document.getElementById('recentRepairContainer');
+          recentContainer.innerHTML = '';
 
-        logs.slice(0, 5).forEach(log => {
-          const item = document.createElement('div');
-          item.className =
-            'p-3 bg-white rounded shadow border border-gray-100';
+          logs.slice(0, 5).forEach(log => {
+            const item = document.createElement('div');
+            item.className =
+              'p-3 bg-white rounded shadow border border-gray-100';
 
-          item.innerHTML = `
+            item.innerHTML = `
         <div class="text-sm text-gray-500">${log.date}</div>
         <div class="font-bold">${log.memo || '(内容なし)'}</div>
         <div class="text-[#6b8f71] font-bold mt-1">¥ ${log.cost.toLocaleString()}</div>
         <div class="text-xs text-gray-400 mt-1">${log.shop || ''}</div>
       `;
 
-          recentContainer.appendChild(item);
-        });
+            recentContainer.appendChild(item);
+          });
 
-      } catch (err) {
-        console.error('Unexpected error:', err);
-      }
-    }
-
-    const tasksMap = { "水稲": ["あぜ塗り", "起耕", "粗代", "本代", "秋耕", "その他"], "そば": ["起耕", "播種", "刈取り", "その他"], "保全会": ["ハンマーモア", "草刈り", "その他"], "小規模工事": ["整地", "掘削", "運搬", "その他"], "その他": ["その他"] };
-    document.getElementById("categorySelect").onchange = function () { document.getElementById("taskSelect").innerHTML = (tasksMap[this.value] || ["その他"]).map(t => `<option value="${t}">${t}</option>`).join(""); };
-
-    async function autoFillHour() {
-      const mId = document.getElementById("machineSelect").value;
-      if (!mId) return;
-      const { data } = await client.from("hour_logs").select("end_hour").eq("machine_id", mId).order("date", { ascending: false }).order("created_at", { ascending: false }).limit(1);
-      if (data && data.length > 0) { document.getElementById("hourBefore").value = data[0].end_hour; calcDiff(); }
-    }
-
-    function calcDiff() {
-      const b = parseFloat(document.getElementById("hourBefore").value) || 0;
-      const a = parseFloat(document.getElementById("hourAfter").value) || 0;
-      const d = a - b;
-      const disp = document.getElementById("hourDiffDisplay");
-
-      // ① 稼働後のほうが小さい場合に文字を赤くするロジック
-      if (a > 0 && a < b) {
-        disp.classList.remove("text-[#6b8f71]");
-        disp.classList.add("text-red-500");
-        disp.textContent = `稼働時間: 0.0 h (入力エラー)`;
-      } else {
-        disp.classList.remove("text-red-500");
-        disp.classList.add("text-[#6b8f71]");
-        disp.textContent = `稼働時間: ${d > 0 ? d.toFixed(1) : "0.0"} h`;
-      }
-    }
-
-    function previewInvoice(input) {
-      const previewArea = document.getElementById('invoicePreviewArea');
-      const previewImg = document.getElementById('invoicePreviewImg');
-
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          previewImg.src = e.target.result;
-          previewArea.classList.remove('hidden');
+        } catch (err) {
+          console.error('Unexpected error:', err);
         }
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    document.getElementById("saveBtn").onclick = async () => {
-      const mId = document.getElementById("machineSelect").value;
-      const hBefore = parseFloat(document.getElementById("hourBefore").value) || 0;
-      const hAfter = parseFloat(document.getElementById("hourAfter").value) || 0;
-
-      if (!mId) return alert("機械を選択してください");
-      if (hAfter < hBefore) return alert("エラー：稼働後の数値が稼働前より小さくなっています。");
-
-      showModal("登録確認", "ログを登録しますか？", async () => {
-        const logData = {
-          machine_id: mId, date: document.getElementById("workDate").value,
-          operator: document.getElementById("operatorSelect").value,
-          category: document.getElementById("categorySelect").value,
-          task: document.getElementById("taskSelect").value,
-          start_hour: hBefore, end_hour: hAfter,
-          fuel_amount: parseFloat(document.getElementById("fuelAmount").value) || 0,
-          memo: document.getElementById("memoInput").value
-        };
-        const { error } = await client.from("hour_logs").insert([logData]);
-        if (!error) location.reload();
-      });
-    };
-
-    async function loadLogs(elId, todayOnly) {
-      const list = document.getElementById(elId);
-      list.innerHTML = "<p class='text-center py-10 opacity-50 text-xs'>読込中...</p>";
-
-      // 基本のクエリ作成
-      let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
-
-      if (todayOnly) {
-        // 【本日の稼働状況】日本時間（JST）の今日の日付で絞り込み
-        const jstToday = new Date().toLocaleDateString('sv-SE');
-        query = query.eq("date", jstToday);
-      } else {
-
-        // 【稼働履歴】画面の入力値を取得してフィルターをかける
-        const month = document.getElementById("filterMonth").value; // YYYY-MM
-        const machine = document.getElementById("filterMachine").value;
-        const operator = document.getElementById("filterOperator").value;
-        const category = document.getElementById("filterCategory").value;
-
-        // 月で絞り込み (前方一致)
-        if (month) query = query.gte("date", `${month}-01`).lte("date", `${month}-31`);
-        // 機械で絞り込み
-        if (machine) query = query.eq("machine_id", machine);
-        // オペレーターで絞り込み
-        if (operator) query = query.eq("operator", operator);
-        // 種別（水稲・そば等）で絞り込み
-        if (category) query = query.eq("category", category);
       }
 
-      const { data, error } = await query;
-      if (error) {
-        console.error("データ取得エラー:", error);
-        return;
+      const tasksMap = { "水稲": ["あぜ塗り", "起耕", "粗代", "本代", "秋耕", "その他"], "そば": ["起耕", "播種", "刈取り", "その他"], "保全会": ["ハンマーモア", "草刈り", "その他"], "小規模工事": ["整地", "掘削", "運搬", "その他"], "その他": ["その他"] };
+      document.getElementById("categorySelect").onchange = function () { document.getElementById("taskSelect").innerHTML = (tasksMap[this.value] || ["その他"]).map(t => `<option value="${t}">${t}</option>`).join(""); };
+
+      async function autoFillHour() {
+        const mId = document.getElementById("machineSelect").value;
+        if (!mId) return;
+        const { data } = await client.from("hour_logs").select("end_hour").eq("machine_id", mId).order("date", { ascending: false }).order("created_at", { ascending: false }).limit(1);
+        if (data && data.length > 0) { document.getElementById("hourBefore").value = data[0].end_hour; calcDiff(); }
       }
 
-      let total = 0;
-      const displayData = todayOnly ? [...(data || [])].reverse() : (data || []);
+      function calcDiff() {
+        const b = parseFloat(document.getElementById("hourBefore").value) || 0;
+        const a = parseFloat(document.getElementById("hourAfter").value) || 0;
+        const d = a - b;
+        const disp = document.getElementById("hourDiffDisplay");
 
-      list.innerHTML = displayData.map(l => {
-        const diff = (l.end_hour - l.start_hour);
-        total += diff;
-        return `<div class="card border-l-4 border-[#6b8f71] !mb-3 !py-3 flex justify-between items-center">
+        // ① 稼働後のほうが小さい場合に文字を赤くするロジック
+        if (a > 0 && a < b) {
+          disp.classList.remove("text-[#6b8f71]");
+          disp.classList.add("text-red-500");
+          disp.textContent = `稼働時間: 0.0 h (入力エラー)`;
+        } else {
+          disp.classList.remove("text-red-500");
+          disp.classList.add("text-[#6b8f71]");
+          disp.textContent = `稼働時間: ${d > 0 ? d.toFixed(1) : "0.0"} h`;
+        }
+      }
+
+      function previewInvoice(input) {
+        const previewArea = document.getElementById('invoicePreviewArea');
+        const previewImg = document.getElementById('invoicePreviewImg');
+
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImg.src = e.target.result;
+            previewArea.classList.remove('hidden');
+          }
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      document.getElementById("saveBtn").onclick = async () => {
+        const mId = document.getElementById("machineSelect").value;
+        const hBefore = parseFloat(document.getElementById("hourBefore").value) || 0;
+        const hAfter = parseFloat(document.getElementById("hourAfter").value) || 0;
+
+        if (!mId) return alert("機械を選択してください");
+        if (hAfter < hBefore) return alert("エラー：稼働後の数値が稼働前より小さくなっています。");
+
+        showModal("登録確認", "ログを登録しますか？", async () => {
+          const logData = {
+            machine_id: mId, date: document.getElementById("workDate").value,
+            operator: document.getElementById("operatorSelect").value,
+            category: document.getElementById("categorySelect").value,
+            task: document.getElementById("taskSelect").value,
+            start_hour: hBefore, end_hour: hAfter,
+            fuel_amount: parseFloat(document.getElementById("fuelAmount").value) || 0,
+            memo: document.getElementById("memoInput").value
+          };
+          const { error } = await client.from("hour_logs").insert([logData]);
+          if (!error) location.reload();
+        });
+      };
+
+      async function loadLogs(elId, todayOnly) {
+        const list = document.getElementById(elId);
+        list.innerHTML = "<p class='text-center py-10 opacity-50 text-xs'>読込中...</p>";
+
+        // 基本のクエリ作成
+        let query = client.from("hour_logs").select("*, machines(name)").order("date", { ascending: false });
+
+        if (todayOnly) {
+          // 【本日の稼働状況】日本時間（JST）の今日の日付で絞り込み
+          const jstToday = new Date().toLocaleDateString('sv-SE');
+          query = query.eq("date", jstToday);
+        } else {
+
+          // 【稼働履歴】画面の入力値を取得してフィルターをかける
+          const month = document.getElementById("filterMonth").value; // YYYY-MM
+          const machine = document.getElementById("filterMachine").value;
+          const operator = document.getElementById("filterOperator").value;
+          const category = document.getElementById("filterCategory").value;
+
+          // 月で絞り込み (前方一致)
+          if (month) query = query.gte("date", `${month}-01`).lte("date", `${month}-31`);
+          // 機械で絞り込み
+          if (machine) query = query.eq("machine_id", machine);
+          // オペレーターで絞り込み
+          if (operator) query = query.eq("operator", operator);
+          // 種別（水稲・そば等）で絞り込み
+          if (category) query = query.eq("category", category);
+        }
+
+        const { data, error } = await query;
+        if (error) {
+          console.error("データ取得エラー:", error);
+          return;
+        }
+
+        let total = 0;
+        const displayData = todayOnly ? [...(data || [])].reverse() : (data || []);
+
+        list.innerHTML = displayData.map(l => {
+          const diff = (l.end_hour - l.start_hour);
+          total += diff;
+          return `<div class="card border-l-4 border-[#6b8f71] !mb-3 !py-3 flex justify-between items-center">
               <div>
                 <b class="text-sm">${l.date} - ${l.machines?.name}</b>
                 <p class="text-xs opacity-70 mt-1">${l.operator} | ${l.task}</p>
@@ -1183,64 +1187,64 @@
                 <i class="fa-regular fa-trash-can text-lg"></i>
               </button>
             </div>`;
-      }).join("");
+        }).join("");
 
-      if (!todayOnly) {
-        const totalEl = document.getElementById("historyTotalHours");
-        if (totalEl) totalEl.innerText = `合計: ${total.toFixed(1)} h`;
-      }
-    }
-
-    async function deleteLog(id) {
-      showModal("削除確認", "このログを削除しますか？", async () => {
-        const { error } = await client.from("hour_logs").delete().eq("id", id);
-        if (!error) {
-          if (document.getElementById("todayView").classList.contains("active")) loadLogs("todayLogList", true);
-          else loadLogs("historyLogList", false);
+        if (!todayOnly) {
+          const totalEl = document.getElementById("historyTotalHours");
+          if (totalEl) totalEl.innerText = `合計: ${total.toFixed(1)} h`;
         }
-      });
-    }
+      }
 
-    // 1. メンテナンス一覧（トラクター一覧）を表示する
-    async function loadMachineList() {
-      try {
-        const { data: machines, error } = await client
-          .from("machines")
-          .select("*")
-          .eq("machine_type", "tractor")
-          .order("id");
-
-        if (error) throw error;
-
-        const container = document.getElementById("maintenanceMachineGrid");
-        if (!container) return;
-        container.innerHTML = "";
-
-        const grouped = {};
-        machines.forEach(m => {
-          const manufacturer = m.manufacturer || "その他";
-          if (!grouped[manufacturer]) grouped[manufacturer] = [];
-          grouped[manufacturer].push(m);
+      async function deleteLog(id) {
+        showModal("削除確認", "このログを削除しますか？", async () => {
+          const { error } = await client.from("hour_logs").delete().eq("id", id);
+          if (!error) {
+            if (document.getElementById("todayView").classList.contains("active")) loadLogs("todayLogList", true);
+            else loadLogs("historyLogList", false);
+          }
         });
+      }
 
-        Object.keys(grouped).forEach(brand => {
-          const brandHeader = document.createElement("h3");
-          brandHeader.className = "text-[#6b8f71] font-bold text-sm mb-2 mt-4 flex items-center gap-2";
-          brandHeader.innerHTML = `<i class="fa-solid fa-tag opacity-50"></i> ${brand}`;
-          container.appendChild(brandHeader);
+      // 1. メンテナンス一覧（トラクター一覧）を表示する
+      async function loadMachineList() {
+        try {
+          const { data: machines, error } = await client
+            .from("machines")
+            .select("*")
+            .eq("machine_type", "tractor")
+            .order("id");
 
-          const grid = document.createElement("div");
-          grid.className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4";
+          if (error) throw error;
 
-          grouped[brand].forEach(m => {
-            const card = document.createElement("div");
-            card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95";
-            card.onclick = () => openMaintenanceDetail(m.id);
+          const container = document.getElementById("maintenanceMachineGrid");
+          if (!container) return;
+          container.innerHTML = "";
 
-            const statusText = m.status || "未着手";
-            const iconColor = "#6b8f71";
+          const grouped = {};
+          machines.forEach(m => {
+            const manufacturer = m.manufacturer || "その他";
+            if (!grouped[manufacturer]) grouped[manufacturer] = [];
+            grouped[manufacturer].push(m);
+          });
 
-            card.innerHTML = `
+          Object.keys(grouped).forEach(brand => {
+            const brandHeader = document.createElement("h3");
+            brandHeader.className = "text-[#6b8f71] font-bold text-sm mb-2 mt-4 flex items-center gap-2";
+            brandHeader.innerHTML = `<i class="fa-solid fa-tag opacity-50"></i> ${brand}`;
+            container.appendChild(brandHeader);
+
+            const grid = document.createElement("div");
+            grid.className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4";
+
+            grouped[brand].forEach(m => {
+              const card = document.createElement("div");
+              card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95";
+              card.onclick = () => openMaintenanceDetail(m.id);
+
+              const statusText = m.status || "未着手";
+              const iconColor = "#6b8f71";
+
+              card.innerHTML = `
                     <div class="flex flex-col gap-2">
                         <div class="flex items-center gap-3">
                             <div style="color: ${iconColor};" class="text-xl flex-shrink-0">
@@ -1256,45 +1260,62 @@
                         </div>
                     </div>
                 `;
-            grid.appendChild(card);
+              grid.appendChild(card);
+            });
+            container.appendChild(grid);
           });
-          container.appendChild(grid);
-        });
 
-      } catch (e) {
-        console.error("メンテナンス一覧の読み込み失敗:", e);
+        } catch (e) {
+          console.error("メンテナンス一覧の読み込み失敗:", e);
+        }
       }
-    }
 
-    // 詳細画面を開く（保存されたチェック状態を読み込む）
-    async function openMaintenanceDetail(machineId) {
-      switchView('maintenanceDetailView');
+      async function openMaintenanceDetail(machineId) {
+        window.currentMachineId = machineId;
+        switchView('maintenanceDetailView');
 
-      try {
-        // 1. 機械名を取得
-        const { data: machine } = await client.from("machines").select("*").eq("id", machineId).single();
-        document.getElementById("maintenanceMachineName").textContent = machine.name;
+        try {
+          // 1. 機械名を取得
+          const { data: machine } = await client.from("machines").select("*").eq("id", machineId).single();
+          document.getElementById("maintenanceMachineName").textContent = machine.name;
 
-        // 2. 全メンテナンス項目を取得
-        const { data: items } = await client.from("maintenance_items_tractor").select("*").order("id");
+          // ★追加：担当者（オペレーター）リストを取得してセレクトボックスに反映
+          const { data: operators } = await client.from('operators').select('name').order('id');
+          const opSelect = document.getElementById('newMaintenanceOperator');
+          if (opSelect && operators) {
+            opSelect.innerHTML = '<option value="">担当者を選択</option>'; // 初期化
+            operators.forEach(op => {
+              const opt = document.createElement('option');
+              opt.value = op.name;
+              opt.textContent = op.name;
+              opSelect.appendChild(opt);
+            });
+          }
 
-        // 3. すでに保存されているチェック状態を取得 ★追加
-        const { data: savedChecks } = await client
-          .from("maintenance_checks")
-          .select("item_id, is_checked")
-          .eq("machine_id", machineId);
+          // ★追記：作業履歴（部品交換履歴）を取得して表示
+          loadMaintenanceHistory(machineId);
 
-        const checklistContainer = document.getElementById("maintenanceChecklist");
-        if (!checklistContainer) return;
-        checklistContainer.innerHTML = "";
 
-        items.forEach(item => {
-          // 保存されたデータの中に、この項目のチェックがあるか探す
-          const isChecked = savedChecks?.find(c => c.item_id === item.id)?.is_checked || false;
 
-          const div = document.createElement("div");
-          div.className = "flex items-center justify-between p-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors";
-          div.innerHTML = `
+          // 2. 全メンテナンス項目を取得
+          const { data: items } = await client.from("maintenance_items_tractor").select("*").order("id");
+
+          // 3. すでに保存されているチェック状態を取得
+          const { data: savedChecks } = await client
+            .from("maintenance_checks")
+            .select("item_id, is_checked")
+            .eq("machine_id", machineId);
+
+          const checklistContainer = document.getElementById("maintenanceChecklist");
+          if (!checklistContainer) return;
+          checklistContainer.innerHTML = "";
+
+          items.forEach(item => {
+            const isChecked = savedChecks?.find(c => c.item_id === item.id)?.is_checked || false;
+
+            const div = document.createElement("div");
+            div.className = "flex items-center justify-between p-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors";
+            div.innerHTML = `
                 <div class="flex flex-col flex-1 text-left">
                     <span class="text-sm font-bold text-gray-700">${item.item_name}</span>
                     <span class="text-[10px] text-gray-400">${item.description || ''}</span>
@@ -1304,59 +1325,39 @@
                        ${isChecked ? 'checked' : ''} 
                        onchange="saveSingleCheck('${machineId}', '${item.id}', this.checked)">
             `;
-          checklistContainer.appendChild(div);
-        });
+            checklistContainer.appendChild(div);
+          });
+
+          calculateProgress();
+
+        } catch (e) {
+          console.error("読み込み失敗:", e);
+        }
+      }
+
+      async function updateGlobalProgress(machineId) {
+        const checkboxes = document.querySelectorAll('.maintenance-check');
+        const total = checkboxes.length;
+        const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+        const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
 
         calculateProgress();
 
-      } catch (e) {
-        console.error("読み込み失敗:", e);
+        let statusText = percent === 100 ? "メンテナンス完了" : (percent === 0 ? "未着手" : `${percent}%完了`);
+
+        await client.from('machines').update({ status: statusText }).eq('id', machineId);
+        loadMachineList();
       }
-    }
 
-    async function saveSingleCheck(machineId, itemId, checked) {
-      try {
-        const { error } = await client
-          .from('maintenance_checks')
-          .upsert({
-            machine_id: machineId,
-            item_id: itemId,
-            is_checked: checked,
-            updated_at: new Date()
-          }, { onConflict: 'machine_id,item_id' });
+      function calculateProgress() {
+        const checkboxes = document.querySelectorAll('.maintenance-check');
+        const total = checkboxes.length;
+        const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+        const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
 
-        if (error) throw error;
-
-        await updateGlobalProgress(machineId);
-
-      } catch (e) {
-        console.error("チェック保存失敗:", e);
-      }
-    }
-
-    async function updateGlobalProgress(machineId) {
-      const checkboxes = document.querySelectorAll('.maintenance-check');
-      const total = checkboxes.length;
-      const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
-      const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
-
-      calculateProgress();
-
-      let statusText = percent === 100 ? "メンテナンス完了" : (percent === 0 ? "未着手" : `${percent}%完了`);
-
-      await client.from('machines').update({ status: statusText }).eq('id', machineId);
-      loadMachineList();
-    }
-
-    function calculateProgress() {
-      const checkboxes = document.querySelectorAll('.maintenance-check');
-      const total = checkboxes.length;
-      const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
-      const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
-
-      const summaryEl = document.getElementById("maintenanceSummary");
-      if (summaryEl) {
-        summaryEl.innerHTML = `
+        const summaryEl = document.getElementById("maintenanceSummary");
+        if (summaryEl) {
+          summaryEl.innerHTML = `
             <div class="flex justify-between items-center mb-1">
                 <span class="font-bold text-[#6b8f71]">完了: ${checked} / ${total} 項目</span>
                 <span class="font-black text-[#6b8f71]">${percent}%</span>
@@ -1365,160 +1366,230 @@
                 <div class="bg-[#6b8f71] h-2 rounded-full transition-all duration-300" style="width: ${percent}%"></div>
             </div>
         `;
+        }
       }
-    }
 
-    async function renderDashboard(mId) {
-      currentMachineId = mId;
-      document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.replace('active', 'inactive'); if (btn.id === `tab-${mId}`) btn.classList.replace('inactive', 'active'); });
-      let { data: logs } = await client.from("hour_logs").select("*, machines(name)");
-      if (mId !== 'all') logs = logs.filter(l => l.machine_id == mId);
-      if (!logs) return;
+      async function renderDashboard(mId) {
+        currentMachineId = mId;
+        document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.replace('active', 'inactive'); if (btn.id === `tab-${mId}`) btn.classList.replace('inactive', 'active'); });
+        let { data: logs } = await client.from("hour_logs").select("*, machines(name)");
+        if (mId !== 'all') logs = logs.filter(l => l.machine_id == mId);
+        if (!logs) return;
 
-      const l26 = logs.filter(l => l.date.startsWith("2026"));
-      const l25 = logs.filter(l => l.date.startsWith("2025"));
-      const totalH = l26.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
-      const totalF = l26.reduce((s, l) => s + (l.fuel_amount || 0), 0);
-      document.getElementById("kpi-hours").innerText = totalH.toFixed(1);
-      document.getElementById("kpi-fuel").innerText = totalF.toFixed(1);
-      document.getElementById("kpi-avg").innerText = totalH > 0 ? (totalF / totalH).toFixed(1) : "0.0";
-      document.getElementById("kpi-days").innerText = new Set(l26.map(l => l.date)).size;
+        const l26 = logs.filter(l => l.date.startsWith("2026"));
+        const l25 = logs.filter(l => l.date.startsWith("2025"));
+        const totalH = l26.reduce((s, l) => s + (l.end_hour - l.start_hour), 0);
+        const totalF = l26.reduce((s, l) => s + (l.fuel_amount || 0), 0);
+        document.getElementById("kpi-hours").innerText = totalH.toFixed(1);
+        document.getElementById("kpi-fuel").innerText = totalF.toFixed(1);
+        document.getElementById("kpi-avg").innerText = totalH > 0 ? (totalF / totalH).toFixed(1) : "0.0";
+        document.getElementById("kpi-days").innerText = new Set(l26.map(l => l.date)).size;
 
-      const mRank = {}; l26.forEach(l => { const n = l.machines?.name || "他"; mRank[n] = (mRank[n] || 0) + (l.end_hour - l.start_hour); });
-      const sorted = Object.entries(mRank).sort((a, b) => b[1] - a[1]);
-      document.getElementById("rankList").innerHTML = [0, 1, 2].map(i => sorted[i] ? `<div class="text-center"><i class="fa-solid fa-crown ${['text-yellow-500', 'text-gray-400', 'text-amber-600'][i]} text-xl"></i><p class="text-[10px] font-bold mt-1">${sorted[i][0]}</p></div>` : '').join("");
+        const mRank = {}; l26.forEach(l => { const n = l.machines?.name || "他"; mRank[n] = (mRank[n] || 0) + (l.end_hour - l.start_hour); });
+        const sorted = Object.entries(mRank).sort((a, b) => b[1] - a[1]);
+        document.getElementById("rankList").innerHTML = [0, 1, 2].map(i => sorted[i] ? `<div class="text-center"><i class="fa-solid fa-crown ${['text-yellow-500', 'text-gray-400', 'text-amber-600'][i]} text-xl"></i><p class="text-[10px] font-bold mt-1">${sorted[i][0]}</p></div>` : '').join("");
 
-      const cat = {}, tsk = {}, opr = {}, mon = Array(12).fill(0);
-      l26.forEach(l => {
-        const h = l.end_hour - l.start_hour;
-        cat[l.category || "他"] = (cat[l.category || "他"] || 0) + h;
-        tsk[l.task || "他"] = (tsk[l.task || "他"] || 0) + h;
-        opr[l.operator || "他"] = (opr[l.operator || "他"] || 0) + h;
-        if (l.date.split("-")[1]) mon[parseInt(l.date.split("-")[1]) - 1] += h;
-      });
-      drawCharts(cat, tsk, opr, mon, totalH, l25);
-    }
-
-    function drawCharts(cat, task, op, monthly, totalH, l25) {
-      Object.values(window.charts).forEach(c => c && c.destroy());
-      const txt = '#3a3a3a';
-      const colorSet = ['#1b4332', '#2d6a4f', '#40916c', '#52b788', '#74c69d'];
-
-      const donut = (id, data) => new Chart(document.getElementById(id), {
-        type: 'doughnut',
-        data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: colorSet, borderWidth: 0 }] },
-        options: {
-          cutout: '75%', maintainAspectRatio: false,
-          plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 12, padding: 15, font: { size: 11, weight: 'bold' }, color: txt } } }
-        }
-      });
-
-      window.charts.c1 = donut('categoryShareChart', cat);
-      window.charts.c2 = donut('taskShareChart', task);
-      window.charts.c3 = donut('operatorShareChart', op);
-
-      window.charts.line = new Chart(document.getElementById('detailChart'), {
-        type: 'line',
-        data: { labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], datasets: [{ data: monthly, borderColor: '#6b8f71', backgroundColor: 'rgba(107,143,113,0.1)', fill: true, tension: 0.4 }] },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: txt, font: { size: 9 } } }, y: { ticks: { color: txt, font: { size: 9 } } } } }
-      });
-
-      const barCtx = document.getElementById('gradientBarChart').getContext('2d');
-      const tLabels = Object.keys(task);
-      const tData = Object.values(task);
-      window.charts.bar = new Chart(barCtx, {
-        type: 'bar',
-        data: { labels: tLabels, datasets: [{ data: tData, backgroundColor: tData.map((_, i) => `rgba(45, 64, 49, ${Math.max(0.2, 1 - (i / tLabels.length))})`), borderRadius: 4 }] },
-        options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: txt, font: { size: 9 } } }, y: { ticks: { color: txt, font: { size: 9 } } } } }
-      });
-
-      const lastH = l25.reduce((s, l) => s + (l.end_hour - l.start_hour), 0) || 1;
-      const ratio = Math.min(100, (totalH / lastH) * 100);
-      window.charts.gauge = new Chart(document.getElementById('yearComparisonGauge'), {
-        type: 'doughnut',
-        data: { datasets: [{ data: [ratio, 100 - ratio], backgroundColor: ['#6b8f71', '#eee'], borderWidth: 0 }] },
-        options: { rotation: -90, circumference: 180, cutout: '75%', maintainAspectRatio: false, plugins: { legend: { display: false } } }
-      });
-      document.getElementById("detailCompareValue").innerText = ratio.toFixed(1) + "%";
-    }
-
-    async function loadCategories() {
-      try {
-        const { data, error } = await client
-          .from('work_types')
-          .select('*')
-          .order('id');
-
-        if (error) throw error;
-
-        const filterSelect = document.getElementById('filterCategory');
-        const inputSelect = document.getElementById('workCategory');
-
-        if (filterSelect) {
-          filterSelect.innerHTML = '<option value="">全作業内容</option>';
-          data.forEach(cat => {
-            const opt = document.createElement('option');
-            opt.value = cat.work_name;
-            opt.textContent = cat.work_name;
-            filterSelect.appendChild(opt);
-          });
-        }
-
-        if (inputSelect) {
-          inputSelect.innerHTML = '<option value="">作業内容を選択</option>';
-          data.forEach(cat => {
-            const opt = document.createElement('option');
-            opt.value = cat.work_name;
-            opt.textContent = cat.work_name;
-            inputSelect.appendChild(opt);
-          });
-        }
-        console.log("作業内容の読み込みに成功しました");
-      } catch (e) {
-        console.error("カテゴリー読み込み失敗:", e);
+        const cat = {}, tsk = {}, opr = {}, mon = Array(12).fill(0);
+        l26.forEach(l => {
+          const h = l.end_hour - l.start_hour;
+          cat[l.category || "他"] = (cat[l.category || "他"] || 0) + h;
+          tsk[l.task || "他"] = (tsk[l.task || "他"] || 0) + h;
+          opr[l.operator || "他"] = (opr[l.operator || "他"] || 0) + h;
+          if (l.date.split("-")[1]) mon[parseInt(l.date.split("-")[1]) - 1] += h;
+        });
+        drawCharts(cat, tsk, opr, mon, totalH, l25);
       }
-    }
 
-    // オペレーターを読み込んでセレクトボックスにセットする
-    async function loadOperators() {
-      try {
-        const { data, error } = await client.from('operators').select('*').order('id');
-        if (error) throw error;
+      function drawCharts(cat, task, op, monthly, totalH, l25) {
+        Object.values(window.charts).forEach(c => c && c.destroy());
+        const txt = '#3a3a3a';
+        const colorSet = ['#1b4332', '#2d6a4f', '#40916c', '#52b788', '#74c69d'];
 
-        const filterSelect = document.getElementById('filterOperator');
-        const inputSelect = document.getElementById('operator');
+        const donut = (id, data) => new Chart(document.getElementById(id), {
+          type: 'doughnut',
+          data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: colorSet, borderWidth: 0 }] },
+          options: {
+            cutout: '75%', maintainAspectRatio: false,
+            plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 12, padding: 15, font: { size: 11, weight: 'bold' }, color: txt } } }
+          }
+        });
 
-        if (filterSelect) {
-          filterSelect.innerHTML = '<option value="">全オペレーター</option>';
-          data.forEach(op => {
-            const opt = document.createElement('option');
-            opt.value = op.operator_name;
-            opt.textContent = op.operator_name;
-            filterSelect.appendChild(opt);
-          });
-        }
-        if (inputSelect) {
-          inputSelect.innerHTML = '<option value="">選択してください</option>';
-          data.forEach(op => {
-            const opt = document.createElement('option');
-            opt.value = op.operator_name;
-            opt.textContent = op.operator_name;
-            inputSelect.appendChild(opt);
-          });
-        }
-      } catch (e) {
-        console.error("オペレーター読み込み失敗:", e);
+        window.charts.c1 = donut('categoryShareChart', cat);
+        window.charts.c2 = donut('taskShareChart', task);
+        window.charts.c3 = donut('operatorShareChart', op);
+
+        window.charts.line = new Chart(document.getElementById('detailChart'), {
+          type: 'line',
+          data: { labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], datasets: [{ data: monthly, borderColor: '#6b8f71', backgroundColor: 'rgba(107,143,113,0.1)', fill: true, tension: 0.4 }] },
+          options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: txt, font: { size: 9 } } }, y: { ticks: { color: txt, font: { size: 9 } } } } }
+        });
+
+        const barCtx = document.getElementById('gradientBarChart').getContext('2d');
+        const tLabels = Object.keys(task);
+        const tData = Object.values(task);
+        window.charts.bar = new Chart(barCtx, {
+          type: 'bar',
+          data: { labels: tLabels, datasets: [{ data: tData, backgroundColor: tData.map((_, i) => `rgba(45, 64, 49, ${Math.max(0.2, 1 - (i / tLabels.length))})`), borderRadius: 4 }] },
+          options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: txt, font: { size: 9 } } }, y: { ticks: { color: txt, font: { size: 9 } } } } }
+        });
+
+        const lastH = l25.reduce((s, l) => s + (l.end_hour - l.start_hour), 0) || 1;
+        const ratio = Math.min(100, (totalH / lastH) * 100);
+        window.charts.gauge = new Chart(document.getElementById('yearComparisonGauge'), {
+          type: 'doughnut',
+          data: { datasets: [{ data: [ratio, 100 - ratio], backgroundColor: ['#6b8f71', '#eee'], borderWidth: 0 }] },
+          options: { rotation: -90, circumference: 180, cutout: '75%', maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+        document.getElementById("detailCompareValue").innerText = ratio.toFixed(1) + "%";
       }
-    }
 
-    // ページ読み込み時の初期化処理
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof loadLogs === 'function') loadLogs('historyLogList', false);
-      loadCategories();
-      loadOperators();
-      if (typeof loadMachineList === 'function') loadMachineList();
-    });
-  </script>
+      async function loadCategories() {
+        try {
+          const { data, error } = await client
+            .from('work_types')
+            .select('*')
+            .order('id');
+
+          if (error) throw error;
+
+          const filterSelect = document.getElementById('filterCategory');
+          const inputSelect = document.getElementById('workCategory');
+
+          if (filterSelect) {
+            filterSelect.innerHTML = '<option value="">全作業内容</option>';
+            data.forEach(cat => {
+              const opt = document.createElement('option');
+              opt.value = cat.work_name;
+              opt.textContent = cat.work_name;
+              filterSelect.appendChild(opt);
+            });
+          }
+
+          if (inputSelect) {
+            inputSelect.innerHTML = '<option value="">作業内容を選択</option>';
+            data.forEach(cat => {
+              const opt = document.createElement('option');
+              opt.value = cat.work_name;
+              opt.textContent = cat.work_name;
+              inputSelect.appendChild(opt);
+            });
+          }
+          console.log("作業内容の読み込みに成功しました");
+        } catch (e) {
+          console.error("カテゴリー読み込み失敗:", e);
+        }
+      }
+
+      // オペレーターを読み込んでセレクトボックスにセットする
+      async function loadOperators() {
+        try {
+          const { data, error } = await client.from('operators').select('*').order('id');
+          if (error) throw error;
+
+          const filterSelect = document.getElementById('filterOperator');
+          const inputSelect = document.getElementById('operator');
+
+          if (filterSelect) {
+            filterSelect.innerHTML = '<option value="">全オペレーター</option>';
+            data.forEach(op => {
+              const opt = document.createElement('option');
+              opt.value = op.operator_name;
+              opt.textContent = op.operator_name;
+              filterSelect.appendChild(opt);
+            });
+          }
+          if (inputSelect) {
+            inputSelect.innerHTML = '<option value="">選択してください</option>';
+            data.forEach(op => {
+              const opt = document.createElement('option');
+              opt.value = op.operator_name;
+              opt.textContent = op.operator_name;
+              inputSelect.appendChild(opt);
+            });
+          }
+        } catch (e) {
+          console.error("オペレーター読み込み失敗:", e);
+        }
+      }
+
+      // ページ読み込み時の初期化処理
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof loadLogs === 'function') loadLogs('historyLogList', false);
+        loadCategories();
+        loadOperators();
+        if (typeof loadMachineList === 'function') loadMachineList();
+      });
+
+      // 1. 部品交換を保存する
+      async function saveMaintenanceRecord() {
+        const mId = window.currentMachineId; // 今開いている機械のID
+        const item = document.getElementById('newMaintenanceItem').value;
+        const operator = document.getElementById('newMaintenanceOperator').value;
+        const status = document.getElementById('newMaintenanceStatus').value;
+        const memo = document.getElementById('newMaintenanceMemo').value;
+
+        if (!item || !operator) {
+          alert("項目名と担当者を入力してください");
+          return;
+        }
+
+        try {
+          const { error } = await client.from('maintenance_records').insert([{
+            machine_id: mId,
+            item_name: item,
+            operator: operator,
+            status: status,
+            memo: memo,
+            date: new Date().toLocaleDateString('sv-SE')
+          }]);
+
+          if (error) throw error;
+          alert("記録しました！");
+
+          // 入力欄を空にする
+          document.getElementById('newMaintenanceItem').value = "";
+          document.getElementById('newMaintenanceMemo').value = "";
+
+          // 2. 保存後、すぐに履歴を再読み込みして表示を更新する
+          loadMaintenanceHistory(mId);
+
+        } catch (e) {
+          console.error(e);
+          alert("保存に失敗しました。テーブルがあるか確認してください。");
+        }
+      }
+
+      // 2. 履歴を表示する
+      async function loadMaintenanceHistory(machineId) {
+        try {
+          const { data } = await client
+            .from('maintenance_records')
+            .select('*')
+            .eq('machine_id', machineId)
+            .order('created_at', { ascending: false });
+
+          const historyContainer = document.getElementById('maintenanceHistoryLog');
+          if (!historyContainer) return;
+
+          if (!data || data.length === 0) {
+            historyContainer.innerHTML = '<p class="italic text-gray-400 text-center py-4">履歴はありません</p>';
+            return;
+          }
+
+          historyContainer.innerHTML = data.map(rec => `
+      <div class="border-b border-gray-100 pb-2 mb-2 last:border-0 text-left">
+        <div class="flex justify-between font-bold text-gray-700">
+          <span>${rec.item_name}</span>
+          <span class="text-gray-400 text-[9px]">${rec.date}</span>
+        </div>
+        <div class="text-gray-500">担当: ${rec.operator}</div>
+        ${rec.memo ? `<div class="text-gray-400 italic">"${rec.memo}"</div>` : ''}
+      </div>
+    `).join('');
+        } catch (e) { console.error(e); }
+      }
+
+    </script>
 </body>
 
 </html>
