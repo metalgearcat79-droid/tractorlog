@@ -575,13 +575,18 @@
           </div>
         </div>
         <div class="bi-main-col">
-          <div class="card">
-            <p class="chart-title">月別稼働推移</p>
-            <div class="chart-wrapper"><canvas id="detailChart"></canvas></div>
-          </div>
-          <div class="card">
-            <p class="chart-title">工程分布分析</p>
-            <div class="chart-wrapper"><canvas id="gradientBarChart"></canvas></div>
+          <div class="lg:col-span-2 space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <h3 class="text-sm font-bold text-gray-700 mb-2">月別稼働推移</h3>
+              <div class="relative h-40"> <canvas id="detailChart"></canvas>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <h3 class="text-sm font-bold text-gray-700 mb-2">作業内容分析</h3>
+              <div class="relative h-[480px]">
+                <canvas id="gradientBarChart"></canvas>
+              </div>
+            </div>
           </div>
         </div>
         <div class="bi-right-col">
@@ -950,7 +955,7 @@
       const { data: operators } = await client
         .from("operators")
         .select("*")
-        .order("id"); 
+        .order("id");
 
       // 3. 作業内容の取得
       const { data: workTypes } = await client
@@ -1282,7 +1287,116 @@
       });
     }
 
-    // --- 修正版：loadMachineList 以降のコード ---
+    // --- グラフ描画の核心部（完全復活版） ---
+    function drawCharts(data) {
+      console.log("🔍 届いているデータの1件目を確認:", data[0]);
+
+      if (typeof Chart === 'undefined') return;
+
+      const ctx1 = document.getElementById('categoryShareChart');
+      const ctx2 = document.getElementById('taskShareChart');
+      const ctx3 = document.getElementById('detailChart');
+
+      if (!ctx1 || !ctx2 || !ctx3) {
+        console.error("❌ キャンバスが見つかりません:", { ctx1, ctx2, ctx3 });
+        return;
+      }
+
+      window.charts = window.charts || { c1: null, c2: null, c3: null };
+      if (window.charts.c1) window.charts.c1.destroy();
+      if (window.charts.c2) window.charts.c2.destroy();
+      if (window.charts.c3) window.charts.c3.destroy();
+
+      const catData = {};
+      const taskData = {};
+      const timeline = {};
+
+      data.forEach(d => {
+        const hours = (parseFloat(d.end_hour) || 0) - (parseFloat(d.start_hour) || 0);
+        const h = hours > 0 ? hours : 0;
+
+        // ① 作物別
+        const cat = d.category || "その他";
+        catData[cat] = (catData[cat] || 0) + h;
+
+        // ② 作業内容
+        const task = d.work_name || d.task_name || d.work_type || d.note || "不明";
+        taskData[task] = (taskData[task] || 0) + h;
+
+        // ③ 日付（棒グラフ用）
+        const dateKey = d.date || d.created_at?.substring(0, 10);
+        if (dateKey) {
+          timeline[dateKey] = (timeline[dateKey] || 0) + h;
+        }
+      });
+
+      console.log("📊 集計結果:", { catData, taskData, timeline });
+
+      const farmColors = ['#6b8f71', '#9eb3a2', '#d1dbd3', '#3a4d3f', '#b5c9b8', '#e8f0e9'];
+
+      // ① 作物別比率
+      window.charts.c1 = new Chart(ctx1, {
+        type: 'doughnut',
+        data: { labels: Object.keys(catData), datasets: [{ data: Object.values(catData), backgroundColor: farmColors }] },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      // ② 作業内容分析（横棒グラフ）
+      if (ctx2) {
+        // データの多い順に並び替える
+        const sortedTask = Object.entries(taskData).sort((a, b) => b[1] - a[1]);
+
+        window.charts.c2 = new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: sortedTask.map(t => t[0]), // 作業名
+            datasets: [{
+              label: 'h',
+              data: sortedTask.map(t => t[1]), // 時間
+              backgroundColor: '#6b8f71',       // 農業らしい緑色
+              borderRadius: 4,
+              barThickness: 12                 // 棒の太さ（スッキリ見えます）
+            }]
+          },
+          options: {
+            indexAxis: 'y', // ★これで横棒になります
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false } // 右側の凡例を消してスペース確保
+            },
+            scales: {
+              x: {
+                beginAtZero: true,
+                grid: { display: false },
+                ticks: { font: { size: 9 } }
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  font: { size: 10, weight: 'bold' },
+                  color: '#333'
+                }
+              }
+            },
+            layout: {
+              padding: { left: 0, right: 15, top: 0, bottom: 0 }
+            }
+          }
+        });
+      }
+
+      // ③ 稼働推移
+      const sortedDates = Object.keys(timeline).sort();
+      window.charts.c3 = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+          labels: sortedDates.map(d => d.slice(5)), // MM-DD
+          datasets: [{ label: 'h', data: sortedDates.map(d => timeline[d]), backgroundColor: '#6b8f71' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
 
     // 1. メンテナンス一覧（トラクター一覧）を表示する
     async function loadMachineList() {
@@ -1481,26 +1595,316 @@
       } catch (e) { console.error(e); }
     }
 
-    // ページ読み込み時の初期化
+    // ==========================================
+    // 1. ページ読み込み時の初期化（DOMContentLoaded）
+    // ==========================================
     document.addEventListener('DOMContentLoaded', async () => {
-      // 1. メンテナンス画面
-      await loadMachineList();
-      await restoreMaintenanceChecks();
+      console.log("🚀 全データの初期化を開始します...");
 
-      // 2. ログ入力画面（関数を直接呼ぶのではなく、確実に中身を動かす）
-      // もし loadOperators などの名前が重複していても、これで再実行を促します
+      // メンテナンス・ログ入力・履歴の読み込み
+      if (typeof loadMachineList === 'function') await loadMachineList();
+      if (typeof restoreMaintenanceChecks === 'function') await restoreMaintenanceChecks();
       if (typeof loadOperators === 'function') await loadOperators();
       if (typeof loadCategories === 'function') await loadCategories();
-
-      // 3. ログ履歴の表示
       if (typeof loadLogs === 'function') loadLogs('historyLogList', false);
 
-      // 4. 日付セット
+      // 日付セット
       const dateInput = document.getElementById('workDate');
       if (dateInput) dateInput.value = new Date().toLocaleDateString('sv-SE');
+      const monthInput = document.getElementById('filterMonth');
+      if (monthInput) monthInput.value = new Date().toISOString().substring(0, 7);
 
-      console.log("全データの初期化命令を完了しました");
-    });
+      // ★ダッシュボードの初期表示（全体を表示）
+      if (typeof renderDashboard === 'function') {
+        renderDashboard('all');
+      }
+
+      console.log("✅ 全データの初期化命令を完了しました");
+    }); // ← ここで DOMContentLoaded がスッキリ終了！
+
+
+    // ==========================================
+    // 2. 実務をこなす関数たち（外側に置く）
+    // ==========================================
+
+    // --- グラフを描画する関数 ---
+    function drawCharts(data) {
+      console.log("📈 グラフ描画を実行します...");
+
+      if (typeof Chart === 'undefined') {
+        console.error("❌ Chart.jsが読み込まれていません。");
+        return;
+      }
+
+      const ctx1 = document.getElementById('categoryShareChart');
+      const ctx2 = document.getElementById('taskShareChart');
+      const ctx3 = document.getElementById('detailChart');
+
+      if (!ctx1 || !ctx2 || !ctx3) {
+        console.warn("⚠️ グラフ用のキャンバスが見つかりません。IDを確認してください。");
+        return;
+      }
+
+      window.charts = window.charts || { c1: null, c2: null, c3: null };
+      if (window.charts.c1) window.charts.c1.destroy();
+      if (window.charts.c2) window.charts.c2.destroy();
+      if (window.charts.c3) window.charts.c3.destroy();
+
+      const categories = {};
+      data.forEach(d => { categories[d.category] = (categories[d.category] || 0) + 1; });
+
+      window.charts.c1 = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(categories),
+          datasets: [{
+            data: Object.values(categories),
+            backgroundColor: ['#6b8f71', '#9eb3a2', '#d1dbd3', '#e8f0e9', '#3a4d3f']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      console.log("✅ グラフの描画が完了しました");
+    }
+
+    // --- ダッシュボード全体を制御する関数 ---
+    async function renderDashboard(machineId) {
+      window.currentViewMachineId = machineId;
+      console.log("🛠️ ダッシュボード描画中... ID:", machineId);
+
+      try {
+        // 1. まずベースのクエリを作る（2026年以降＋日付順）
+        let query = client
+          .from("hour_logs")
+          .select("*")
+          .gte("date", "2026-01-01")
+          .order("date", { ascending: false });
+
+        // 2. 「すべて」以外が選ばれている場合だけ、さらにマシンIDで絞り込む
+        // ここが抜けていたり、順番が違うとボタンが反応しません！
+        if (machineId !== 'all') {
+          query = query.eq("machine_id", machineId);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        // もしデータが0件なら「データなし」と表示して終わる（エラーで止めない）
+        if (!data || data.length === 0) {
+          console.warn("⚠️ 2026年のデータが見つかりません");
+          // ランキングやグラフを空にする処理をここに入れると親切です
+          const rankingContainer = document.getElementById("rankList");
+          if (rankingContainer) rankingContainer.innerHTML = "データなし";
+          return;
+        }
+
+        // 集計
+        const summary = {};
+        data.forEach(log => {
+          let name = "不明";
+          if (typeof allMachines !== 'undefined') {
+            const m = allMachines.find(item => String(item.id) === String(log.machine_id));
+            if (m) name = m.name;
+          }
+          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+          summary[name] = (summary[name] || 0) + (h > 0 ? h : 0);
+        });
+
+        // ランキング表示（上位3位）
+        const sorted = Object.entries(summary).sort((a, b) => b[1] - a[1]);
+        const rankingContainer = document.getElementById("rankList");
+        if (rankingContainer) {
+          const crownColors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
+          rankingContainer.innerHTML = sorted.slice(0, 3).map(([name, hours], i) => `
+            <div class="flex flex-col items-center px-1 text-center" style="min-width: 75px;">
+              <div class="mb-1"><i class="fa-solid fa-crown ${crownColors[i]} text-xl"></i></div>
+              <span class="text-[10px] font-bold text-gray-700 truncate w-20 leading-tight">${name}</span>
+            </div>
+          `).join('');
+        }
+
+        // --- KPIカードの集計と反映 ---
+        if (data) {
+          let totalH = 0;
+          let totalF = 0;
+          const daysSet = new Set();
+
+          data.forEach(log => {
+            // 稼働時間の計算
+            const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+            totalH += (h > 0 ? h : 0);
+
+            // ✅ 給油量を fuel_amount から取得
+            totalF += (parseFloat(log.fuel_amount) || 0);
+
+            // 作業日数のカウント
+            if (log.date) daysSet.add(log.date);
+          });
+
+          // 燃費計算 (給油合計 ÷ 稼働時間合計)
+          const fuelAvg = totalH > 0 ? (totalF / totalH).toFixed(2) : "0.00";
+
+          // HTML要素への反映
+          const elH = document.getElementById("kpi-hours");
+          const elF = document.getElementById("kpi-fuel");
+          const elA = document.getElementById("kpi-avg");
+          const elD = document.getElementById("kpi-days");
+
+          if (elH) elH.innerText = totalH.toFixed(1);
+          if (elF) elF.innerText = totalF.toFixed(1); // 給油量
+          if (elA) elA.innerText = fuelAvg;          // 燃費
+          if (elD) elD.innerText = daysSet.size;      // 日数
+
+          console.log("✅ KPI更新完了 (fuel_amount使用):", { totalH, totalF, fuelAvg });
+        }
+
+        // ✅ ここが「呼び出し（命令）」だけになっているのが正解！
+        if (typeof drawCharts === 'function') {
+          drawCharts(data);
+        }
+
+      } catch (e) {
+        console.error("❌ ダッシュボード描画エラー:", e);
+      }
+    } // 👈 renderDashboard はここで終わり
+
+    // --- 2. グラフ描画関数（外側でどっしり構える） ---
+    async function drawCharts(data) {
+      console.log("📊 グラフ描画を開始します...", data.length + "件");
+
+      if (typeof Chart === 'undefined') return;
+
+      // 既存グラフの破棄
+      if (window.charts) {
+        Object.values(window.charts).forEach(c => c && typeof c.destroy === 'function' && c.destroy());
+      }
+      window.charts = {};
+
+      const txt = '#3a3a3a';
+      const colorSet = ['#1b4332', '#2d6a4f', '#40916c', '#52b788', '#74c69d'];
+
+      // --- 1. データ集計（以前の引数に合わせて作成） ---
+      const cat = {};     // 作物
+      const task = {};    // 作業
+      const op = {};      // オペレーター
+      const monthly = new Array(12).fill(0); // 月別(1-12月)
+      let totalH = 0;
+
+      data.forEach(d => {
+        const h = Math.max(0, (parseFloat(d.end_hour) || 0) - (parseFloat(d.start_hour) || 0));
+        totalH += h;
+
+        // ① 作物別
+        cat[d.category || "他"] = (cat[d.category || "他"] || 0) + h;
+
+        // ② 作業内容
+        const taskName = d.task || d.work_name || "他";
+        task[taskName] = (task[taskName] || 0) + h;
+
+        // ③ オペレーター
+        op[d.operator || "不明"] = (op[d.operator || "不明"] || 0) + h;
+
+        // ④ 月別
+        if (d.date) {
+          const month = new Date(d.date).getMonth();
+          monthly[month] += h;
+        }
+      });
+
+      // ドーナツグラフの共通設定
+      const donut = (id, labelData) => {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        return new Chart(el, {
+          type: 'doughnut',
+          data: { labels: Object.keys(labelData), datasets: [{ data: Object.values(labelData), backgroundColor: colorSet, borderWidth: 0 }] },
+          options: {
+            cutout: '75%', maintainAspectRatio: false,
+            plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 10, font: { size: 10 }, color: txt } } }
+          }
+        });
+      };
+
+      // --- 2. 各グラフの描画 ---
+      window.charts.c1 = donut('categoryShareChart', cat);
+      window.charts.c2 = donut('taskShareChart', task);
+      window.charts.c3 = donut('operatorShareChart', op);
+
+      // 月別推移（折れ線）
+      const detailEl = document.getElementById('detailChart');
+      if (detailEl) {
+        window.charts.line = new Chart(detailEl, {
+          type: 'line',
+          data: {
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            datasets: [{ label: 'h', data: monthly, borderColor: '#6b8f71', backgroundColor: 'rgba(107,143,113,0.1)', fill: true, tension: 0.4 }]
+          },
+          options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+
+      // 横棒グラフ (作業内容分析：ランキング形式)
+      // 横棒グラフ (作業内容分析：ランキング ＋ グラデーション復活)
+      const barEl = document.getElementById('gradientBarChart');
+      if (barEl) {
+        // 1. 稼働時間が多い順に並べ替え
+        const sortedTask = Object.entries(task).sort((a, b) => b[1] - a[1]);
+        const tLabels = sortedTask.map(t => t[0]);
+        const tData = sortedTask.map(t => t[1]);
+
+        window.charts.bar = new Chart(barEl, {
+          type: 'bar',
+          data: {
+            labels: tLabels,
+            datasets: [{
+              label: 'h',
+              data: tData,
+              // ★以前のグラデーション設定を適用
+              backgroundColor: tData.map((_, i) => `rgba(45, 64, 49, ${Math.max(0.2, 1 - (i / tLabels.length))})`),
+              borderRadius: 4,
+              maxBarThickness: 28,
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                beginAtZero: true,
+                grid: { color: '#f0f0f0' },
+                ticks: { font: { size: 10 } }
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  autoSkip: false,
+                  font: { size: 11, weight: 'bold' },
+                  color: '#333'
+                }
+              }
+            }
+          }
+        });
+      }
+      // 前年比ゲージ (簡易版)
+      const gaugeEl = document.getElementById('yearComparisonGauge');
+      if (gaugeEl) {
+        const ratio = Math.min(100, (totalH / 500) * 100); // 仮に目標を500hとしています
+        window.charts.gauge = new Chart(gaugeEl, {
+          type: 'doughnut',
+          data: { datasets: [{ data: [ratio, 100 - ratio], backgroundColor: ['#6b8f71', '#eee'], borderWidth: 0 }] },
+          options: { rotation: -90, circumference: 180, cutout: '75%', maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+        const valEl = document.getElementById("detailCompareValue");
+        if (valEl) valEl.innerText = ratio.toFixed(1) + "%";
+      }
+
+      console.log("✅ 豪華版グラフの描画が完了しました");
+    }
+
   </script>
 </body>
 
