@@ -946,48 +946,90 @@
 
       allMachines = machines || [];
 
-      // 2. オペレーターの取得 (operators テーブルから)
+      // 2. オペレーターの取得
       const { data: operators } = await client
         .from("operators")
         .select("*")
-        .order("name");
+        .order("id"); 
 
-      // 3. 作業内容の取得 (work_types テーブルから)
+      // 3. 作業内容の取得
       const { data: workTypes } = await client
         .from("work_types")
         .select("*")
-        .order("name");
+        .order("id");
 
       // --- 各画面要素への反映 ---
 
       // 入力フォームの機械選択
-      document.getElementById("machineSelect").innerHTML = '<option value="">選択</option>' +
-        allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+      const machineSelect = document.getElementById("machineSelect");
+      if (machineSelect) {
+        machineSelect.innerHTML = '<option value="">選択</option>' +
+          allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+      }
 
       // 検索条件の機械選択
-      document.getElementById("filterMachine").innerHTML = '<option value="">すべての機械</option>' +
-        allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+      const filterMachine = document.getElementById("filterMachine");
+      if (filterMachine) {
+        filterMachine.innerHTML = '<option value="">すべての機械</option>' +
+          allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+      }
 
       // ダッシュボードの機械別タブ
-      document.getElementById("machineTabs").innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体</button>` +
-        allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
+      const machineTabs = document.getElementById("machineTabs");
+      if (machineTabs) {
+        machineTabs.innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体</button>` +
+          allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
+      }
 
-      // 検索条件のオペレーター選択（追加分）
+      // オペレーター選択の反映（検索と入力両方）
       if (operators) {
-        document.getElementById("filterOperator").innerHTML = '<option value="">全オペレーター</option>' +
-          operators.map(o => `<option value="${o.name}">${o.name}</option>`).join("");
+        const opList = operators.map(o => `<option value="${o.name}">${o.name}</option>`).join("");
+        const fOp = document.getElementById("filterOperator");
+        if (fOp) fOp.innerHTML = '<option value="">全オペレーター</option>' + opList;
+
+        const iOp = document.getElementById("operator");
+        if (iOp) iOp.innerHTML = '<option value="">選択してください</option>' + opList;
       }
 
-      // 検索条件の作業内容選択（追加分）
+      // 作業内容の反映（連動ロジック含む）
       if (workTypes) {
-        document.getElementById("filterCategory").innerHTML = '<option value="">全作業内容</option>' +
-          workTypes.map(w => `<option value="${w.name}">${w.name}</option>`).join("");
+        // 検索条件側
+        const fCat = document.getElementById("filterCategory");
+        if (fCat) {
+          fCat.innerHTML = '<option value="">全作業内容</option>' +
+            workTypes.map(w => `<option value="${w.work_name || w.category}">${w.work_name || w.category}</option>`).join("");
+        }
+
+        // 入力フォーム側（種別）
+        const iCat = document.getElementById("category");
+        if (iCat) {
+          const categories = [...new Set(workTypes.map(w => w.category))];
+          iCat.innerHTML = '<option value="">種別を選択</option>' +
+            categories.map(c => `<option value="${c}">${c}</option>`).join("");
+
+          // 種別を選んだら作業内容を出す連動設定
+          iCat.onchange = () => {
+            const selected = iCat.value;
+            const iWork = document.getElementById("work_name");
+            if (iWork) {
+              const filtered = workTypes.filter(t => t.category === selected);
+              iWork.innerHTML = '<option value="">作業内容を選択</option>' +
+                filtered.map(t => `<option value="${t.work_name}">${t.work_name}</option>`).join("");
+            }
+          };
+        }
       }
 
-      // 日付の初期セット
+      // 日付の初期
       const today = new Date().toISOString().split('T')[0];
-      if (document.getElementById("workDate")) document.getElementById("workDate").value = today;
-      if (document.getElementById("filterMonth")) document.getElementById("filterMonth").value = today.substring(0, 7);
+      if (document.getElementById("workDate")) {
+        document.getElementById("workDate").value = today;
+      }
+      if (document.getElementById("filterMonth")) {
+        document.getElementById("filterMonth").value = today.substring(0, 7);
+      }
+
+      console.log("全データの初期化と日付セットが完了しました");
     });
 
     // 修理履歴ダッシュボードを読み込む
@@ -1440,11 +1482,24 @@
     }
 
     // ページ読み込み時の初期化
-    document.addEventListener('DOMContentLoaded', () => {
-      loadMachineList();
-      if (typeof loadOperators === 'function') loadOperators();
-      if (typeof loadCategories === 'function') loadCategories();
-      // もし dashboard などの初期化が必要ならここに追記
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. メンテナンス画面
+      await loadMachineList();
+      await restoreMaintenanceChecks();
+
+      // 2. ログ入力画面（関数を直接呼ぶのではなく、確実に中身を動かす）
+      // もし loadOperators などの名前が重複していても、これで再実行を促します
+      if (typeof loadOperators === 'function') await loadOperators();
+      if (typeof loadCategories === 'function') await loadCategories();
+
+      // 3. ログ履歴の表示
+      if (typeof loadLogs === 'function') loadLogs('historyLogList', false);
+
+      // 4. 日付セット
+      const dateInput = document.getElementById('workDate');
+      if (dateInput) dateInput.value = new Date().toLocaleDateString('sv-SE');
+
+      console.log("全データの初期化命令を完了しました");
     });
   </script>
 </body>
