@@ -190,12 +190,12 @@
     }
 
     .kpi-value {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 900;
     }
 
     .kpi-unit {
-      font-size: 8px;
+      font-size: 12px;
       opacity: 0.8;
       font-weight: bold;
     }
@@ -225,7 +225,6 @@
       gap: 12px;
     }
 
-    /* 右カラム自体の定義 */
     .bi-right-col {
       flex: 0.8;
       min-width: 280px;
@@ -233,28 +232,24 @@
       flex-direction: column;
       gap: 16px;
       align-self: stretch;
-      /* これで親の高さ一杯に伸びます */
     }
 
-    /* YoYカード (全体の1/4の高さ) */
     .bi-right-col>.yoy-card {
-      flex: 1;
+      flex: 1 1 0% !important;
+      min-height: 0;
+      max-height: 33%;
       display: flex;
       flex-direction: column;
-      margin-bottom: 0 !important;
     }
 
-    /* メンテナンスカード (全体の3/4の高さ) */
     .bi-right-col>.maint-card {
-      flex: 3;
+      flex: 2 2 0% !important;
+      min-height: 0;
+      max-height: 67%;
       display: flex;
       flex-direction: column;
-      margin-bottom: 0 !important;
-      overflow: hidden;
-      /* はみ出し防止 */
     }
 
-    /* ログ表示エリア */
     #maintenanceLog {
       flex: 1;
       overflow-y: auto;
@@ -275,10 +270,11 @@
     }
 
     .chart-title {
-      font-size: 12px;
-      font-weight: bold;
-      color: #6b8f71;
+      font-size: 14px !important;
+      font-weight: bold !important;
+      color: #6b8f71 !important;
       margin-bottom: 8px;
+      display: block;
     }
 
     .chart-wrapper {
@@ -514,24 +510,24 @@
           <div class="kpi-section">
             <div id="machineTabs" class="flex gap-2 overflow-x-auto pb-1"></div>
             <div class="kpi-grid">
-              <div class="kpi-card"><span class="kpi-label">総稼働</span>
+              <div class="kpi-card"><span class="kpi-label">総 稼 働</span>
                 <div class="kpi-value-container"><span class="kpi-value" id="kpi-hours">0.0</span><span
                     class="kpi-unit">h</span></div>
               </div>
-              <div class="kpi-card"><span class="kpi-label">給油</span>
+              <div class="kpi-card"><span class="kpi-label">給 油</span>
                 <div class="kpi-value-container"><span class="kpi-value" id="kpi-fuel">0.0</span><span
                     class="kpi-unit">L</span></div>
               </div>
-              <div class="kpi-card"><span class="kpi-label">燃費</span>
+              <div class="kpi-card"><span class="kpi-label">燃 費</span>
                 <div class="kpi-value-container"><span class="kpi-value" id="kpi-avg">0.0</span><span
                     class="kpi-unit">L/h</span></div>
               </div>
-              <div class="kpi-card"><span class="kpi-label">日数</span>
+              <div class="kpi-card"><span class="kpi-label">日 数</span>
                 <div class="kpi-value-container"><span class="kpi-value" id="kpi-days">0</span><span
                     class="kpi-unit">日</span></div>
               </div>
-              <div class="kpi-card bg-[#4a6b50]"><span class="kpi-label">状態</span><span
-                  class="kpi-value text-[10px]">良好</span></div>
+              <div class="kpi-card bg-[#4a6b50]"><span class="kpi-label">状 態</span><span
+                  class="kpi-value text-[15px]">良好</span></div>
             </div>
           </div>
           <div class="ranking-section">
@@ -545,31 +541,32 @@
       <div class="bi-container">
         <div class="bi-left-col">
           <div class="card">
-            <p class="chart-title">作物別比率</p>
+            <p class="chart-title" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px; color: #6b8f71;"></i>
+              機械別修理コスト
+            </p>
             <div class="chart-wrapper relative">
-              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <i class="fa-solid fa-seedling text-2xl text-[#6b8f71] opacity-20"></i>
-              </div>
               <canvas id="categoryShareChart"></canvas>
             </div>
           </div>
 
           <div class="card">
-            <p class="chart-title">作業内容分析</p>
+            <p class="chart-title" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-wheat-awn" style="margin-right: 8px; color: #6b8f71;"></i>
+              作物別比率
+            </p>
             <div class="chart-wrapper relative">
-              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <i class="fa-solid fa-gears text-2xl text-[#6b8f71] opacity-20"></i>
-              </div>
               <canvas id="taskShareChart"></canvas>
             </div>
           </div>
 
           <div class="card">
-            <p class="chart-title">担当者別比率</p>
+            <p class="chart-title" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-user-check" style="margin-right: 8px; color: #6b8f71;"></i>
+              担当者別比率
+            </p>
+
             <div class="chart-wrapper relative">
-              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <i class="fa-solid fa-user-check text-2xl text-[#6b8f71] opacity-20"></i>
-              </div>
               <canvas id="operatorShareChart"></canvas>
             </div>
           </div>
@@ -577,21 +574,31 @@
         <div class="bi-main-col">
           <div class="lg:col-span-2 space-y-4">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-              <h3 class="text-sm font-bold text-gray-700 mb-2">月別稼働推移</h3>
+              <p class="chart-title" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: #6b8f71;"></i>
+                月別稼働推移
+              </p>
               <div class="relative h-40"> <canvas id="detailChart"></canvas>
               </div>
             </div>
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-              <h3 class="text-sm font-bold text-gray-700 mb-2">作業内容分析</h3>
+              <p class="chart-title" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-list-check" style="margin-right: 8px; color: #6b8f71;"></i>
+                作業内容分析
+              </p>
               <div class="relative h-[480px]">
                 <canvas id="gradientBarChart"></canvas>
               </div>
             </div>
           </div>
         </div>
+
         <div class="bi-right-col">
           <div class="card yoy-card text-center relative">
-            <p class="chart-title">前年実績比 (YoY)</p>
+            <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
+              <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: #6b8f71;"></i>
+              前年実績比 (YoY)
+            </p>
             <div class="chart-wrapper relative">
               <canvas id="yearComparisonGauge"></canvas>
               <div class="absolute inset-0 flex items-center justify-center pt-14">
@@ -601,7 +608,10 @@
           </div>
 
           <div class="card maint-card overflow-hidden">
-            <p class="chart-title border-b pb-1">メンテナンス情報</p>
+            <p class="chart-title border-b pb-1" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-clipboard-list" style="margin-right: 8px; color: #6b8f71;"></i>
+              メンテナンス情報
+            </p>
             <div id="maintenanceLog" class="text-[10px] space-y-2 opacity-80 pt-2 flex-1 overflow-y-auto">
               <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
             </div>
@@ -873,10 +883,167 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
+
+
     const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
     const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     let allMachines = []; let currentMachineId = 'all'; window.charts = {};
+
+    window.drawCharts = function (data) {
+      console.log("📊 全カラムのグラフを最適化します");
+      if (typeof Chart === 'undefined') return;
+
+      if (window.charts) {
+        Object.values(window.charts).forEach(c => c && typeof c.destroy === 'function' && c.destroy());
+      }
+      window.charts = {};
+
+      // データ集計
+      const stats = { cat: {}, op: {}, task: {}, time: new Array(12).fill(0) };
+      let totalH = 0;
+      data.forEach(d => {
+        const h = Math.max(0, (parseFloat(d.end_hour) || 0) - (parseFloat(d.start_hour) || 0));
+        totalH += h;
+        stats.cat[d.category || "その他"] = (stats.cat[d.category || "その他"] || 0) + h;
+        stats.op[d.operator || "不明"] = (stats.op[d.operator || "不明"] || 0) + h;
+        stats.task[d.task || "その他"] = (stats.task[d.task || "その他"] || 0) + h;
+        if (d.date) {
+          const m = new Date(d.date).getMonth();
+          stats.time[m] += h;
+        }
+      });
+
+      const colors = ['#6b8f71', '#9eb3a2', '#d1dbd3', '#3a4d3f', '#b5c9b8'];
+
+      // --- 【左】上段：機械別修理コスト (金額順にソート & グラデーション) ---
+      const ctxRepair = document.getElementById('categoryShareChart');
+      if (ctxRepair) {
+        // 1. データをオブジェクトの配列にする
+        const rawData = [
+          { label: 'SL54', value: 80000 },
+          { label: 'YT333', value: 30000 },
+          { label: 'TJV95', value: 7000 },
+          { label: 'SL60', value: 20000 },
+          { label: 'コンバイン', value: 120000 },
+          { label: '田植機', value: 15000 },
+          { label: '軽トラ', value: 7000 },
+          { label: 'トラック', value: 20000 },
+          { label: 'MZ70', value: 4000 }
+        ];
+
+        // 2. 金額が高い順に並べ替える (降順)
+        rawData.sort((a, b) => b.value - a.value);
+
+        // 3. グラフ用にラベルと数値を切り分ける
+        const sortedLabels = rawData.map(d => d.label);
+        const sortedValues = rawData.map(d => d.value);
+
+        // 4. グラデーション色の計算
+        const maxVal = sortedValues[0]; // ソート済みなので一番上が最大値
+        const backgroundColors = sortedValues.map(val => {
+          const opacity = 0.3 + (val / maxVal) * 0.7;
+          return `rgba(139, 0, 0, ${opacity})`;
+        });
+
+        window.charts.c1 = new Chart(ctxRepair, {
+          type: 'bar',
+          data: {
+            labels: sortedLabels,
+            datasets: [{
+              label: 'コスト',
+              data: sortedValues,
+              backgroundColor: backgroundColors,
+              borderRadius: 4,
+              barThickness: 15
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { display: false },
+              y: {
+                grid: { display: false },
+                ticks: { font: { size: 11, weight: 'bold' } } // 名前を見やすく
+              }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+
+      // --- 【左】下段：作物比率 (ドーナツ) ---
+      const ctxCrop = document.getElementById('taskShareChart');
+      if (ctxCrop) {
+        window.charts.c2 = new Chart(ctxCrop, {
+          type: 'doughnut',
+          data: { labels: Object.keys(stats.cat), datasets: [{ data: Object.values(stats.cat), backgroundColor: colors }] },
+          options: {
+            cutout: '45%', // 🔥 70%→45%に下げることで「肉厚」なドーナツになります
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } }
+          }
+        });
+      }
+
+      // --- 【中央】上段：月別稼働推移 (以前の折れ線グラフ) ---
+      const ctxLine = document.getElementById('detailChart');
+      if (ctxLine) {
+        window.charts.line = new Chart(ctxLine, {
+          type: 'line',
+          data: {
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            datasets: [{ label: 'h', data: stats.time, borderColor: '#6b8f71', backgroundColor: 'rgba(107,143,113,0.1)', fill: true, tension: 0.4 }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+
+      // --- 【中央】下段：作業内容分析 (グラデーション棒グラフ) ---
+      const ctxBar = document.getElementById('gradientBarChart');
+      if (ctxBar) {
+        const sorted = Object.entries(stats.task).sort((a, b) => b[1] - a[1]);
+        window.charts.bar = new Chart(ctxBar, {
+          type: 'bar',
+          data: {
+            labels: sorted.map(t => t[0]),
+            datasets: [{
+              label: 'h',
+              data: sorted.map(t => t[1]),
+              backgroundColor: sorted.map((_, i) => `rgba(107, 143, 113, ${Math.max(0.2, 1 - (i / 5))})`),
+              borderRadius: 4
+            }]
+          },
+          options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+
+      // --- 【右】上段：前年実績比 (半円ゲージ) ---
+      const ctxGauge = document.getElementById('yearComparisonGauge');
+      if (ctxGauge) {
+        const ratio = Math.min(100, (totalH / 500) * 100); // 目標500h
+        window.charts.gauge = new Chart(ctxGauge, {
+          type: 'doughnut',
+          data: { datasets: [{ data: [ratio, 100 - ratio], backgroundColor: ['#6b8f71', '#eee'], borderWidth: 0 }] },
+          options: { rotation: -90, circumference: 180, cutout: '75%', maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+        const valEl = document.getElementById("detailCompareValue");
+        if (valEl) valEl.innerText = ratio.toFixed(1) + "%";
+      }
+
+      // --- 【右】下段：担当者比率 (ドーナツ) ---
+      const ctxOp = document.getElementById('operatorShareChart');
+      if (ctxOp) {
+        window.charts.c4 = new Chart(ctxOp, {
+          type: 'doughnut',
+          data: { labels: Object.keys(stats.op), datasets: [{ data: Object.values(stats.op), backgroundColor: colors }] },
+          options: { cutout: '45%', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } } }
+        });
+      }
+    };
 
     function openMenu() { document.getElementById("sideMenu").style.left = "0px"; document.getElementById("overlay").style.display = "block"; }
     function closeMenu() { document.getElementById("sideMenu").style.left = "-280px"; document.getElementById("overlay").style.display = "none"; }
@@ -982,8 +1149,16 @@
       // ダッシュボードの機械別タブ
       const machineTabs = document.getElementById("machineTabs");
       if (machineTabs) {
-        machineTabs.innerHTML = `<button onclick="renderDashboard('all')" id="tab-all" class="tab-btn active">全体</button>` +
-          allMachines.map(m => `<button onclick="renderDashboard(${m.id})" id="tab-${m.id}" class="tab-btn inactive">${m.name}</button>`).join("");
+        machineTabs.innerHTML = `
+    <button onclick="renderDashboard('all')" 
+            id="tab-all" 
+            class="tab-btn active" 
+            style="min-width: 120px; letter-spacing: 0.2em;">全　体</button>
+  ` + allMachines.map(m => `
+    <button onclick="renderDashboard(${m.id})" 
+            id="tab-${m.id}" 
+            class="tab-btn inactive">${m.name}</button>
+  `).join("");
       }
 
       // オペレーター選択の反映（検索と入力両方）
@@ -1287,116 +1462,54 @@
       });
     }
 
-    // --- グラフ描画の核心部（完全復活版） ---
-    function drawCharts(data) {
-      console.log("🔍 届いているデータの1件目を確認:", data[0]);
+    // メンテナンス履歴をDBから取得して表示する関数
+    async function loadMaintenanceLogs() {
+      const logContainer = document.getElementById('maintenanceLog');
+      if (!logContainer) return;
 
-      if (typeof Chart === 'undefined') return;
+      try {
+        // 1. 最新のメンテナンス履歴を5件ほど取得
+        const { data: logs, error } = await client
+          .from('maintenance_status') // メンテナンス状態テーブル
+          .select('item_id, updated_at, status')
+          .eq('status', true)        // 完了したものだけ
+          .order('updated_at', { ascending: false }) // 新しい順
+          .limit(5);
+        if (error) throw error;
 
-      const ctx1 = document.getElementById('categoryShareChart');
-      const ctx2 = document.getElementById('taskShareChart');
-      const ctx3 = document.getElementById('detailChart');
+        if (logs && logs.length > 0) {
+          logContainer.innerHTML = logs.map(log => {
+            // item_id が "tractor1_oil" のような形式だと仮定して整形
+            const [machine, item] = log.item_id.split('_');
+            const date = new Date(log.updated_at).toLocaleDateString('ja-JP', {
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
 
-      if (!ctx1 || !ctx2 || !ctx3) {
-        console.error("❌ キャンバスが見つかりません:", { ctx1, ctx2, ctx3 });
-        return;
-      }
-
-      window.charts = window.charts || { c1: null, c2: null, c3: null };
-      if (window.charts.c1) window.charts.c1.destroy();
-      if (window.charts.c2) window.charts.c2.destroy();
-      if (window.charts.c3) window.charts.c3.destroy();
-
-      const catData = {};
-      const taskData = {};
-      const timeline = {};
-
-      data.forEach(d => {
-        const hours = (parseFloat(d.end_hour) || 0) - (parseFloat(d.start_hour) || 0);
-        const h = hours > 0 ? hours : 0;
-
-        // ① 作物別
-        const cat = d.category || "その他";
-        catData[cat] = (catData[cat] || 0) + h;
-
-        // ② 作業内容
-        const task = d.work_name || d.task_name || d.work_type || d.note || "不明";
-        taskData[task] = (taskData[task] || 0) + h;
-
-        // ③ 日付（棒グラフ用）
-        const dateKey = d.date || d.created_at?.substring(0, 10);
-        if (dateKey) {
-          timeline[dateKey] = (timeline[dateKey] || 0) + h;
+            return `
+          <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-gray-700">${machine.toUpperCase()}</span>
+              <span class="text-[9px] text-gray-400">${date}</span>
+            </div>
+            <div class="text-[#6b8f71] flex items-center gap-1">
+              <i class="fa-solid fa-check-circle"></i> ${item} 完了
+            </div>
+          </div>
+        `;
+          }).join('');
+        } else {
+          logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">直近の整備履歴はありません</p>`;
         }
-      });
-
-      console.log("📊 集計結果:", { catData, taskData, timeline });
-
-      const farmColors = ['#6b8f71', '#9eb3a2', '#d1dbd3', '#3a4d3f', '#b5c9b8', '#e8f0e9'];
-
-      // ① 作物別比率
-      window.charts.c1 = new Chart(ctx1, {
-        type: 'doughnut',
-        data: { labels: Object.keys(catData), datasets: [{ data: Object.values(catData), backgroundColor: farmColors }] },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      // ② 作業内容分析（横棒グラフ）
-      if (ctx2) {
-        // データの多い順に並び替える
-        const sortedTask = Object.entries(taskData).sort((a, b) => b[1] - a[1]);
-
-        window.charts.c2 = new Chart(ctx2, {
-          type: 'bar',
-          data: {
-            labels: sortedTask.map(t => t[0]), // 作業名
-            datasets: [{
-              label: 'h',
-              data: sortedTask.map(t => t[1]), // 時間
-              backgroundColor: '#6b8f71',       // 農業らしい緑色
-              borderRadius: 4,
-              barThickness: 12                 // 棒の太さ（スッキリ見えます）
-            }]
-          },
-          options: {
-            indexAxis: 'y', // ★これで横棒になります
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false } // 右側の凡例を消してスペース確保
-            },
-            scales: {
-              x: {
-                beginAtZero: true,
-                grid: { display: false },
-                ticks: { font: { size: 9 } }
-              },
-              y: {
-                grid: { display: false },
-                ticks: {
-                  font: { size: 10, weight: 'bold' },
-                  color: '#333'
-                }
-              }
-            },
-            layout: {
-              padding: { left: 0, right: 15, top: 0, bottom: 0 }
-            }
-          }
-        });
+      } catch (err) {
+        console.error('履歴取得エラー:', err);
+        logContainer.innerHTML = `<p class="text-red-400 text-center py-4">データ取得失敗</p>`;
       }
-
-      // ③ 稼働推移
-      const sortedDates = Object.keys(timeline).sort();
-      window.charts.c3 = new Chart(ctx3, {
-        type: 'bar',
-        data: {
-          labels: sortedDates.map(d => d.slice(5)), // MM-DD
-          datasets: [{ label: 'h', data: sortedDates.map(d => timeline[d]), backgroundColor: '#6b8f71' }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
     }
+
+    loadMaintenanceLogs();
 
     // 1. メンテナンス一覧（トラクター一覧）を表示する
     async function loadMachineList() {
@@ -1458,9 +1571,11 @@
                   .select('status')
                   .filter('item_id', 'ilike', `${m.id}_%`);
 
-                const totalItems = 13;
+                const totalItems = (checks && checks.length > 0) ? checks.length : 20;
                 const completedCount = checks ? checks.filter(c => c.status).length : 0;
-                const percent = Math.round((completedCount / totalItems) * 100);
+
+                let percent = Math.round((completedCount / totalItems) * 100);
+                percent = Math.min(100, percent);
 
                 const progressDiv = document.getElementById(`card-progress-${m.id}`);
                 if (progressDiv) {
@@ -1471,11 +1586,11 @@
                       : `<span class="text-orange-500 font-black"><i class="fa-solid fa-spinner text-[9px]"></i> ${percent}% 完了</span>`;
 
                   progressDiv.innerHTML = `
-                    <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
-                    <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
-                      <div class="bg-[#6b8f71] h-1 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
-                    </div>
-                  `;
+        <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
+        <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
+          <div class="bg-[#6b8f71] h-1 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+        </div>
+      `;
                 }
               } catch (err) { console.error(err); }
             })();
@@ -1483,6 +1598,90 @@
           container.appendChild(grid);
         });
       } catch (e) { console.error(e); }
+    }
+
+    async function loadMaintenanceLogs() {
+      const logContainer = document.getElementById('maintenanceLog');
+      if (!logContainer) return;
+
+      try {
+        // 1. 全てのメンテナンス状態を取得
+        const { data: allStatus, error: statusError } = await client
+          .from('maintenance_status')
+          .select('item_id, status, updated_at');
+
+        if (statusError) throw statusError;
+
+        // 2. 機械ごとに「全項目数」と「完了数」をカウント
+        const machineProgress = {};
+        allStatus.forEach(item => {
+          const mId = item.item_id.split('_')[0];
+          if (!machineProgress[mId]) {
+            machineProgress[mId] = { total: 0, completed: 0, lastUpdate: item.updated_at };
+          }
+          machineProgress[mId].total++;
+          if (item.status) {
+            machineProgress[mId].completed++;
+            // 一番新しい完了日時を保持
+            if (new Date(item.updated_at) > new Date(machineProgress[mId].lastUpdate)) {
+              machineProgress[mId].lastUpdate = item.updated_at;
+            }
+          }
+        });
+
+        // 3. 判定ロジック
+        const finishedMachineIds = Object.keys(machineProgress).filter(mId => {
+          const p = machineProgress[mId];
+          // 1つ以上項目があり、かつ（完了数 ＝ 項目数）であること
+          // かつ、特定の「少なすぎるデータ（テスト用）」を除外するために 3項目以上 とする
+          return p.total >= 3 && p.completed === p.total;
+        });
+
+        // 4. 機械名を取得
+        const { data: machines, error: mError } = await client
+          .from('machines')
+          .select('id, name')
+          .in('id', finishedMachineIds);
+
+        if (mError) throw mError;
+
+        const machineMap = {};
+        machines.forEach(m => { machineMap[m.id.toString()] = m.name; });
+
+        // 5. 完了した機械を最新順に並べて表示
+        const displayData = finishedMachineIds
+          .map(mId => ({
+            id: mId,
+            name: machineMap[mId] || `機械(ID:${mId})`,
+            date: machineProgress[mId].lastUpdate
+          }))
+          .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        logContainer.innerHTML = displayData.map(data => {
+          const date = new Date(data.date);
+          const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
+
+          return `
+        <div class="flex items-center justify-between border-b border-gray-50 py-3 last:border-0">
+          <div class="flex flex-col">
+            <span class="text-[13px] font-black text-gray-800">${data.name}</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-[#6b8f71] flex items-center justify-center">
+                <i class="fa-solid fa-check text-[5px] text-white"></i>
+              </span>
+              <span class="text-[10px] text-[#6b8f71] font-bold tracking-wider">ALL MAINTENANCE COMPLETE</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-[11px] text-gray-500 font-mono font-bold">${dateStr}</div>
+          </div>
+        </div>
+      `;
+        }).join('');
+
+      } catch (err) {
+        console.error('履歴取得エラー:', err);
+      }
     }
 
     // 2. 詳細画面を開く
@@ -1624,49 +1823,8 @@
 
 
     // ==========================================
-    // 2. 実務をこなす関数たち（外側に置く）
+    // 2. 実務をこなす関数たち
     // ==========================================
-
-    // --- グラフを描画する関数 ---
-    function drawCharts(data) {
-      console.log("📈 グラフ描画を実行します...");
-
-      if (typeof Chart === 'undefined') {
-        console.error("❌ Chart.jsが読み込まれていません。");
-        return;
-      }
-
-      const ctx1 = document.getElementById('categoryShareChart');
-      const ctx2 = document.getElementById('taskShareChart');
-      const ctx3 = document.getElementById('detailChart');
-
-      if (!ctx1 || !ctx2 || !ctx3) {
-        console.warn("⚠️ グラフ用のキャンバスが見つかりません。IDを確認してください。");
-        return;
-      }
-
-      window.charts = window.charts || { c1: null, c2: null, c3: null };
-      if (window.charts.c1) window.charts.c1.destroy();
-      if (window.charts.c2) window.charts.c2.destroy();
-      if (window.charts.c3) window.charts.c3.destroy();
-
-      const categories = {};
-      data.forEach(d => { categories[d.category] = (categories[d.category] || 0) + 1; });
-
-      window.charts.c1 = new Chart(ctx1, {
-        type: 'doughnut',
-        data: {
-          labels: Object.keys(categories),
-          datasets: [{
-            data: Object.values(categories),
-            backgroundColor: ['#6b8f71', '#9eb3a2', '#d1dbd3', '#e8f0e9', '#3a4d3f']
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      console.log("✅ グラフの描画が完了しました");
-    }
 
     // --- ダッシュボード全体を制御する関数 ---
     async function renderDashboard(machineId) {
@@ -1682,7 +1840,6 @@
           .order("date", { ascending: false });
 
         // 2. 「すべて」以外が選ばれている場合だけ、さらにマシンIDで絞り込む
-        // ここが抜けていたり、順番が違うとボタンが反応しません！
         if (machineId !== 'all') {
           query = query.eq("machine_id", machineId);
         }
@@ -1693,7 +1850,6 @@
         // もしデータが0件なら「データなし」と表示して終わる（エラーで止めない）
         if (!data || data.length === 0) {
           console.warn("⚠️ 2026年のデータが見つかりません");
-          // ランキングやグラフを空にする処理をここに入れると親切です
           const rankingContainer = document.getElementById("rankList");
           if (rankingContainer) rankingContainer.innerHTML = "データなし";
           return;
@@ -1752,14 +1908,13 @@
           const elD = document.getElementById("kpi-days");
 
           if (elH) elH.innerText = totalH.toFixed(1);
-          if (elF) elF.innerText = totalF.toFixed(1); // 給油量
-          if (elA) elA.innerText = fuelAvg;          // 燃費
-          if (elD) elD.innerText = daysSet.size;      // 日数
+          if (elF) elF.innerText = totalF.toFixed(1);
+          if (elA) elA.innerText = fuelAvg;
+          if (elD) elD.innerText = daysSet.size;
 
           console.log("✅ KPI更新完了 (fuel_amount使用):", { totalH, totalF, fuelAvg });
         }
 
-        // ✅ ここが「呼び出し（命令）」だけになっているのが正解！
         if (typeof drawCharts === 'function') {
           drawCharts(data);
         }
@@ -1767,144 +1922,7 @@
       } catch (e) {
         console.error("❌ ダッシュボード描画エラー:", e);
       }
-    } // 👈 renderDashboard はここで終わり
-
-    // --- 2. グラフ描画関数（外側でどっしり構える） ---
-    async function drawCharts(data) {
-      console.log("📊 グラフ描画を開始します...", data.length + "件");
-
-      if (typeof Chart === 'undefined') return;
-
-      // 既存グラフの破棄
-      if (window.charts) {
-        Object.values(window.charts).forEach(c => c && typeof c.destroy === 'function' && c.destroy());
-      }
-      window.charts = {};
-
-      const txt = '#3a3a3a';
-      const colorSet = ['#1b4332', '#2d6a4f', '#40916c', '#52b788', '#74c69d'];
-
-      // --- 1. データ集計（以前の引数に合わせて作成） ---
-      const cat = {};     // 作物
-      const task = {};    // 作業
-      const op = {};      // オペレーター
-      const monthly = new Array(12).fill(0); // 月別(1-12月)
-      let totalH = 0;
-
-      data.forEach(d => {
-        const h = Math.max(0, (parseFloat(d.end_hour) || 0) - (parseFloat(d.start_hour) || 0));
-        totalH += h;
-
-        // ① 作物別
-        cat[d.category || "他"] = (cat[d.category || "他"] || 0) + h;
-
-        // ② 作業内容
-        const taskName = d.task || d.work_name || "他";
-        task[taskName] = (task[taskName] || 0) + h;
-
-        // ③ オペレーター
-        op[d.operator || "不明"] = (op[d.operator || "不明"] || 0) + h;
-
-        // ④ 月別
-        if (d.date) {
-          const month = new Date(d.date).getMonth();
-          monthly[month] += h;
-        }
-      });
-
-      // ドーナツグラフの共通設定
-      const donut = (id, labelData) => {
-        const el = document.getElementById(id);
-        if (!el) return null;
-        return new Chart(el, {
-          type: 'doughnut',
-          data: { labels: Object.keys(labelData), datasets: [{ data: Object.values(labelData), backgroundColor: colorSet, borderWidth: 0 }] },
-          options: {
-            cutout: '75%', maintainAspectRatio: false,
-            plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 10, font: { size: 10 }, color: txt } } }
-          }
-        });
-      };
-
-      // --- 2. 各グラフの描画 ---
-      window.charts.c1 = donut('categoryShareChart', cat);
-      window.charts.c2 = donut('taskShareChart', task);
-      window.charts.c3 = donut('operatorShareChart', op);
-
-      // 月別推移（折れ線）
-      const detailEl = document.getElementById('detailChart');
-      if (detailEl) {
-        window.charts.line = new Chart(detailEl, {
-          type: 'line',
-          data: {
-            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-            datasets: [{ label: 'h', data: monthly, borderColor: '#6b8f71', backgroundColor: 'rgba(107,143,113,0.1)', fill: true, tension: 0.4 }]
-          },
-          options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-      }
-
-      // 横棒グラフ (作業内容分析：ランキング形式)
-      // 横棒グラフ (作業内容分析：ランキング ＋ グラデーション復活)
-      const barEl = document.getElementById('gradientBarChart');
-      if (barEl) {
-        // 1. 稼働時間が多い順に並べ替え
-        const sortedTask = Object.entries(task).sort((a, b) => b[1] - a[1]);
-        const tLabels = sortedTask.map(t => t[0]);
-        const tData = sortedTask.map(t => t[1]);
-
-        window.charts.bar = new Chart(barEl, {
-          type: 'bar',
-          data: {
-            labels: tLabels,
-            datasets: [{
-              label: 'h',
-              data: tData,
-              // ★以前のグラデーション設定を適用
-              backgroundColor: tData.map((_, i) => `rgba(45, 64, 49, ${Math.max(0.2, 1 - (i / tLabels.length))})`),
-              borderRadius: 4,
-              maxBarThickness: 28,
-            }]
-          },
-          options: {
-            indexAxis: 'y',
-            maintainAspectRatio: false,
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: {
-              x: {
-                beginAtZero: true,
-                grid: { color: '#f0f0f0' },
-                ticks: { font: { size: 10 } }
-              },
-              y: {
-                grid: { display: false },
-                ticks: {
-                  autoSkip: false,
-                  font: { size: 11, weight: 'bold' },
-                  color: '#333'
-                }
-              }
-            }
-          }
-        });
-      }
-      // 前年比ゲージ (簡易版)
-      const gaugeEl = document.getElementById('yearComparisonGauge');
-      if (gaugeEl) {
-        const ratio = Math.min(100, (totalH / 500) * 100); // 仮に目標を500hとしています
-        window.charts.gauge = new Chart(gaugeEl, {
-          type: 'doughnut',
-          data: { datasets: [{ data: [ratio, 100 - ratio], backgroundColor: ['#6b8f71', '#eee'], borderWidth: 0 }] },
-          options: { rotation: -90, circumference: 180, cutout: '75%', maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-        const valEl = document.getElementById("detailCompareValue");
-        if (valEl) valEl.innerText = ratio.toFixed(1) + "%";
-      }
-
-      console.log("✅ 豪華版グラフの描画が完了しました");
     }
-
   </script>
 </body>
 
