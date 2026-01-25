@@ -744,8 +744,8 @@
         </button>
 
         <div id="invoicePreviewArea" class="mt-4 hidden text-center">
-          <img id="invoicePreviewImg" src="" class="w-full rounded-lg shadow-md mb-2">
-          <p class="text-[10px] text-gray-500">この画像を修理履歴として保存します</p>
+          <img id="invoicePreviewImg" src="" class="w-full rounded-lg shadow-md mb-2 opacity-50">
+          <p class="text-[10px] text-gray-500">解析用プレビュー（画像は保存されません）</p>
         </div>
       </div>
 
@@ -881,6 +881,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/tesseract.js@v4.0.1/dist/tesseract.min.js"></script>
 
   <script>
 
@@ -1340,55 +1341,60 @@
       }
     }
 
-    function previewInvoice(input) {
-      const previewArea = document.getElementById('invoicePreviewArea');
-      const previewImg = document.getElementById('invoicePreviewImg');
+    async function previewInvoice(input) {
+      const file = input.files[0];
+      if (!file) return;
 
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          previewImg.src = e.target.result;
-          previewArea.classList.remove('hidden');
+      // プレビュー表示（確認用に出すだけで、保存はしません）
+      const previewImg = document.getElementById('invoicePreviewImg');
+      const previewArea = document.getElementById('invoicePreviewArea');
+      previewImg.src = URL.createObjectURL(file);
+      previewArea.classList.remove('hidden');
+
+      // OCR開始の合図（メモ欄に状況を表示）
+      const memoField = document.getElementById('repairMemo');
+      memoField.value = "📄 請求書を読み取り中... 少々お待ちください。";
+
+      try {
+        // Tesseract.jsで解析（日本語と英語を対象）
+        const result = await Tesseract.recognize(file, 'jpn+eng', {
+          logger: m => console.log(m) // 進捗をコンソールに表示
+        });
+
+        const fullText = result.data.text;
+        memoField.value = fullText; // 全文を一旦メモに入れる
+
+        // --- 自動抽出ロジック ---
+
+        // ① 金額の抽出（「円」や「¥」の前の数字を探す）
+        const costMatch = fullText.replace(/,/g, '').match(/(?:金額|合計|合計額|税込|￥|¥)\s?(\d+)/);
+        if (costMatch) {
+          document.getElementById('repairCost').value = costMatch[1];
         }
-        reader.readAsDataURL(input.files[0]);
+
+        // ② 日付の抽出（202x年xx月xx日 や 202x/xx/xx を探す）
+        const dateMatch = fullText.match(/(\d{4})[年\/-](\d{1,2})[月\/-](\d{1,2})/);
+        if (dateMatch) {
+          const y = dateMatch[1];
+          const m = dateMatch[2].padStart(2, '0');
+          const d = dateMatch[3].padStart(2, '0');
+          document.getElementById('repairDate').value = `${y}-${m}-${d}`;
+        }
+
+        // ③ 店舗名の抽出（「株式会社」や「店」を含む行を探すなど：簡易版）
+        const shopMatch = fullText.match(/(?:発行元|店|株式会社|有限会社)\s?([^\n]+)/);
+        if (shopMatch) {
+          document.getElementById('repairShop').value = shopMatch[1].trim();
+        }
+
+        console.log("✅ 解析完了");
+        alert("読み取りが完了しました。内容が正しいか確認してください。");
+
+      } catch (error) {
+        console.error("OCR Error:", error);
+        memoField.value = "❌ 読み取りに失敗しました。手動で入力してください。";
       }
     }
-
-    document.getElementById("saveBtn").onclick = async () => {
-      const mId = document.getElementById("machineSelect").value;
-      const hBefore = parseFloat(document.getElementById("hourBefore").value) || 0;
-      const hAfter = parseFloat(document.getElementById("hourAfter").value) || 0;
-
-      if (!mId) return alert("機械を選択してください");
-      if (hAfter < hBefore) return alert("エラー：稼働後の数値が稼働前より小さくなっています。");
-
-      showModal("登録確認", "ログを登録しますか？", async () => {
-        const logData = {
-          machine_id: mId,
-          date: document.getElementById("workDate").value,
-          // ↓ここを修正：operatorSelect ではなく operator
-          operator: document.getElementById("operator").value,
-          // ↓ここを修正：categorySelect ではなく category
-          category: document.getElementById("category").value,
-          // ↓ここを修正：taskSelect ではなく work_name
-          task: document.getElementById("work_name").value,
-          start_hour: hBefore,
-          end_hour: hAfter,
-          fuel_amount: parseFloat(document.getElementById("fuelAmount").value) || 0,
-          memo: document.getElementById("memoInput").value
-        };
-
-        const { error } = await client.from("hour_logs").insert([logData]);
-
-        if (!error) {
-          // 保存に成功したらページをリロードして最新の状態にする
-          location.reload();
-        } else {
-          alert("保存に失敗しました: " + error.message);
-          console.error("Supabaseエラー:", error);
-        }
-      });
-    };
 
     async function loadLogs(elId, todayOnly) {
       const list = document.getElementById(elId);
