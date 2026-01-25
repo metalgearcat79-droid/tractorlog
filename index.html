@@ -493,7 +493,7 @@
         <textarea id="memoInput" class="w-full p-3 rounded-lg" rows="2"></textarea>
       </div>
 
-      <button id="saveBtn" class="btn-main">ログを保存する</button>
+      <button id="saveBtn" class="btn-main" onclick="saveLog()">ログを保存する</button>
     </div>
 
     <div id="dashboard" class="view">
@@ -770,7 +770,7 @@
         <textarea id="repairMemo" class="w-full p-3 rounded-lg" rows="3"></textarea>
       </div>
 
-      <button id="saveRepairBtn" class="btn-main">修理履歴を保存</button>
+      <button id="saveRepairBtn" class="btn-main" onclick="saveRepairLog()">修理履歴を保存</button>
       <button onclick="switchView('repairView')" class="btn-sub mt-4">修理履歴へ戻る</button>
 
     </div>
@@ -1345,34 +1345,44 @@
       const file = input.files[0];
       if (!file) return;
 
-      // プレビュー表示（確認用に出すだけで、保存はしません）
       const previewImg = document.getElementById('invoicePreviewImg');
       const previewArea = document.getElementById('invoicePreviewArea');
       previewImg.src = URL.createObjectURL(file);
       previewArea.classList.remove('hidden');
 
-      // OCR開始の合図（メモ欄に状況を表示）
       const memoField = document.getElementById('repairMemo');
-      memoField.value = "📄 請求書を読み取り中... 少々お待ちください。";
+      memoField.value = "📄 請求書を解析中... (日本語モード) ⏳";
 
       try {
-        // Tesseract.jsで解析（日本語と英語を対象）
-        const result = await Tesseract.recognize(file, 'jpn+eng', {
-          logger: m => console.log(m) // 進捗をコンソールに表示
+        // 【改良ポイント1】workerを作成し、パラメータを細かく設定する
+        const worker = await Tesseract.createWorker('jpn+eng');
+
+        // OCRの精度を上げるための設定（白黒はっきりさせる等の内部処理を促す）
+        await worker.setParameters({
+          tessedit_pageseg_mode: Tesseract.PSM.AUTO, // 自動レイアウト解析
         });
 
-        const fullText = result.data.text;
-        memoField.value = fullText; // 全文を一旦メモに入れる
+        const { data: { text } } = await worker.recognize(file);
+        await worker.terminate(); // 使い終わったら終了（メモリ節約）
 
-        // --- 自動抽出ロジック ---
+        // 【改良ポイント2】読み取ったテキストのゴミ掃除
+        // 全角スペースを半角に、連続する改行を整理、変な記号を少し除去
+        const fullText = text
+          .replace(/　/g, ' ')
+          .replace(/\n\s*\n/g, '\n')
+          .trim();
 
-        // ① 金額の抽出（「円」や「¥」の前の数字を探す）
-        const costMatch = fullText.replace(/,/g, '').match(/(?:金額|合計|合計額|税込|￥|¥)\s?(\d+)/);
+        memoField.value = fullText;
+
+        // --- 自動抽出ロジック（ここも少し強化） ---
+
+        // ① 金額：数字以外のゴミが混じりやすいので、マッチングを調整
+        const costMatch = fullText.replace(/,/g, '').match(/(?:金額|合計|税込|￥|¥)\s?(\d{3,})/);
         if (costMatch) {
           document.getElementById('repairCost').value = costMatch[1];
         }
 
-        // ② 日付の抽出（202x年xx月xx日 や 202x/xx/xx を探す）
+        // ② 日付： OCRは「2025」を「202S」と読み間違えることがあるので少し柔軟に
         const dateMatch = fullText.match(/(\d{4})[年\/-](\d{1,2})[月\/-](\d{1,2})/);
         if (dateMatch) {
           const y = dateMatch[1];
@@ -1381,14 +1391,15 @@
           document.getElementById('repairDate').value = `${y}-${m}-${d}`;
         }
 
-        // ③ 店舗名の抽出（「株式会社」や「店」を含む行を探すなど：簡易版）
-        const shopMatch = fullText.match(/(?:発行元|店|株式会社|有限会社)\s?([^\n]+)/);
+        // ③ 店舗名： 
+        const shopMatch = fullText.match(/(?:発行元|店|株式会社|有限会社|農協|JA)\s?([^\n]+)/);
         if (shopMatch) {
-          document.getElementById('repairShop').value = shopMatch[1].trim();
+          // 読み取った店名から変な記号を除去
+          const cleanShop = shopMatch[1].replace(/[|｜\[\]]/g, '').trim();
+          document.getElementById('repairShop').value = cleanShop;
         }
 
-        console.log("✅ 解析完了");
-        alert("読み取りが完了しました。内容が正しいか確認してください。");
+        alert("読み取り完了✨\n文字化けがある場合は修正してくださいね。");
 
       } catch (error) {
         console.error("OCR Error:", error);
@@ -1432,7 +1443,7 @@
       }
 
       let total = 0;
-      const displayData = todayOnly ? [...(data || [])].reverse() : (data || []);
+      const displayData = [...(data || [])].reverse();
 
       list.innerHTML = displayData.map(l => {
         const diff = (l.end_hour - l.start_hour);
@@ -1928,6 +1939,102 @@
       } catch (e) {
         console.error("❌ ダッシュボード描画エラー:", e);
       }
+    }
+
+    async function saveMaintenanceRecord() {
+      const item = document.getElementById('newMaintenanceItem')?.value;
+      const operator = document.getElementById('newMaintenanceOperator')?.value;
+      const status = document.getElementById('newMaintenanceStatus')?.value;
+      const memo = document.getElementById('newMaintenanceMemo')?.value;
+
+      // 【ここを確実に！】
+      // window.currentMachineId を明示的に数値として取得する
+      let mId = window.currentMachineId;
+      const numericMachineId = parseInt(mId);
+
+      // 数値じゃない（"all"や空っぽ）場合はエラーを出す
+      if (isNaN(numericMachineId)) {
+        alert("機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
+        return;
+      }
+
+      if (!item) {
+        alert("交換部品・項目名を入力してくださいね🌸");
+        return;
+      }
+
+      try {
+        const { error } = await client.from('maintenance_records').insert([
+          {
+            item_name: item,
+            operator: operator,
+            status: status,
+            memo: memo,
+            date: new Date().toISOString().split('T')[0],
+            machine_id: numericMachineId // ここで数値を使う
+          }
+        ]);
+
+        if (error) throw error;
+
+        alert("メンテナンス情報を記録しました！✨");
+
+        // 入力欄をクリア
+        document.getElementById('newMaintenanceItem').value = '';
+        document.getElementById('newMaintenanceMemo').value = '';
+
+        // 履歴の表示を更新（この関数がある場合）
+        if (typeof loadMaintenanceHistory === 'function') {
+          loadMaintenanceHistory(numericMachineId);
+        }
+
+      } catch (err) {
+        console.error("Maint Save Error:", err);
+        alert("保存に失敗しました: " + (err.message || JSON.stringify(err)));
+      }
+    }
+
+    async function saveLog() {
+      const machineId = document.getElementById('machineSelect')?.value;
+      const workDate = document.getElementById('workDate')?.value;
+      const operator = document.getElementById('operator')?.value;
+      const category = document.getElementById('category')?.value;
+      const workName = document.getElementById('work_name')?.value;
+      const hourBefore = parseFloat(document.getElementById('hourBefore')?.value) || 0;
+      const hourAfter = parseFloat(document.getElementById('hourAfter')?.value) || 0;
+      const fuel = parseFloat(document.getElementById('fuelAmount')?.value) || 0;
+      const memo = document.getElementById('memoInput')?.value;
+
+      // バリデーション（入力チェック）
+      if (!machineId) return alert("機械を選択してください🌸");
+      if (!workDate || !workName) return alert("「作業日」「作業内容」は必須項目です🌸");
+      if (hourAfter < hourBefore) return alert("エラー：稼働後の数値が稼働前より小さくなっています。");
+
+      // 以前のスタイル：showModal を使って確認してから保存
+      showModal("登録確認", "ログを登録しますか？", async () => {
+        try {
+          const { error } = await client.from('hour_logs').insert([{
+            date: workDate,
+            operator: operator,
+            machine_id: parseInt(machineId),
+            start_hour: hourBefore,
+            end_hour: hourAfter,
+            category: category,
+            task: workName,
+            fuel_amount: fuel,
+            memo: memo
+          }]);
+
+          if (error) throw error;
+
+          // 保存成功後、以前のようにページをリロードしてすべてリセット
+          location.reload();
+
+        } catch (err) {
+          console.error("Log Save Error:", err);
+          alert("保存に失敗しました: " + (err.message));
+        }
+      });
     }
   </script>
 </body>
