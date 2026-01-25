@@ -1345,44 +1345,24 @@
       const file = input.files[0];
       if (!file) return;
 
-      const previewImg = document.getElementById('invoicePreviewImg');
-      const previewArea = document.getElementById('invoicePreviewArea');
-      previewImg.src = URL.createObjectURL(file);
-      previewArea.classList.remove('hidden');
-
       const memoField = document.getElementById('repairMemo');
-      memoField.value = "📄 請求書を解析中... (日本語モード) ⏳";
+      memoField.value = "⏳ 解析準備中...";
 
       try {
-        // 【改良ポイント1】workerを作成し、パラメータを細かく設定する
-        const worker = await Tesseract.createWorker('jpn+eng');
+        // 一番エラーが起きにくい「一発読み取り」の書き方に変更
+        const result = await Tesseract.recognize(
+          file,
+          'jpn+eng',
+          { logger: m => console.log(m) }
+        );
 
-        // OCRの精度を上げるための設定（白黒はっきりさせる等の内部処理を促す）
-        await worker.setParameters({
-          tessedit_pageseg_mode: Tesseract.PSM.AUTO, // 自動レイアウト解析
-        });
+        const fullText = result.data.text;
+        memoField.value = fullText; // ここで「全文」がメモに入れば成功！
 
-        const { data: { text } } = await worker.recognize(file);
-        await worker.terminate(); // 使い終わったら終了（メモリ節約）
+        // --- 以下、抽出ロジック（水道料金でも、数字があれば反応するはず） ---
+        const costMatch = fullText.replace(/,/g, '').match(/(?:金額|合計|税込|￥|¥|請求額)\s?(\d{3,})/);
+        if (costMatch) document.getElementById('repairCost').value = costMatch[1];
 
-        // 【改良ポイント2】読み取ったテキストのゴミ掃除
-        // 全角スペースを半角に、連続する改行を整理、変な記号を少し除去
-        const fullText = text
-          .replace(/　/g, ' ')
-          .replace(/\n\s*\n/g, '\n')
-          .trim();
-
-        memoField.value = fullText;
-
-        // --- 自動抽出ロジック（ここも少し強化） ---
-
-        // ① 金額：数字以外のゴミが混じりやすいので、マッチングを調整
-        const costMatch = fullText.replace(/,/g, '').match(/(?:金額|合計|税込|￥|¥)\s?(\d{3,})/);
-        if (costMatch) {
-          document.getElementById('repairCost').value = costMatch[1];
-        }
-
-        // ② 日付： OCRは「2025」を「202S」と読み間違えることがあるので少し柔軟に
         const dateMatch = fullText.match(/(\d{4})[年\/-](\d{1,2})[月\/-](\d{1,2})/);
         if (dateMatch) {
           const y = dateMatch[1];
@@ -1391,19 +1371,11 @@
           document.getElementById('repairDate').value = `${y}-${m}-${d}`;
         }
 
-        // ③ 店舗名： 
-        const shopMatch = fullText.match(/(?:発行元|店|株式会社|有限会社|農協|JA)\s?([^\n]+)/);
-        if (shopMatch) {
-          // 読み取った店名から変な記号を除去
-          const cleanShop = shopMatch[1].replace(/[|｜\[\]]/g, '').trim();
-          document.getElementById('repairShop').value = cleanShop;
-        }
-
-        alert("読み取り完了✨\n文字化けがある場合は修正してくださいね。");
+        console.log("✅ 解析完了");
 
       } catch (error) {
-        console.error("OCR Error:", error);
-        memoField.value = "❌ 読み取りに失敗しました。手動で入力してください。";
+        console.error("OCR Error Detail:", error); // ブラウザのコンソール（F12）に詳細が出ます
+        memoField.value = "❌ 読み取りに失敗しました。\n理由: " + error.message;
       }
     }
 
