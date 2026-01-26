@@ -937,7 +937,7 @@
         const sortedValues = rawData.map(d => d.value);
 
         // 4. グラデーション色の計算
-        const maxVal = sortedValues[0]; // ソート済みなので一番上が最大値
+        const maxVal = sortedValues[0];
         const backgroundColors = sortedValues.map(val => {
           const opacity = 0.3 + (val / maxVal) * 0.7;
           return `rgba(139, 0, 0, ${opacity})`;
@@ -963,7 +963,7 @@
               x: { display: false },
               y: {
                 grid: { display: false },
-                ticks: { font: { size: 11, weight: 'bold' } } // 名前を見やすく
+                ticks: { font: { size: 11, weight: 'bold' } }
               }
             },
             plugins: { legend: { display: false } }
@@ -1021,7 +1021,7 @@
       // --- 【右】上段：前年実績比 (半円ゲージ) ---
       const ctxGauge = document.getElementById('yearComparisonGauge');
       if (ctxGauge) {
-        const ratio = Math.min(100, (totalH / 500) * 100); // 目標500h
+        const ratio = Math.min(100, (totalH / 500) * 100);
         window.charts.gauge = new Chart(ctxGauge, {
           type: 'doughnut',
           data: { datasets: [{ data: [ratio, 100 - ratio], backgroundColor: ['#6b8f71', '#eee'], borderWidth: 0 }] },
@@ -1056,7 +1056,7 @@
     function closeModal() { document.getElementById("customModal").classList.remove("active"); }
 
     function switchView(id) {
-      console.log("Switching to:", id); // どこに切り替えようとしているか確認
+      console.log("Switching to:", id);
 
       // 全てのビューからactiveを取り除く
       document.querySelectorAll('.view').forEach(v => {
@@ -1068,7 +1068,7 @@
       const targetView = document.getElementById(id);
       if (targetView) {
         targetView.classList.add('active');
-        targetView.style.display = 'block'; // 強制的に表示
+        targetView.style.display = 'block';
       } else {
         console.error("エラー: ID '" + id + "' のビューが見つかりません。");
       }
@@ -1143,11 +1143,30 @@
           allMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join("");
       }
 
+      // 4. オペレーター選択の反映
+      const operatorSelect = document.getElementById("operatorSelect");
+      if (operatorSelect) {
+        operatorSelect.innerHTML = '<option value="">選択</option>' +
+          (operators || []).map(o => `<option value="${o.name}">${o.name}</option>`).join("");
+      }
+
+      // 5. 作業種別選択の反映
+      const workTypeSelect = document.getElementById("workTypeSelect");
+      if (workTypeSelect) {
+        workTypeSelect.innerHTML = '<option value="">選択</option>' +
+          (workTypes || []).map(w => `<option value="${w.name}">${w.name}</option>`).join("");
+      }
+
+      // 最後に、ダッシュボードを表示する（ダッシュボード画面にいる場合のみ）
+      if (typeof renderDashboard === 'function') {
+        renderDashboard('all');
+      }
+
       // ダッシュボードの機械別タブ
       const machineTabs = document.getElementById("machineTabs");
       if (machineTabs) {
         // 今選ばれているIDを確実に取得（関数の引数 machineId を使用）
-        const currentId = machineId || 'all';
+        const currentId = 'all';
 
         // 1. 「全体」ボタン
         const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
@@ -1577,7 +1596,7 @@
           grouped[manufacturer].push(m);
         });
 
-        Object.keys(grouped).forEach(brand => {
+        for (const brand of Object.keys(grouped)) {
           const brandHeader = document.createElement("h3");
           brandHeader.className = "text-[#6b8f71] font-bold text-sm mb-2 mt-4 flex items-center gap-2";
           brandHeader.innerHTML = `<i class="fa-solid fa-tag opacity-50"></i> ${brand}`;
@@ -1586,7 +1605,8 @@
           const grid = document.createElement("div");
           grid.className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4";
 
-          grouped[brand].forEach(m => {
+          // 各マシンのカードを作成
+          for (const m of grouped[brand]) {
             const card = document.createElement("div");
             card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95";
             card.onclick = () => openMaintenanceDetail(m.id);
@@ -1608,16 +1628,21 @@
             `;
             grid.appendChild(card);
 
+            // 進捗状況を非同期で取得して反映
             (async () => {
               try {
                 const { data: checks } = await client
                   .from('maintenance_status')
-                  .select('status')
+                  .select('item_id, status')
                   .filter('item_id', 'ilike', `${m.id}_%`);
 
                 const totalItems = 20;
-                const completedCount = checks ? checks.filter(c => c.status === true).length : 0;
+                const uniqueChecks = {};
+                if (checks) {
+                  checks.forEach(c => { uniqueChecks[c.item_id] = c.status; });
+                }
 
+                const completedCount = Object.values(uniqueChecks).filter(status => status === true || status === "true").length;
                 let percent = Math.round((completedCount / totalItems) * 100);
                 percent = Math.min(100, percent);
 
@@ -1630,20 +1655,19 @@
                       : `<span class="text-orange-500 font-black"><i class="fa-solid fa-spinner text-[9px]"></i> ${percent}% 完了</span>`;
 
                   progressDiv.innerHTML = `
-        <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
-        <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
-          <div class="bg-[#6b8f71] h-1 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
-        </div>
-      `;
+                    <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
+                    <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
+                      <div class="bg-[#6b8f71] h-1 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                    </div>
+                  `;
                 }
-              } catch (err) { console.error(err); }
+              } catch (err) { console.error("カード進捗更新エラー:", err); }
             })();
-          });
+          }
           container.appendChild(grid);
-        });
-      } catch (e) { console.error(e); }
+        }
+      } catch (e) { console.error("一覧読み込みエラー:", e); }
     }
-
     async function loadMaintenanceLogs() {
       const logContainer = document.getElementById('maintenanceLog');
       if (!logContainer) return;
@@ -1871,33 +1895,34 @@
     // ==========================================
 
     // --- ダッシュボード全体を制御する関数 ---
-    async function renderDashboard(machineId) {
+    async function renderDashboard(machineId = 'all') {
+      // 【ここが重要！】
+      // 画面内に machineTabs という場所がないなら、ダッシュボード画面ではないと判断して即終了する
+      const machineTabs = document.getElementById("machineTabs");
+      if (!machineTabs) return;
+
       window.currentViewMachineId = machineId;
       console.log("🛠️ ダッシュボード描画中... ID:", machineId);
+      const currentId = machineId;
+      const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
 
-      // 【ここを追加・修正】タブの描画を一番最初に行う
-      const machineTabs = document.getElementById("machineTabs");
-      if (machineTabs) {
-        const currentId = machineId;
-        const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
-
-        let tabsHTML = `
+      let tabsHTML = `
       <button onclick="renderDashboard('all')" 
               class="tab-btn ${allBtnClass}" 
               style="min-width: 80px; letter-spacing: 0.2em;">全 体</button>
     `;
 
-        if (typeof allMachines !== 'undefined' && allMachines.length > 0) {
-          tabsHTML += allMachines.map(m => {
-            const isActive = (String(m.id) === String(currentId)) ? 'active' : 'inactive';
-            return `
+      if (typeof allMachines !== 'undefined' && allMachines.length > 0) {
+        tabsHTML += allMachines.map(m => {
+          const isActive = (String(m.id) === String(currentId)) ? 'active' : 'inactive';
+          return `
           <button onclick="renderDashboard(${m.id})" 
                   class="tab-btn ${isActive}">${m.name}</button>
         `;
-          }).join("");
-        }
-        machineTabs.innerHTML = tabsHTML;
+        }).join("");
       }
+      machineTabs.innerHTML = tabsHTML;
+
 
       try {
         // 1. まずベースのクエリを作る（2026年以降＋日付順）
