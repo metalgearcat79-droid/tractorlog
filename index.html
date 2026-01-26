@@ -563,7 +563,7 @@
           <div class="card">
             <p class="chart-title" style="display: flex; align-items: center;">
               <i class="fa-solid fa-user-check" style="margin-right: 8px; color: #6b8f71;"></i>
-              担当者別比率
+              オペレーター比率
             </p>
 
             <div class="chart-wrapper relative">
@@ -926,10 +926,6 @@
           { label: 'YT333', value: 30000 },
           { label: 'TJV95', value: 7000 },
           { label: 'SL60', value: 20000 },
-          { label: 'コンバイン', value: 120000 },
-          { label: '田植機', value: 15000 },
-          { label: '軽トラ', value: 7000 },
-          { label: 'トラック', value: 20000 },
           { label: 'MZ70', value: 4000 }
         ];
 
@@ -1150,16 +1146,32 @@
       // ダッシュボードの機械別タブ
       const machineTabs = document.getElementById("machineTabs");
       if (machineTabs) {
-        machineTabs.innerHTML = `
-    <button onclick="renderDashboard('all')" 
-            id="tab-all" 
-            class="tab-btn active" 
-            style="min-width: 120px; letter-spacing: 0.2em;">全　体</button>
-  ` + allMachines.map(m => `
-    <button onclick="renderDashboard(${m.id})" 
-            id="tab-${m.id}" 
-            class="tab-btn inactive">${m.name}</button>
-  `).join("");
+        // 今選ばれているIDを確実に取得（関数の引数 machineId を使用）
+        const currentId = machineId || 'all';
+
+        // 1. 「全体」ボタン
+        const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
+        let tabsHTML = `
+          <button onclick="renderDashboard('all')" 
+                  id="tab-all" 
+                  class="tab-btn ${allBtnClass}" 
+                  style="min-width: 80px; letter-spacing: 0.2em;">全 体</button>
+        `;
+
+        // 2. 各機械のボタン（allMachines.map）
+        if (typeof allMachines !== 'undefined' && allMachines.length > 0) {
+          tabsHTML += allMachines.map(m => {
+            // IDを比較して active か inactive か決める
+            const isActive = (String(m.id) === String(currentId)) ? 'active' : 'inactive';
+            return `
+              <button onclick="renderDashboard(${m.id})" 
+                      id="tab-${m.id}" 
+                      class="tab-btn ${isActive}">${m.name}</button>
+            `;
+          }).join("");
+        }
+
+        machineTabs.innerHTML = tabsHTML;
       }
 
       // オペレーター選択の反映（検索と入力両方）
@@ -1458,7 +1470,7 @@
       }
 
       let total = 0;
-      const displayData = [...(data || [])].reverse();
+      const displayData = todayOnly ? [...(data || [])].reverse() : (data || []);
 
       list.innerHTML = displayData.map(l => {
         const diff = (l.end_hour - l.start_hour);
@@ -1603,8 +1615,8 @@
                   .select('status')
                   .filter('item_id', 'ilike', `${m.id}_%`);
 
-                const totalItems = (checks && checks.length > 0) ? checks.length : 20;
-                const completedCount = checks ? checks.filter(c => c.status).length : 0;
+                const totalItems = 20;
+                const completedCount = checks ? checks.filter(c => c.status === true).length : 0;
 
                 let percent = Math.round((completedCount / totalItems) * 100);
                 percent = Math.min(100, percent);
@@ -1863,6 +1875,30 @@
       window.currentViewMachineId = machineId;
       console.log("🛠️ ダッシュボード描画中... ID:", machineId);
 
+      // 【ここを追加・修正】タブの描画を一番最初に行う
+      const machineTabs = document.getElementById("machineTabs");
+      if (machineTabs) {
+        const currentId = machineId;
+        const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
+
+        let tabsHTML = `
+      <button onclick="renderDashboard('all')" 
+              class="tab-btn ${allBtnClass}" 
+              style="min-width: 80px; letter-spacing: 0.2em;">全 体</button>
+    `;
+
+        if (typeof allMachines !== 'undefined' && allMachines.length > 0) {
+          tabsHTML += allMachines.map(m => {
+            const isActive = (String(m.id) === String(currentId)) ? 'active' : 'inactive';
+            return `
+          <button onclick="renderDashboard(${m.id})" 
+                  class="tab-btn ${isActive}">${m.name}</button>
+        `;
+          }).join("");
+        }
+        machineTabs.innerHTML = tabsHTML;
+      }
+
       try {
         // 1. まずベースのクエリを作る（2026年以降＋日付順）
         let query = client
@@ -1962,7 +1998,6 @@
       const status = document.getElementById('newMaintenanceStatus')?.value;
       const memo = document.getElementById('newMaintenanceMemo')?.value;
 
-      // 【ここを確実に！】
       // window.currentMachineId を明示的に数値として取得する
       let mId = window.currentMachineId;
       const numericMachineId = parseInt(mId);
