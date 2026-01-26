@@ -701,8 +701,9 @@
 
     <div id="repairView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
 
-      <button onclick="switchView('invoiceOCRView')" class="btn-main w-full mb-6">
-        修理の登録</button>
+      <button onclick="goToRepairRegistration()" class="btn-main w-full mb-6">
+        修理の登録
+      </button>
 
       <!-- 累計修理費 -->
       <div class="text-center my-6">
@@ -750,6 +751,12 @@
       </div>
 
       <!-- 自動入力される項目 -->
+      <div class="card">
+        <label class="block text-xs font-bold text-gray-400 mb-1">対象の機械</label>
+        <select id="repairMachineSelect" class="w-full p-3 rounded-lg border bg-white">
+        </select>
+      </div>
+
       <div class="card">
         <label class="block text-xs font-bold text-gray-400 mb-1">修理日</label>
         <input type="date" id="repairDate" class="w-full p-3 rounded-lg">
@@ -881,11 +888,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://unpkg.com/tesseract.js@v4.0.1/dist/tesseract.min.js"></script>
 
   <script>
-
-
     const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
     const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
     const GOOGLE_VISION_API_KEY = 'AIzaSyCdX_rYEeovClhxRAwAOhPxG4CPTX6fqlg';
@@ -1430,6 +1434,91 @@
       } finally {
         if (saveBtn) saveBtn.disabled = false; // エラーでも成功でもボタンを復活させる
       }
+    }
+
+    async function saveRepairLog() {
+      console.log("保存処理を開始します...");
+
+      // 1. 画面から入力値を取得
+      const dateValue = document.getElementById('repairDate').value;
+      const shopValue = document.getElementById('repairShop').value;
+      const costValue = document.getElementById('repairCost').value;
+      const memoValue = document.getElementById('repairMemo').value;
+      const machineId = document.getElementById('repairMachineSelect').value;
+
+      // 2. 必須チェック
+      if (!dateValue || !costValue) {
+        alert("「修理日」と「金額」を入力してください。");
+        return;
+      }
+
+      const btn = document.getElementById('saveRepairBtn');
+      btn.disabled = true;
+      btn.innerText = "保存中...";
+
+      try {
+        // 3. Supabaseへ保存
+        const { error } = await client
+          .from('repair_logs')
+          .insert([
+            {
+              date: dateValue,
+              shop: shopValue,
+              cost: parseInt(costValue),
+              memo: memoValue,
+              machine_id: machineId
+            }
+          ]);
+
+        if (error) throw error;
+        alert("修理履歴を保存しました！🚜🌾");
+
+        // 4. フォームリセット
+        document.getElementById('repairDate').value = "";
+        document.getElementById('repairShop').value = "";
+        document.getElementById('repairCost').value = "";
+        document.getElementById('repairMemo').value = "";
+
+        // 5. 履歴を再読み込みして戻る
+        if (typeof fetchRepairLogs === 'function') {
+          await fetchRepairLogs();
+        }
+        switchView('repairView');
+
+      } catch (error) {
+        console.error("Save Error:", error);
+        alert("保存失敗: " + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "修理履歴を保存";
+      }
+    } // <--- 🌟ここで saveRepairLog が終わるように「 } 」を追加しました！
+
+    // --- ここから下は、独立した関数として外に出します ---
+
+    function prepareMachineSelect() {
+      const select = document.getElementById('repairMachineSelect');
+      if (!select) return;
+
+      select.innerHTML = '';
+
+      if (allMachines && allMachines.length > 0) {
+        allMachines.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.id;
+          opt.textContent = m.name;
+          select.appendChild(opt);
+        });
+      } else {
+        const opt = document.createElement('option');
+        opt.textContent = "機械が登録されていません";
+        select.appendChild(opt);
+      }
+    }
+
+    function goToRepairRegistration() {
+      prepareMachineSelect(); // リストを作成
+      switchView('invoiceOCRView'); // 画面を切り替え
     }
 
     async function loadLogs(elId, todayOnly) {
