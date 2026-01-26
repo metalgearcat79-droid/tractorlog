@@ -766,7 +766,7 @@
       </div>
 
       <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">メモ（OCR全文）</label>
+        <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
         <textarea id="repairMemo" class="w-full p-3 rounded-lg" rows="3"></textarea>
       </div>
 
@@ -1379,71 +1379,56 @@
 
       const previewImg = document.getElementById('invoicePreviewImg');
       const previewArea = document.getElementById('invoicePreviewArea');
+      const saveBtn = document.getElementById('saveRepairBtn');
+
+      // プレビュー表示
       previewImg.src = URL.createObjectURL(file);
       previewArea.classList.remove('hidden');
 
       const memoField = document.getElementById('repairMemo');
       memoField.value = "📄 Google AIが解析中... ⏳";
+      if (saveBtn) saveBtn.disabled = true; // 解析中は二重押し防止で無効化
 
       try {
-        // 1. 画像ファイルを Base64 形式に変換する
         const base64Image = await new Promise((resolve) => {
           const reader = new FileReader();
           reader.onload = () => resolve(reader.result.split(',')[1]);
           reader.readAsDataURL(file);
         });
 
-        // 2. Google Vision API を呼び出す
         const url = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`;
-        const requestData = {
-          requests: [{
-            image: { content: base64Image },
-            features: [{ type: "TEXT_DETECTION" }]
-          }]
-        };
-
         const response = await fetch(url, {
           method: "POST",
-          body: JSON.stringify(requestData)
+          body: JSON.stringify({
+            requests: [{ image: { content: base64Image }, features: [{ type: "TEXT_DETECTION" }] }]
+          })
         });
         const result = await response.json();
 
-        // 読み取った全テキストを取得
-        const detections = result.responses[0]?.textAnnotations;
-        if (!detections || detections.length === 0) {
-          memoField.value = "❌ 文字が読み取れませんでした。";
-          return;
-        }
+        const fullText = result.responses[0]?.textAnnotations[0]?.description || "";
 
-        const fullText = detections[0].description;
-        memoField.value = fullText; // メモ欄に全ての読み取り結果を表示
-        console.log("🔍 OCR読み取り結果:", fullText);
-
-        // 3. 自動抽出（金額と日付）
-        // スペースや改行を消して検索しやすくする
+        // --- 抽出処理 ---
         const cleanText = fullText.replace(/\s/g, '');
+        const costMatch = cleanText.match(/(?:金額|合計|税込|￥|¥|請求額)[:：]?([0-9,]{3,})/);
+        if (costMatch) document.getElementById('repairCost').value = costMatch[1].replace(/,/g, '');
 
-        // 金額の抽出（「金額」「合計」などの後の数字を拾う）
-        const costMatch = cleanText.match(/(?:金額|合計|税込|￥|¥|請求額|合計金額)[:：]?([0-9,]{3,})/);
-        if (costMatch) {
-          // カンマを除去して数字だけをセット
-          document.getElementById('repairCost').value = costMatch[1].replace(/,/g, '');
-        }
-
-        // 日付の抽出 (2026年1月26日 or 2026/01/26 など)
         const dateMatch = cleanText.match(/(\d{4})[年\/-](\d{1,2})[月\/-](\d{1,2})/);
         if (dateMatch) {
-          const y = dateMatch[1];
-          const m = dateMatch[2].padStart(2, '0');
-          const d = dateMatch[3].padStart(2, '0');
-          document.getElementById('repairDate').value = `${y}-${m}-${d}`;
+          document.getElementById('repairDate').value = `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}`;
         }
 
-        alert("Google AIによる解析が完了しました！✨");
+        // ✨ 解析が終わったらプレビューを消す
+        previewArea.classList.add('hidden');
+        previewImg.src = "";
+        memoField.value = "解析完了: " + fullText.substring(0, 50) + "..."; // 冒頭だけメモに残す
+
+        alert("解析完了！内容を確認して保存してください。");
 
       } catch (error) {
         console.error("OCR Error:", error);
-        memoField.value = "❌ 通信エラーが発生しました。";
+        memoField.value = "❌ 解析エラー";
+      } finally {
+        if (saveBtn) saveBtn.disabled = false; // エラーでも成功でもボタンを復活させる
       }
     }
 
@@ -1837,7 +1822,6 @@
       } catch (e) { console.error(e); }
     }
 
-    // --- その他、貼り付けに含まれていた関数 ---
     async function loadMaintenanceHistory(machineId) {
       try {
         const { data } = await client.from('maintenance_records').select('*').eq('machine_id', machineId).order('created_at', { ascending: false });
@@ -1890,8 +1874,6 @@
 
     // --- ダッシュボード全体を制御する関数 ---
     async function renderDashboard(machineId = 'all') {
-      // 【ここが重要！】
-      // 画面内に machineTabs という場所がないなら、ダッシュボード画面ではないと判断して即終了する
       const machineTabs = document.getElementById("machineTabs");
       if (!machineTabs) return;
 
