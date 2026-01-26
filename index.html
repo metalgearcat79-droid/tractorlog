@@ -888,6 +888,7 @@
 
     const SUPABASE_URL = "https://txsqxnwgolybcdclazdx.supabase.co";
     const SUPABASE_KEY = "sb_publishable_8JEM6Yyg5_oQpF-grdaxIw_rrxZBQYj";
+    const GOOGLE_VISION_API_KEY = 'AIzaSyCdX_rYEeovClhxRAwAOhPxG4CPTX6fqlg';
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     let allMachines = []; let currentMachineId = 'all'; window.charts = {};
 
@@ -1382,29 +1383,55 @@
       previewArea.classList.remove('hidden');
 
       const memoField = document.getElementById('repairMemo');
-      memoField.value = "⏳ 画像を最適化中...";
+      memoField.value = "📄 Google AIが解析中... ⏳";
 
       try {
-        // 【魔法の工程】画像を白黒ハッキリさせる加工
-        const processedImage = await preprocessImage(file);
+        // 1. 画像ファイルを Base64 形式に変換する
+        const base64Image = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.readAsDataURL(file);
+        });
 
-        memoField.value = "📄 読み取り中... (日本語・高精度モード) ⏳";
+        // 2. Google Vision API を呼び出す
+        const url = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`;
+        const requestData = {
+          requests: [{
+            image: { content: base64Image },
+            features: [{ type: "TEXT_DETECTION" }]
+          }]
+        };
 
-        // Tesseractの実行
-        const result = await Tesseract.recognize(
-          processedImage, // 加工した画像を送る
-          'jpn+eng',
-          { logger: m => console.log(m) }
-        );
+        const response = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify(requestData)
+        });
+        const result = await response.json();
 
-        const fullText = result.data.text.replace(/\s/g, ''); // スペースを消して密度を上げる
-        memoField.value = result.data.text;
+        // 読み取った全テキストを取得
+        const detections = result.responses[0]?.textAnnotations;
+        if (!detections || detections.length === 0) {
+          memoField.value = "❌ 文字が読み取れませんでした。";
+          return;
+        }
 
-        // --- 自動抽出（少しパターンを増やしました） ---
-        const costMatch = fullText.match(/(?:金額|合計|税込|￥|¥|請求額)(\d{3,})/);
-        if (costMatch) document.getElementById('repairCost').value = costMatch[1];
+        const fullText = detections[0].description;
+        memoField.value = fullText; // メモ欄に全ての読み取り結果を表示
+        console.log("🔍 OCR読み取り結果:", fullText);
 
-        const dateMatch = fullText.match(/(\d{4})[年\/-](\d{1,2})[月\/-](\d{1,2})/);
+        // 3. 自動抽出（金額と日付）
+        // スペースや改行を消して検索しやすくする
+        const cleanText = fullText.replace(/\s/g, '');
+
+        // 金額の抽出（「金額」「合計」などの後の数字を拾う）
+        const costMatch = cleanText.match(/(?:金額|合計|税込|￥|¥|請求額|合計金額)[:：]?([0-9,]{3,})/);
+        if (costMatch) {
+          // カンマを除去して数字だけをセット
+          document.getElementById('repairCost').value = costMatch[1].replace(/,/g, '');
+        }
+
+        // 日付の抽出 (2026年1月26日 or 2026/01/26 など)
+        const dateMatch = cleanText.match(/(\d{4})[年\/-](\d{1,2})[月\/-](\d{1,2})/);
         if (dateMatch) {
           const y = dateMatch[1];
           const m = dateMatch[2].padStart(2, '0');
@@ -1412,45 +1439,12 @@
           document.getElementById('repairDate').value = `${y}-${m}-${d}`;
         }
 
-        alert("解析が終わりました！✨\n水道料金の領収書、さっきより読めていますか？");
+        alert("Google AIによる解析が完了しました！✨");
 
       } catch (error) {
         console.error("OCR Error:", error);
-        memoField.value = "❌ 読み取りに失敗しました。";
+        memoField.value = "❌ 通信エラーが発生しました。";
       }
-    }
-
-    // --- 画像を白黒・高コントラストにする補助関数 ---
-    function preprocessImage(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = img.width;
-            canvas.height = img.height;
-
-            // 画像を描画
-            ctx.drawImage(img, 0, 0);
-
-            // 画像データを取得してグレースケール＆コントラスト調整
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const data = imageData.data;
-            for (let i = 0; i < data.length; i += 4) {
-              const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-              // 128を境に白か黒に振り切る（二値化に近い処理）
-              const v = avg > 128 ? 255 : 0;
-              data[i] = data[i + 1] = data[i + 2] = v;
-            }
-            ctx.putImageData(imageData, 0, 0);
-            resolve(canvas.toDataURL('image/jpeg', 0.9));
-          };
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
     }
 
     async function loadLogs(elId, todayOnly) {
@@ -2110,6 +2104,40 @@
           alert("保存に失敗しました: " + (err.message));
         }
       });
+    }
+
+    // --- Google Vision APIを使って画像から数字を読み取る関数 ---
+    async function performOCR(base64Image) {
+      const url = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`;
+
+      const requestData = {
+        requests: [{
+          image: { content: base64Image },
+          features: [{ type: "TEXT_DETECTION" }]
+        }]
+      };
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify(requestData)
+        });
+        const result = await response.json();
+
+        // 読み取った全テキストを結合
+        const detections = result.responses[0].textAnnotations;
+        if (!detections || detections.length === 0) return null;
+
+        const fullText = detections[0].description;
+        console.log("🔍 OCR読み取り結果:", fullText);
+
+        // テキストから「数字（小数点含む）」だけを抽出する（例: "123.4"）
+        const match = fullText.match(/\d+(\.\d+)?/);
+        return match ? match[0] : null;
+      } catch (err) {
+        console.error("❌ OCRエラー:", err);
+        return null;
+      }
     }
   </script>
 </body>
