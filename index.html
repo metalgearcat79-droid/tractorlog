@@ -398,8 +398,8 @@
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
       <button onclick="switchView('dashboard')" class="menu-item"><i
           class="fa-solid fa-chart-line w-8 text-lg"></i>DASHBOARD</button>
-      <button onclick="switchView('repairView')" class="menu-item"><i
-          class="fa-solid fa-tools w-8 text-lg"></i>修理履歴</button>
+      <button onclick="switchView('repairView'); loadRepairDashboard(); closeMenu();" class="menu-item">
+        <i class="fa-solid fa-tools w-8 text-lg"></i>修理履歴 </button>
       <button onclick="switchView('maintenanceMachineListView'); loadMachineList();" class="menu-item"><i
           class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス記録</button>
       <button onclick="switchView('versionView')" class="menu-item"><i
@@ -419,6 +419,23 @@
       </div>
     </div>
   </div>
+
+
+
+  <div id="customModal">
+    <div class="modal-content">
+      <div class="modal-header bg-[#2d4031] p-4 text-white text-center">
+        <h3 id="modalTitle" class="font-bold">CONFIRM</h3>
+      </div>
+      <div class="modal-body p-6 text-center font-bold" id="modalMessage">メッセージ</div>
+      <div class="modal-footer p-4 bg-gray-50 flex gap-2">
+        <button class="flex-1 p-2 bg-gray-200 rounded-lg" onclick="closeModal()">戻る</button>
+        <button id="modalOkBtn" class="flex-1 p-2 bg-[#6b8f71] text-white rounded-lg">実行する</button>
+      </div>
+    </div>
+  </div>
+
+
 
   <div id="mainContainer">
     <header id="pageHeader" class="flex flex-col items-center justify-center py-8 relative">
@@ -699,30 +716,62 @@
       </button>
     </div>
 
-    <div id="repairView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
+    <div id="repairView" class="view px-4 max-w-5xl mx-auto pb-16 hidden bg-[#f8f9fa]">
 
-      <button onclick="goToRepairRegistration()" class="btn-main w-full mb-6">
-        修理の登録
-      </button>
-
-      <!-- 累計修理費 -->
-      <div class="text-center my-6">
-        <div class="text-sm text-gray-500">累計修理費</div>
-        <div id="totalRepairCost" class="text-3xl font-bold text-[#6b8f71]">¥ 0</div>
+      <div class="flex justify-between items-center pt-8 mb-6">
+        <h2 class="text-xl md:text-2xl font-extrabold text-[#6b8f71] flex items-center gap-2">
+          <i class="fa-solid fa-screwdriver-wrench"></i> Tractor 修理履歴
+        </h2>
+        <button onclick="switchView('invoiceOCRView'); populateMachineSelect();"
+          class="bg-[#6b8f71] text-white px-5 py-2 rounded-full shadow-lg active:scale-95 transition-all text-xs font-bold">
+          <i class="fa-solid fa-plus mr-1"></i> 新規登録
+        </button>
       </div>
 
-      <!-- 年ごとの修理費 -->
-      <h2 class="font-bold text-lg mt-6 mb-2">年ごとの修理費</h2>
-      <div id="yearlyRepairContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+      <div
+        class="bg-gradient-to-br from-[#6b8f71] to-[#4b634d] rounded-[2rem] p-6 text-white shadow-xl mb-8 relative overflow-hidden">
+        <div class="relative z-10">
+          <p class="text-[#d1e0d3] text-[10px] md:text-xs font-medium mb-1 uppercase tracking-widest">2026年度 累計修理費</p>
+          <h3 id="totalRepairCost" class="text-3xl md:text-5xl font-black tracking-wider">¥ 0</h3>
+          <div class="mt-4 flex gap-4 text-[10px] text-[#d1e0d3]">
+            <span><i class="fa-solid fa-tractor mr-1"></i> 酒田市・八幡日向地区</span>
+          </div>
+        </div>
+        <i class="fa-solid fa-gears absolute -right-4 -bottom-4 text-white/10 text-7xl md:text-8xl rotate-12"></i>
+      </div>
 
-      <!-- 機械ごとの修理費 -->
-      <h2 class="font-bold text-lg mt-6 mb-2">機械ごとの修理費</h2>
-      <div id="machineRepairContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-      <!-- 最近の修理履歴 -->
-      <h2 class="font-bold text-lg mt-6 mb-2">最近の修理</h2>
-      <div id="recentRepairContainer" class="space-y-3"></div>
+        <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-gray-100 flex flex-col">
+          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
+            <i class="fa-solid fa-calendar-days"></i> 年ごとの修理費
+          </div>
+          <div id="yearlyRepairContainer" class="space-y-2 flex-grow text-sm">
+          </div>
+        </div>
 
+        <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-gray-100 flex flex-col">
+          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
+            <i class="fa-solid fa-microchip"></i> 機械ごとの集計
+          </div>
+          <div id="machineRepairContainer" class="space-y-2 flex-grow text-sm">
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-gray-100 flex flex-col">
+          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
+            <i class="fa-solid fa-clock-rotate-left"></i> 最近の修理
+          </div>
+          <div id="recentRepairContainer" class="space-y-3 flex-grow">
+          </div>
+        </div>
+      </div>
+
+      <div button onclick="switchView('inputView')"
+        class="bg-white border-2 border-gray-100 text-gray-500 px-8 py-3 rounded-2xl shadow-sm hover:bg-gray-50 hover:text-[#6b8f71] active:scale-95 transition-all font-bold text-sm inline-flex items-center gap-2">
+        <i class="fa-solid fa-house"></i> TOP（入力画面）に戻る
+        </button>
+      </div>
     </div>
 
     <div id="invoiceOCRView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
@@ -778,7 +827,7 @@
       </div>
 
       <button id="saveRepairBtn" class="btn-main" onclick="saveRepairLog()">修理履歴を保存</button>
-      <button onclick="switchView('repairView')" class="btn-sub mt-4">修理履歴へ戻る</button>
+      <button onclick="switchView('repairView'); loadRepairDashboard();" class="btn-sub mt-4 w-full">修理履歴へ戻る</button>
 
     </div>
 
@@ -1466,35 +1515,39 @@
               shop: shopValue,
               cost: parseInt(costValue),
               memo: memoValue,
-              machine_id: machineId
+              machine_id: machineId || null // IDが空でも保存できるようにする
             }
           ]);
 
         if (error) throw error;
-        alert("修理履歴を保存しました！🚜🌾");
 
-        // 4. フォームリセット
-        document.getElementById('repairDate').value = "";
-        document.getElementById('repairShop').value = "";
-        document.getElementById('repairCost').value = "";
-        document.getElementById('repairMemo').value = "";
+        // --- ここをオシャレに書き換え ---
+        btn.innerText = "保存完了！";
 
-        // 5. 履歴を再読み込みして戻る
-        if (typeof fetchRepairLogs === 'function') {
-          await fetchRepairLogs();
+        // 1. 成功したらダッシュボードの数字を再計算
+        loadRepairDashboard();
+
+        // 2. モーダルで通知（もしモーダルが動くなら）
+        if (typeof showCustomModal === 'function') {
+          showCustomModal("保存完了", "修理履歴を記録しました。ダッシュボードを更新します。");
+        } else {
+          alert("保存完了しました！🚜🌾");
         }
-        switchView('repairView');
 
-      } catch (error) {
-        console.error("Save Error:", error);
-        alert("保存失敗: " + error.message);
-      } finally {
+        // 3. 自動的に履歴トップ画面に戻す
+        setTimeout(() => {
+          switchView('repairView');
+          btn.disabled = false;
+          btn.innerText = "修理履歴を保存";
+        }, 1500);
+
+      } catch (err) {
+        console.error("❌ 保存に失敗しました:", err);
+        alert("エラーで保存できませんでした: " + err.message);
         btn.disabled = false;
         btn.innerText = "修理履歴を保存";
       }
-    } // <--- 🌟ここで saveRepairLog が終わるように「 } 」を追加しました！
-
-    // --- ここから下は、独立した関数として外に出します ---
+    }
 
     function prepareMachineSelect() {
       const select = document.getElementById('repairMachineSelect');
@@ -1953,6 +2006,10 @@
         renderDashboard('all');
       }
 
+      if (typeof switchView === 'function') {
+        switchView('portalView');
+      }
+
       console.log("✅ 全データの初期化命令を完了しました");
     }); // ← ここで DOMContentLoaded がスッキリ終了！
 
@@ -2146,8 +2203,8 @@
       const memo = document.getElementById('memoInput')?.value;
 
       // バリデーション（入力チェック）
-      if (!machineId) return alert("機械を選択してください🌸");
-      if (!workDate || !workName) return alert("「作業日」「作業内容」は必須項目です🌸");
+      if (!machineId) return alert("機械を選択してください");
+      if (!workDate || !workName) return alert("「作業日」「作業内容」は必須項目です");
       if (hourAfter < hourBefore) return alert("エラー：稼働後の数値が稼働前より小さくなっています。");
 
       // 以前のスタイル：showModal を使って確認してから保存
@@ -2208,6 +2265,62 @@
       } catch (err) {
         console.error("❌ OCRエラー:", err);
         return null;
+      }
+    }
+    /**
+     * 修理履歴ページのデータを全て読み込んで更新する
+     */
+    async function loadRepairDashboard() {
+      console.log("📊 集計を開始します...");
+      try {
+        const { data, error } = await client
+          .from('repair_logs')
+          .select('*'); // orderは一旦外して全取得を優先
+
+        if (error) throw error;
+
+        console.log("📦 届いたデータの中身:", data);
+
+        if (!data || data.length === 0) {
+          document.getElementById('totalRepairCost').textContent = "データなし";
+          return;
+        }
+
+        // --- 合計計算（どんな形式でも数字にする） ---
+        let total = 0;
+        data.forEach(log => {
+          // カンマが入っていても、文字になっていても、数字に変換する
+          const costNum = Number(String(log.cost).replace(/[^0-9.-]+/g, ""));
+          console.log(`検証中: ${log.shop} の金額 -> 原文:${log.cost} 変換後:${costNum}`);
+          if (!isNaN(costNum)) {
+            total += costNum;
+          }
+        });
+
+        // 画面に表示
+        document.getElementById('totalRepairCost').textContent = `¥ ${total.toLocaleString()}`;
+
+        // --- リスト表示も実行 ---
+        const recentContainer = document.getElementById('recentRepairContainer');
+        if (recentContainer) {
+          recentContainer.innerHTML = '';
+          data.slice(0, 5).forEach(log => {
+            recentContainer.innerHTML += `
+          <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 mb-2 flex justify-between items-center">
+            <div>
+              <div class="text-[10px] text-gray-400">${log.date}</div>
+              <div class="font-bold text-[#2d4031]">${log.shop || '店舗不明'}</div>
+            </div>
+            <div class="font-bold text-[#6b8f71]">¥${Number(log.cost).toLocaleString()}</div>
+          </div>`;
+          });
+        }
+
+        // 年別・機械別タイルも更新
+        updateSummaryTiles(data);
+
+      } catch (err) {
+        console.error("❌ エラー発生:", err);
       }
     }
   </script>
