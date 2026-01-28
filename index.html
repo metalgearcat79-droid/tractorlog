@@ -498,13 +498,13 @@
             <input type="number" id="hourBefore" class="w-full p-3 rounded-lg font-bold" step="0.1"
               oninput="calcDiff()" />
           </div>
-          <div class="flex-1">
+          <div class="flex-1 min-w-0">
             <label class="block text-xs font-bold text-gray-400 mb-1">稼働後</label>
-            <div class="flex items-center gap-2">
-              <input type="number" id="hourAfter" class="flex-1 p-3 rounded-lg font-bold" step="0.1" oninput="calcDiff()" />
+            <div class="flex items-center gap-2 min-w-0">
+              <input type="number" id="hourAfter" class="flex-1 min-w-0 p-3 rounded-lg font-bold" step="0.1" oninput="calcDiff()" />
               <input type="file" id="hourAfterImage" accept="image/*" capture="environment" class="hidden" onchange="handleHourAfterImage(this)">
               <button type="button" onclick="document.getElementById('hourAfterImage').click()"
-                class="p-2 bg-white border rounded-lg text-[#6b8f71] shadow-sm hover:bg-[#f0f7f1]"><i class="fa-solid fa-camera"></i></button>
+                class="flex-none p-2 bg-white border rounded-lg text-[#6b8f71] shadow-sm hover:bg-[#f0f7f1]"><i class="fa-solid fa-camera"></i></button>
             </div>
           </div>
         </div>
@@ -1305,6 +1305,10 @@
       if (document.getElementById("filterMonth")) {
         document.getElementById("filterMonth").value = today.substring(0, 7);
       }
+
+      // 安全のため、機械選択に change リスナを確実に追加
+      const msEl = document.getElementById('machineSelect');
+      if (msEl && !msEl.onchange) msEl.addEventListener('change', autoFillHour);
 
       console.log("全データの初期化と日付セットが完了しました");
     });
