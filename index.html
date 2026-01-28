@@ -74,10 +74,18 @@
       background: white;
       border-radius: 12px;
       padding: 16px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 16px rgba(107, 143, 113, 0.10);
       margin-bottom: 16px;
       position: relative;
       overflow: hidden;
+    }
+
+    /* Override Tailwind shadows to use a greenish-gray tint for cards */
+    .shadow-sm {
+      box-shadow: 0 4px 10px rgba(107, 143, 113, 0.06) !important;
+    }
+    .shadow {
+      box-shadow: 0 8px 22px rgba(107, 143, 113, 0.10) !important;
     }
 
     .btn-main {
@@ -492,8 +500,12 @@
           </div>
           <div class="flex-1">
             <label class="block text-xs font-bold text-gray-400 mb-1">稼働後</label>
-            <input type="number" id="hourAfter" class="w-full p-3 rounded-lg font-bold" step="0.1"
-              oninput="calcDiff()" />
+            <div class="flex items-center gap-2">
+              <input type="number" id="hourAfter" class="flex-1 p-3 rounded-lg font-bold" step="0.1" oninput="calcDiff()" />
+              <input type="file" id="hourAfterImage" accept="image/*" capture="environment" class="hidden" onchange="handleHourAfterImage(this)">
+              <button type="button" onclick="document.getElementById('hourAfterImage').click()"
+                class="p-2 bg-white border rounded-lg text-[#6b8f71] shadow-sm hover:bg-[#f0f7f1]"><i class="fa-solid fa-camera"></i></button>
+            </div>
           </div>
         </div>
       </div>
@@ -716,7 +728,7 @@
       </button>
     </div>
 
-    <div id="repairView" class="view px-4 max-w-5xl mx-auto pb-16 hidden bg-[#f8f9fa]">
+    <div id="repairView" class="view px-4 max-w-5xl mx-auto pb-16 hidden" style="background-color: #e2e8e3;">
 
       <div class="flex justify-between items-center pt-8 mb-6">
         <h2 class="text-xl md:text-2xl font-extrabold text-[#6b8f71] flex items-center gap-2">
@@ -728,13 +740,12 @@
         </button>
       </div>
 
-      <div
-        class="bg-gradient-to-br from-[#6b8f71] to-[#4b634d] rounded-[2rem] p-6 text-white shadow-xl mb-8 relative overflow-hidden">
+      <div class="bg-gradient-to-br from-[#6b8f71] to-[#4b634d] rounded-[2rem] p-6 text-white shadow-xl mb-8 relative overflow-hidden">
         <div class="relative z-10">
           <p class="text-[#d1e0d3] text-[10px] md:text-xs font-medium mb-1 uppercase tracking-widest">2026年度 累計修理費</p>
           <h3 id="totalRepairCost" class="text-3xl md:text-5xl font-black tracking-wider">¥ 0</h3>
           <div class="mt-4 flex gap-4 text-[10px] text-[#d1e0d3]">
-            <span><i class="fa-solid fa-tractor mr-1"></i> 酒田市・八幡日向地区</span>
+            <span><i class="fa-solid fa-tractor mr-1"></i> トラクターのみの修理費</span>
           </div>
         </div>
         <i class="fa-solid fa-gears absolute -right-4 -bottom-4 text-white/10 text-7xl md:text-8xl rotate-12"></i>
@@ -742,7 +753,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-gray-100 flex flex-col">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
           <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
             <i class="fa-solid fa-calendar-days"></i> 年ごとの修理費
           </div>
@@ -750,7 +761,7 @@
           </div>
         </div>
 
-        <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-gray-100 flex flex-col">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
           <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
             <i class="fa-solid fa-microchip"></i> 機械ごとの集計
           </div>
@@ -758,7 +769,7 @@
           </div>
         </div>
 
-        <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-gray-100 flex flex-col">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
           <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
             <i class="fa-solid fa-clock-rotate-left"></i> 最近の修理
           </div>
@@ -767,9 +778,9 @@
         </div>
       </div>
 
-      <div button onclick="switchView('inputView')"
-        class="bg-white border-2 border-gray-100 text-gray-500 px-8 py-3 rounded-2xl shadow-sm hover:bg-gray-50 hover:text-[#6b8f71] active:scale-95 transition-all font-bold text-sm inline-flex items-center gap-2">
-        <i class="fa-solid fa-house"></i> TOP（入力画面）に戻る
+      <div class="flex justify-center w-full mt-6 mb-8">
+        <button onclick="switchView('inputView')" class="btn-sub w-full">
+          <i class="fa-solid fa-house mr-2"></i>TOPに戻る
         </button>
       </div>
     </div>
@@ -1337,7 +1348,7 @@
           .forEach(year => {
             const card = document.createElement('div');
             card.className =
-              'p-3 bg-white rounded shadow text-center border border-gray-100';
+              'p-3 bg-white rounded-md shadow text-center border border-gray-100';
             card.innerHTML = `
           <div class="text-sm text-gray-500">${year}年</div>
           <div class="text-lg font-bold text-[#6b8f71]">¥ ${yearly[year].toLocaleString()}</div>
@@ -1367,7 +1378,7 @@
 
           const card = document.createElement('div');
           card.className =
-            'p-3 bg-white rounded shadow text-center border border-gray-100';
+            'p-3 bg-white rounded-md shadow text-center border border-gray-100';
           card.innerHTML = `
         <div class="text-sm text-gray-500">${name}</div>
         <div class="text-lg font-bold text-[#6b8f71]">¥ ${machineTotals[machineId].toLocaleString()}</div>
@@ -1384,7 +1395,7 @@
         logs.slice(0, 5).forEach(log => {
           const item = document.createElement('div');
           item.className =
-            'p-3 bg-white rounded shadow border border-gray-100';
+            'p-3 bg-white rounded-md shadow border border-gray-100';
 
           item.innerHTML = `
         <div class="text-sm text-gray-500">${log.date}</div>
@@ -2267,62 +2278,42 @@
         return null;
       }
     }
-    /**
-     * 修理履歴ページのデータを全て読み込んで更新する
-     */
-    async function loadRepairDashboard() {
-      console.log("📊 集計を開始します...");
+
+    // ハンドラ：稼働後の数値を画像から読み取る
+    async function handleHourAfterImage(input) {
+      const file = input.files[0];
+      if (!file) return;
+
       try {
-        const { data, error } = await client
-          .from('repair_logs')
-          .select('*'); // orderは一旦外して全取得を優先
-
-        if (error) throw error;
-
-        console.log("📦 届いたデータの中身:", data);
-
-        if (!data || data.length === 0) {
-          document.getElementById('totalRepairCost').textContent = "データなし";
-          return;
-        }
-
-        // --- 合計計算（どんな形式でも数字にする） ---
-        let total = 0;
-        data.forEach(log => {
-          // カンマが入っていても、文字になっていても、数字に変換する
-          const costNum = Number(String(log.cost).replace(/[^0-9.-]+/g, ""));
-          console.log(`検証中: ${log.shop} の金額 -> 原文:${log.cost} 変換後:${costNum}`);
-          if (!isNaN(costNum)) {
-            total += costNum;
-          }
+        const base64Image = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.readAsDataURL(file);
         });
 
-        // 画面に表示
-        document.getElementById('totalRepairCost').textContent = `¥ ${total.toLocaleString()}`;
+        // OCR 実行
+        const text = await performOCR(base64Image);
+        if (!text) return alert('読み取りに失敗しました。写真を変えて再試行してください。');
 
-        // --- リスト表示も実行 ---
-        const recentContainer = document.getElementById('recentRepairContainer');
-        if (recentContainer) {
-          recentContainer.innerHTML = '';
-          data.slice(0, 5).forEach(log => {
-            recentContainer.innerHTML += `
-          <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 mb-2 flex justify-between items-center">
-            <div>
-              <div class="text-[10px] text-gray-400">${log.date}</div>
-              <div class="font-bold text-[#2d4031]">${log.shop || '店舗不明'}</div>
-            </div>
-            <div class="font-bold text-[#6b8f71]">¥${Number(log.cost).toLocaleString()}</div>
-          </div>`;
-          });
+        // 数字（小数点含む）を抽出して input に反映
+        const m = text.match(/\d+(?:\.\d+)?/);
+        if (m) {
+          document.getElementById('hourAfter').value = m[0];
+          calcDiff();
+        } else {
+          alert('数字が検出されませんでした。読み取り結果:\n' + (text.substring(0,200) || '-----'));
         }
-
-        // 年別・機械別タイルも更新
-        updateSummaryTiles(data);
-
       } catch (err) {
-        console.error("❌ エラー発生:", err);
+        console.error('HourAfter OCR error', err);
+        alert('読み取り中にエラーが発生しました');
+      } finally {
+        // ファイル入力をクリアして同じ画像を再選択できるようにする
+        input.value = '';
       }
     }
+    // Duplicate/old secondary `loadRepairDashboard` removed.
+    // The primary `loadRepairDashboard` (defined earlier) is used to populate
+    // 年ごとの修理費 / 機械ごとの修理費 / 最近の修理一覧 など。
   </script>
 </body>
 
