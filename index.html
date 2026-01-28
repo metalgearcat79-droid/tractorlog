@@ -386,6 +386,76 @@
       overflow-y: auto;
       height: 100vh;
     }
+
+    /* --- Portal view styles --- */
+    #portalView {
+      min-height: 100vh;
+      display: none;
+    }
+
+    #portalView.active { display: block; }
+
+    .portal-hero {
+      width: 100%;
+      height: 100vh;
+      margin: 0;
+      border-radius: 0;
+      position: relative;
+      overflow: hidden;
+      color: #ffffff;
+      padding: 80px 48px;
+      background-image: linear-gradient(rgba(45,64,49,0.72), rgba(45,64,49,0.72)), url('https://images.unsplash.com/photo-1614831884597-ff157b5656f1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+      background-size: cover;
+      background-position: center center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .portal-title { font-size: 36px; font-weight: 900; letter-spacing: .06em; }
+    .portal-sub { opacity: 0.95; margin-top: 8px; color: rgba(255,255,255,0.95); }
+    .portal-grid {
+      display: grid;
+      /* narrower cards with centered grid to allow side gutters */
+      grid-template-columns: repeat(3, minmax(180px, 260px));
+      gap: 24px;
+      margin-top: 40px;
+      justify-content: center;
+    }
+    .portal-grid .portal-card {
+      background: rgba(255,255,255,0.14);
+      border-radius: 12px;
+      padding: 24px;
+      min-height: 120px;
+      text-align: center;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      box-shadow: 0 8px 20px rgba(107,143,113,0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .portal-grid .portal-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 48px rgba(107,143,113,0.12);
+      background: rgba(255,255,255,0.22);
+    }
+    @media (max-width: 1024px) {
+      .portal-grid { grid-template-columns: repeat(2, minmax(180px, 320px)); }
+    }
+    @media (max-width: 640px) {
+      .portal-grid { grid-template-columns: repeat(1, 1fr); }
+      .portal-hero { padding: 40px 20px; }
+      .portal-title { font-size: 24px; }
+      .portal-sub { font-size: 14px; }
+      .portal-grid .portal-card { padding: 18px; min-height: 100px; }
+    }
+
+    /* Version card centered on desktop; on narrower screens it becomes full-width */
+    .portal-card.version-card { grid-column: 2 / 3; }
+    @media (max-width: 1024px) {
+      .portal-card.version-card { grid-column: 1 / -1; justify-self: center; max-width: 520px; }
+    }
+
   </style>
 </head>
 
@@ -452,6 +522,61 @@
       <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
       <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 Tractor log</h1>
     </header>
+
+    <!-- Portal View: entry hub -->
+    <div id="portalView" class="view">
+      <div class="portal-hero" style="min-height:100vh; padding:80px 48px; border-radius:0;">
+        <div style="text-align:center; width:100%;">
+          <i class="fa-solid fa-seedling text-6xl" style="color: #eaf2ea;"></i>
+          <div class="portal-title" style="margin-top:14px;">和農日向 機械管理App</div>
+          <div class="portal-sub">機械の稼働・メンテナンス・修理履歴を一元管理します</div>
+        </div>
+
+        <div class="portal-grid">
+          <div class="portal-card" onclick="switchView('inputView')" style="cursor:pointer;">
+            <div class="text-4xl text-[#6b8f71]"><i class="fa-solid fa-tractor"></i></div>
+            <div class="font-bold mt-2">トラクター</div>
+            <div class="text-xs opacity-80 mt-1">Tractor Log を開く</div>
+          </div>
+
+          <div class="portal-card" onclick="alert('田植え機ページは未実装です')" style="cursor:pointer;">
+            <div class="text-4xl text-[#6b8f71]"><i class="fa-solid fa-seedling"></i></div>
+            <div class="font-bold mt-2">田植え機</div>
+            <div class="text-xs opacity-80 mt-1">準備中</div>
+          </div>
+
+          <div class="portal-card" onclick="alert('コンバインページは未実装です')" style="cursor:pointer;">
+            <div class="text-4xl text-[#6b8f71]"><i class="fa-solid fa-wheat-awn"></i></div>
+            <div class="font-bold mt-2">コンバイン</div>
+            <div class="text-xs opacity-80 mt-1">準備中</div>
+          </div>
+
+          <div class="portal-card" onclick="switchView('maintenanceMachineListView')" style="cursor:pointer;">
+            <div class="text-4xl text-[#6b8f71]"><i class="fa-solid fa-toolbox"></i></div>
+            <div class="font-bold mt-2">メンテナンス</div>
+            <div class="text-xs opacity-80 mt-1">点検・記録</div>
+          </div>
+
+          <div class="portal-card" onclick="switchView('repairView')" style="cursor:pointer;">
+            <div class="text-4xl text-[#6b8f71]"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <div class="font-bold mt-2">修理</div>
+            <div class="text-xs opacity-80 mt-1">修理履歴</div>
+          </div>
+
+          <div class="portal-card" onclick="showModal('エクスポート', 'エクスポート/印刷機能は準備中です')" style="cursor:pointer;">
+            <div class="text-4xl text-[#6b8f71]"><i class="fa-solid fa-file-export"></i></div>
+            <div class="font-bold mt-2">エクスポート/印刷</div>
+            <div class="text-xs opacity-80 mt-1">CSV / 印刷</div>
+          </div>
+
+          <div class="portal-card version-card" onclick="switchView('versionView')" style="cursor:pointer;">
+            <div class="text-4xl text-[#6b8f71]"><i class="fa-solid fa-info-circle"></i></div>
+            <div class="font-bold mt-2">バージョン情報</div>
+            <div class="text-xs opacity-80 mt-1">リリース履歴</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div id="inputView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
       <div class="flex items-center gap-2 mb-1 mt-4">
@@ -913,7 +1038,7 @@
       </div>
     </div>
 
-    <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+    <div id="versionView" class="view pt-8 px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
       <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
         <i class="fa-solid fa-code-branch"></i> バージョン情報
       </div>
@@ -1138,10 +1263,10 @@
         console.error("エラー: ID '" + id + "' のビューが見つかりません。");
       }
 
-      // ヘッダーの制御
+      // ヘッダーの制御（portalView, dashboard, versionView では非表示）
       const header = document.getElementById("pageHeader");
       if (header) {
-        header.style.display = (id === 'dashboard') ? 'none' : 'flex';
+        header.style.display = (id === 'dashboard' || id === 'portalView' || id === 'versionView') ? 'none' : 'flex';
       }
 
       closeMenu();
