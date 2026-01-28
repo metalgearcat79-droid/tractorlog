@@ -401,7 +401,7 @@
       margin: 0;
       border-radius: 0;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       color: #ffffff;
       padding: 80px 48px;
       background-image: linear-gradient(rgba(45,64,49,0.72), rgba(45,64,49,0.72)), url('https://images.unsplash.com/photo-1614831884597-ff157b5656f1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
@@ -414,6 +414,9 @@
 
     .portal-title { font-size: 36px; font-weight: 900; letter-spacing: .06em; }
     .portal-sub { opacity: 0.95; margin-top: 8px; color: rgba(255,255,255,0.95); }
+    /* Ensure title/sub are explicitly visible on all devices */
+    .portal-title, .portal-sub { color: rgba(234,242,234,1); text-shadow: 0 1px 2px rgba(0,0,0,0.35); }
+    .portal-hero > div { position: relative; z-index: 2; }
     .portal-grid {
       display: grid;
       /* narrower cards with centered grid to allow side gutters */
@@ -444,7 +447,7 @@
     }
     @media (max-width: 640px) {
       .portal-grid { grid-template-columns: repeat(1, 1fr); }
-      .portal-hero { padding: 40px 20px; }
+      .portal-hero { padding: calc(40px + env(safe-area-inset-top)) 20px 20px; }
       .portal-title { font-size: 24px; }
       .portal-sub { font-size: 14px; }
       .portal-grid .portal-card { padding: 18px; min-height: 100px; }
