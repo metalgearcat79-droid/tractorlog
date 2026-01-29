@@ -62,6 +62,14 @@
       font-size: 0.9rem;
     }
 
+    #plantingSideMenu .menu-item {
+      color: #4a9b9b;
+    }
+
+    #combineSideMenu .menu-item {
+      color: #c9a961;
+    }
+
     select,
     input,
     textarea {
@@ -112,6 +120,94 @@
       display: block;
       border: none;
       cursor: pointer;
+    }
+
+    /* plantingView専用のボタンスタイル */
+    #plantingView .btn-main,
+    #todayViewPlanting .btn-main,
+    #historyViewPlanting .btn-main,
+    #maintenanceMachineListViewPlanting .btn-main,
+    #maintenanceDetailViewPlanting .btn-main,
+    #repairViewPlanting .btn-main,
+    #invoiceOCRViewPlanting .btn-main {
+      background-color: #4a9b9b;
+    }
+
+    #plantingView .btn-main:hover,
+    #todayViewPlanting .btn-main:hover,
+    #historyViewPlanting .btn-main:hover,
+    #maintenanceMachineListViewPlanting .btn-main:hover,
+    #maintenanceDetailViewPlanting .btn-main:hover,
+    #repairViewPlanting .btn-main:hover,
+    #invoiceOCRViewPlanting .btn-main:hover {
+      background-color: #3a8080;
+    }
+
+    #plantingView .btn-sub,
+    #todayViewPlanting .btn-sub,
+    #historyViewPlanting .btn-sub,
+    #maintenanceMachineListViewPlanting .btn-sub,
+    #maintenanceDetailViewPlanting .btn-sub,
+    #repairViewPlanting .btn-sub,
+    #invoiceOCRViewPlanting .btn-sub {
+      background-color: #4a9b9b;
+    }
+
+    #plantingView .btn-sub:hover,
+    #todayViewPlanting .btn-sub:hover,
+    #historyViewPlanting .btn-sub:hover,
+    #maintenanceMachineListViewPlanting .btn-sub:hover,
+    #maintenanceDetailViewPlanting .btn-sub:hover,
+    #repairViewPlanting .btn-sub:hover,
+    #invoiceOCRViewPlanting .btn-sub:hover {
+      background-color: #3a8080;
+    }
+
+    /* combineView専用のボタンスタイル */
+    #combineView .btn-main,
+    #todayViewCombine .btn-main,
+    #historyViewCombine .btn-main,
+    #maintenanceMachineListViewCombine .btn-main,
+    #maintenanceDetailViewCombine .btn-main {
+      background-color: #c9a961;
+    }
+
+    #combineView .btn-main:hover,
+    #todayViewCombine .btn-main:hover,
+    #historyViewCombine .btn-main:hover,
+    #maintenanceMachineListViewCombine .btn-main:hover,
+    #maintenanceDetailViewCombine .btn-main:hover {
+      background-color: #b8985a;
+    }
+
+    #combineView .btn-sub,
+    #todayViewCombine .btn-sub,
+    #historyViewCombine .btn-sub,
+    #maintenanceMachineListViewCombine .btn-sub,
+    #maintenanceDetailViewCombine .btn-sub {
+      background-color: #c9a961;
+    }
+
+    #combineView .btn-sub:hover,
+    #todayViewCombine .btn-sub:hover,
+    #historyViewCombine .btn-sub:hover,
+    #maintenanceMachineListViewCombine .btn-sub:hover,
+    #maintenanceDetailViewCombine .btn-sub:hover {
+      background-color: #b8985a;
+    }
+
+    /* combineView専用の背景色 */
+    #combine-section {
+      background-color: #faf8f3;
+    }
+
+    #combineView,
+    #todayViewCombine,
+    #historyViewCombine,
+    #maintenanceMachineListViewCombine,
+    #maintenanceDetailViewCombine,
+    #dashboardCombine {
+      background-color: #faf8f3;
     }
 
     .log-badge {
@@ -402,7 +498,7 @@
       justify-content: center;
       color: #ffffff;
       padding: 80px 40px;
-      background-image: linear-gradient(rgba(60,75,65,0.88), rgba(60,75,65,0.88)), url('https://images.unsplash.com/photo-1614831884597-ff157b5656f1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+      background-image: url('https://images.unsplash.com/photo-1614831884597-ff157b5656f1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
       background-size: cover;
       background-position: center center;
       display: flex;
@@ -434,6 +530,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      color: rgba(234,242,234,1);
     }
     .portal-grid .portal-card i { color: inherit !important; }
     .portal-grid .portal-card:hover {
@@ -482,8 +579,6 @@
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
       <button onclick="switchView('dashboard')" class="menu-item"><i
           class="fa-solid fa-chart-line w-8 text-lg"></i>DASHBOARD</button>
-      <button onclick="switchView('repairView'); loadRepairDashboard(); closeMenu();" class="menu-item">
-        <i class="fa-solid fa-tools w-8 text-lg"></i>修理履歴</button>
       <button onclick="switchView('maintenanceMachineListView'); loadMachineList();" class="menu-item"><i
           class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス記録</button>
     </nav>
@@ -492,38 +587,44 @@
   <!-- Planting Side Menu -->
   <div id="plantingSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg text-[#6b8f71]">田植え機メニュー</h2>
+      <h2 class="font-bold text-lg text-[#4a9b9b]">田植え機メニュー</h2>
       <button onclick="closeMenu()" class="text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
           class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
-      <button onclick="switchView('dashboardPlanting')" class="menu-item"><i
-          class="fa-solid fa-chart-line w-8 text-lg"></i>DASHBOARD</button>
       <button onclick="switchView('plantingView')" class="menu-item"><i
-          class="fa-solid fa-seedling w-8 text-lg"></i>ログ入力</button>
+          class="fa-solid fa-seedling w-8 text-lg"></i>田植え機ログ入力</button>
       <button onclick="switchView('todayViewPlanting')" class="menu-item"><i
           class="fa-solid fa-calendar-day w-8 text-lg"></i>本日の稼働状況</button>
       <button onclick="switchView('historyViewPlanting')" class="menu-item"><i
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
       <button onclick="switchView('maintenanceMachineListViewPlanting'); loadMachineListPlanting();" class="menu-item"><i
-          class="fa-solid fa-wrench w-8 text-lg"></i>メンテナンス記録</button>
-      <button onclick="switchView('repairViewPlanting'); loadRepairDashboardPlanting(); closeMenu();" class="menu-item"><i
-          class="fa-solid fa-screwdriver-wrench w-8 text-lg"></i>修理履歴</button>
+          class="fa-solid fa-wrench w-8 text-lg"></i>メンテナンス情報</button>
+      <button onclick="switchView('dashboardPlanting')" class="menu-item"><i
+          class="fa-solid fa-chart-line w-8 text-lg"></i>分析</button>
     </nav>
   </div>
 
   <!-- Combine Side Menu -->
   <div id="combineSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg text-[#6b8f71]">コンバインメニュー</h2>
+      <h2 class="font-bold text-lg text-[#c9a961]">コンバインメニュー</h2>
       <button onclick="closeMenu()" class="text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
           class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
       <button onclick="switchView('combineView')" class="menu-item"><i
-          class="fa-solid fa-wheat-awn w-8 text-lg"></i>ログ入力</button>
+          class="fa-solid fa-wheat-awn w-8 text-lg"></i>コンバインログ入力</button>
+      <button onclick="switchView('todayViewCombine')" class="menu-item"><i
+          class="fa-solid fa-calendar-day w-8 text-lg"></i>本日の稼働状況</button>
+      <button onclick="switchView('historyViewCombine')" class="menu-item"><i
+          class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
+      <button onclick="switchView('maintenanceMachineListViewCombine'); loadMachineListCombine();" class="menu-item"><i
+          class="fa-solid fa-wrench w-8 text-lg"></i>メンテナンス情報</button>
+      <button onclick="switchView('dashboardCombine')" class="menu-item"><i
+          class="fa-solid fa-chart-line w-8 text-lg"></i>分析</button>
     </nav>
   </div>
 
@@ -542,8 +643,6 @@
           class="fa-solid fa-seedling w-8 text-lg"></i>田植え機</button>
       <button onclick="switchView('combineView')" class="menu-item"><i
           class="fa-solid fa-wheat-awn w-8 text-lg"></i>コンバイン</button>
-      <button onclick="switchView('repairView'); loadRepairDashboard(); closeMenu();" class="menu-item">
-        <i class="fa-solid fa-tools w-8 text-lg"></i>修理履歴</button>
       <button onclick="switchView('maintenanceMachineListView'); loadMachineList();" class="menu-item"><i
           class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス記録</button>
     </nav>
@@ -580,13 +679,6 @@
 
 
   <div id="mainContainer">
-    <header id="pageHeader" class="flex flex-col items-center justify-center py-8 relative">
-      <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
-          class="fa-solid fa-bars"></i></button>
-      <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
-      <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
-    </header>
-
     <!-- Portal View: entry hub -->
     <div id="portalView" class="view">
       <div class="portal-hero" style="min-height:100vh; padding:80px 48px; border-radius:0;">
@@ -607,18 +699,17 @@
             <div class="font-bold mt-2">田植え機</div>
           </div>
 
-          <div class="portal-card" onclick="alert('コンバインページは未実装です')" style="cursor:pointer;">
+          <div class="portal-card" onclick="switchView('combineView')" style="cursor:pointer;">
             <div class="text-4xl"><i class="fa-solid fa-wheat-awn"></i></div>
             <div class="font-bold mt-2">コンバイン</div>
-            <div class="text-xs opacity-80 mt-1">準備中</div>
           </div>
 
-          <div class="portal-card" onclick="switchView('maintenanceMachineListView')" style="cursor:pointer;">
+          <div class="portal-card" onclick="switchView('maintenanceMachineListView'); loadMachineList();" style="cursor:pointer;">
             <div class="text-4xl"><i class="fa-solid fa-toolbox"></i></div>
             <div class="font-bold mt-2">メンテナンス</div>
           </div>
 
-          <div class="portal-card" onclick="switchView('repairView')" style="cursor:pointer;">
+          <div class="portal-card" onclick="switchView('repairView'); loadRepairDashboard();" style="cursor:pointer;">
             <div class="text-4xl"><i class="fa-solid fa-screwdriver-wrench"></i></div>
             <div class="font-bold mt-2">修理</div>
           </div>
@@ -639,6 +730,14 @@
     <!-- Tractor Section -->
     <div id="tractor-section">
       <div id="tractorView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+        <!-- トラクター専用ヘッダー -->
+        <header id="pageHeader" class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
+          <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+        </header>
+
         <div class="flex items-center gap-2 mb-1 mt-4">
           <i class="fa-solid fa-pen-to-square text-[#6b8f71] text-lg"></i>
           <span class="text-lg font-bold text-[#6b8f71]">ログ入力</span>
@@ -749,7 +848,7 @@
               </div>
             </div>
             <div class="ranking-section">
-              <p class="text-[11px] font-bold text-[#6b8f71] mb-2 text-center"><i
+              <p class="text-[11px] font-bold text-[#4a9b9b] mb-2 text-center"><i
                   class="fa-solid fa-trophy mr-1"></i>稼働ランキング</p>
               <div id="rankListPlanting" class="flex justify-around items-center"></div>
             </div>
@@ -760,7 +859,7 @@
           <div class="bi-left-col">
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px; color: #6b8f71;"></i>
+                <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px; color: #4a9b9b;"></i>
                 機械別修理コスト
               </p>
               <div class="chart-wrapper relative">
@@ -770,7 +869,7 @@
 
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-wheat-awn" style="margin-right: 8px; color: #6b8f71;"></i>
+                <i class="fa-solid fa-wheat-awn" style="margin-right: 8px; color: #4a9b9b;"></i>
                 作物別比率
               </p>
               <div class="chart-wrapper relative">
@@ -780,7 +879,7 @@
 
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-user-check" style="margin-right: 8px; color: #6b8f71;"></i>
+                <i class="fa-solid fa-user-check" style="margin-right: 8px; color: #4a9b9b;"></i>
                 オペレーター比率
               </p>
 
@@ -793,7 +892,7 @@
             <div class="lg:col-span-2 space-y-4">
               <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <p class="chart-title" style="display: flex; align-items: center;">
-                  <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: #6b8f71;"></i>
+                  <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: #4a9b9b;"></i>
                   月別稼働推移
                 </p>
                 <div class="relative h-40"> <canvas id="detailChartPlanting"></canvas>
@@ -801,7 +900,7 @@
               </div>
               <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <p class="chart-title" style="display: flex; align-items: center;">
-                  <i class="fa-solid fa-list-check" style="margin-right: 8px; color: #6b8f71;"></i>
+                  <i class="fa-solid fa-list-check" style="margin-right: 8px; color: #4a9b9b;"></i>
                   作業内容分析
                 </p>
                 <div class="relative h-[480px]">
@@ -814,20 +913,20 @@
           <div class="bi-right-col">
             <div class="card yoy-card text-center relative">
               <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
-                <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: #6b8f71;"></i>
+                <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: #4a9b9b;"></i>
                 前年実績比 (YoY)
               </p>
               <div class="chart-wrapper relative">
                 <canvas id="yearComparisonGaugePlanting"></canvas>
                 <div class="absolute inset-0 flex items-center justify-center pt-14">
-                  <p id="detailCompareValuePlanting" class="text-2xl font-black text-[#6b8f71]">--%</p>
+                  <p id="detailCompareValuePlanting" class="text-2xl font-black text-[#4a9b9b]">--%</p>
                 </div>
               </div>
             </div>
 
             <div class="card maint-card overflow-hidden">
               <p class="chart-title border-b pb-1" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-clipboard-list" style="margin-right: 8px; color: #6b8f71;"></i>
+                <i class="fa-solid fa-clipboard-list" style="margin-right: 8px; color: #4a9b9b;"></i>
                 メンテナンス情報
               </p>
               <div id="maintenanceLogPlanting" class="text-[10px] space-y-2 opacity-80 pt-2 flex-1 overflow-y-auto">
@@ -839,11 +938,19 @@
       </div>
 
       <div id="plantingView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+        <!-- 田植え機専用ヘッダー -->
+        <header id="plantingHeader" class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
+          <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+        </header>
+
         <div class="flex items-center gap-2 mb-1 mt-4">
-          <i class="fa-solid fa-seedling text-[#6b8f71] text-lg"></i>
-          <span class="text-lg font-bold text-[#6b8f71]">田植え機ログ入力</span>
+          <i class="fa-solid fa-seedling text-[#4a9b9b] text-lg"></i>
+          <span class="text-lg font-bold text-[#4a9b9b]">田植え機ログ入力</span>
         </div>
-        <div class="border-t-2 border-[#6b8f71] mb-6 opacity-50"></div>
+        <div class="border-t-2 border-[#4a9b9b] mb-6 opacity-50"></div>
 
         <div class="card">
           <label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label>
@@ -883,12 +990,12 @@
             <div class="flex items-end">
               <input type="file" id="taue_hourAfterImage" accept="image/*" capture="environment" class="hidden" onchange="taue_handleHourAfterImage(this)">
               <button type="button" onclick="document.getElementById('taue_hourAfterImage').click()"
-                class="p-3 bg-white border rounded-lg text-[#6b8f71] shadow-sm hover:bg-[#f0f7f1]"><i class="fa-solid fa-camera"></i></button>
+                class="p-3 bg-white border rounded-lg text-[#4a9b9b] shadow-sm hover:bg-[#e0f2f2]"><i class="fa-solid fa-camera"></i></button>
             </div>
           </div>
         </div>
 
-        <div id="taue_hourDiffDisplay" class="text-right font-black text-[#6b8f71] mb-6 text-xl">稼働時間: 0.0 h</div>
+        <div id="taue_hourDiffDisplay" class="text-right font-black text-[#4a9b9b] mb-6 text-xl">稼働時間: 0.0 h</div>
 
         <div class="card">
           <div class="flex gap-4">
@@ -915,7 +1022,15 @@
 
       <!-- 本日の稼働状況 (田植え機) -->
       <div id="todayViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
-        <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg"><i
+        <!-- 田植え機専用ヘッダー -->
+        <header class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
+          <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+        </header>
+
+        <div class="flex items-center gap-2 mb-4 font-bold text-[#4a9b9b] border-b-2 border-[#4a9b9b] pb-2 text-lg"><i
             class="fa-solid fa-calendar-day"></i> 本日の稼働状況</div>
         <div id="todayLogListPlanting" class="space-y-4"></div>
         <button onclick="switchView('plantingView')" class="btn-sub">TOPに戻る</button>
@@ -923,7 +1038,15 @@
 
       <!-- 稼働履歴・検索 (田植え機) -->
       <div id="historyViewPlanting" class="view px-4 py-6 max-w-3xl mx-auto pb-10">
-        <div class="flex items-center gap-2 mb-6 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-3 text-lg w-full">
+        <!-- 田植え機専用ヘッダー -->
+        <header class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
+          <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+        </header>
+
+        <div class="flex items-center gap-2 mb-6 font-bold text-[#4a9b9b] border-b-2 border-[#4a9b9b] pb-3 text-lg w-full">
           <i class="fa-solid fa-magnifying-glass"></i>
           <span>稼働履歴検索</span>
         </div>
@@ -964,7 +1087,7 @@
         </div>
 
         <div class="flex justify-end items-center mb-4 px-1">
-          <div id="historyTotalHoursPlanting" class="text-sm font-black text-[#6b8f71] opacity-80 bg-white px-4 py-2 rounded-full shadow-sm">
+          <div id="historyTotalHoursPlanting" class="text-sm font-black text-[#4a9b9b] opacity-80 bg-white px-4 py-2 rounded-full shadow-sm">
             合計: 0.0 h
           </div>
         </div>
@@ -979,7 +1102,15 @@
 
     <!-- 田植え機 メンテナンス機械一覧 -->
     <div id="maintenanceMachineListViewPlanting" class="view px-4 max-w-3xl mx-auto pb-10">
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
+      <!-- 田植え機専用ヘッダー -->
+      <header class="flex flex-col items-center justify-center py-8 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
+        <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-4 font-bold text-[#4a9b9b] border-b-2 border-[#4a9b9b] pb-2 text-lg">
         <i class="fa-solid fa-wrench"></i> 田植え機 メンテナンス記録
       </div>
 
@@ -993,9 +1124,16 @@
 
     <!-- 田植え機 メンテナンス詳細 -->
     <div id="maintenanceDetailViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+      <!-- 田植え機専用ヘッダー -->
+      <header class="flex flex-col items-center justify-center py-8 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
+        <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+      </header>
 
       <!-- タイトル（機械名は JS で差し替える） -->
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
+      <div class="flex items-center gap-2 mb-4 font-bold text-[#4a9b9b] border-b-2 border-[#4a9b9b] pb-2 text-lg">
         <i class="fa-solid fa-seedling"></i>
         <span id="maintenanceMachineNamePlanting">機械名</span>
       </div>
@@ -1022,24 +1160,24 @@
       </div>
 
       <div class="card mb-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-        <p class="font-bold text-sm text-[#6b8f71] mb-4 flex items-center">
+        <p class="font-bold text-sm text-[#4a9b9b] mb-4 flex items-center">
           <i class="fas fa-tools mr-2"></i>部品交換を記録
         </p>
 
         <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
         <input id="newMaintenanceItemPlanting" type="text"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b8f71] outline-none"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#4a9b9b] outline-none"
           placeholder="例：オイルエレメント">
 
         <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
         <select id="newMaintenanceOperatorPlanting"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b8f71] outline-none">
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#4a9b9b] outline-none">
           <option value="">担当者を選択</option>
         </select>
 
         <label class="block text-xs font-bold text-gray-400 mb-1">状態</label>
         <select id="newMaintenanceStatusPlanting"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b8f71] outline-none">
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#4a9b9b] outline-none">
           <option value="done">完了</option>
           <option value="progress">作業中</option>
         </select>
@@ -1049,7 +1187,7 @@
           placeholder="備考"></textarea>
 
         <button onclick="saveMaintenanceRecordPlanting()"
-          class="btn-main w-full py-3 bg-[#6b8f71] text-white rounded-lg font-bold hover:bg-[#5a7a5f] transition-all shadow-md">
+          class="btn-main w-full py-3 bg-[#4a9b9b] text-white rounded-lg font-bold hover:bg-[#3a8080] transition-all shadow-md">
           部品交換を保存する
         </button>
       </div>
@@ -1062,133 +1200,283 @@
         </button>
       </div>
     </div>
-
-    <!-- 田植え機 修理履歴 -->
-    <div id="repairViewPlanting" class="view px-4 max-w-5xl mx-auto pb-16 hidden" style="background-color: #e2e8e3;">
-
-      <div class="flex justify-between items-center pt-8 mb-6">
-        <h2 class="text-xl md:text-2xl font-extrabold text-[#6b8f71] flex items-center gap-2">
-          <i class="fa-solid fa-screwdriver-wrench"></i> 田植え機 修理履歴
-        </h2>
-        <button onclick="switchView('invoiceOCRViewPlanting'); populateMachineSelectPlanting();"
-          class="bg-[#6b8f71] text-white px-5 py-2 rounded-full shadow-lg active:scale-95 transition-all text-xs font-bold">
-          <i class="fa-solid fa-plus mr-1"></i> 新規登録
-        </button>
-      </div>
-
-      <div class="bg-gradient-to-br from-[#6b8f71] to-[#4b634d] rounded-[2rem] p-6 text-white shadow-xl mb-8 relative overflow-hidden">
-        <div class="relative z-10">
-          <p class="text-[#d1e0d3] text-[10px] md:text-xs font-medium mb-1 uppercase tracking-widest">2026年度 累計修理費</p>
-          <h3 id="totalRepairCostPlanting" class="text-3xl md:text-5xl font-black tracking-wider">¥ 0</h3>
-          <div class="mt-4 flex gap-4 text-[10px] text-[#d1e0d3]">
-            <span><i class="fa-solid fa-seedling mr-1"></i> 田植え機のみの修理費</span>
-          </div>
-        </div>
-        <i class="fa-solid fa-gears absolute -right-4 -bottom-4 text-white/10 text-7xl md:text-8xl rotate-12"></i>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
-          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
-            <i class="fa-solid fa-calendar-days"></i> 年ごとの修理費
-          </div>
-          <div id="yearlyRepairContainerPlanting" class="space-y-2 flex-grow text-sm">
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
-          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
-            <i class="fa-solid fa-microchip"></i> 機械ごとの集計
-          </div>
-          <div id="machineRepairContainerPlanting" class="space-y-2 flex-grow text-sm">
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
-          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
-            <i class="fa-solid fa-clock-rotate-left"></i> 最近の修理
-          </div>
-          <div id="recentRepairContainerPlanting" class="space-y-3 flex-grow">
-          </div>
-        </div>
-      </div>
-
-      <div class="flex justify-center w-full mt-6 mb-8">
-        <button onclick="switchView('plantingView')" class="btn-sub w-full">
-          <i class="fa-solid fa-house mr-2"></i>TOPに戻る
-        </button>
-      </div>
-    </div>
-
-    <!-- 田植え機 修理履歴登録 -->
-    <div id="invoiceOCRViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
-
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-screwdriver-wrench"></i> 修理履歴の登録（田植え機）
-      </div>
-
-      <!-- 請求書の読み取り -->
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">請求書・領収書の撮影</label>
-
-        <input type="file" id="invoiceImagePlanting" accept="image/*" capture="environment" class="hidden"
-          onchange="previewInvoicePlanting(this)">
-
-        <button onclick="document.getElementById('invoiceImagePlanting').click()"
-          class="w-full py-4 border-2 border-dashed border-[#6b8f71] rounded-lg text-[#6b8f71] flex flex-col items-center gap-2 hover:bg-[#f0f7f1] transition-colors">
-          <i class="fa-solid fa-camera text-2xl"></i>
-          <span class="text-sm font-bold">カメラを起動 / 画像を選択</span>
-        </button>
-
-        <div id="invoicePreviewAreaPlanting" class="mt-4 hidden text-center">
-          <img id="invoicePreviewImgPlanting" src="" class="w-full rounded-lg shadow-md mb-2 opacity-50">
-          <p class="text-[10px] text-gray-500">解析用プレビュー（画像は保存されません）</p>
-        </div>
-      </div>
-
-      <!-- 自動入力される項目 -->
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">対象の機械</label>
-        <select id="repairMachineSelectPlanting" class="w-full p-3 rounded-lg border bg-white">
-        </select>
-      </div>
-
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">修理日</label>
-        <input type="date" id="repairDatePlanting" class="w-full p-3 rounded-lg">
-      </div>
-
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">店舗名</label>
-        <input type="text" id="repairShopPlanting" class="w-full p-3 rounded-lg">
-      </div>
-
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">金額</label>
-        <input type="number" id="repairCostPlanting" class="w-full p-3 rounded-lg">
-      </div>
-
-      <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
-        <textarea id="repairMemoPlanting" class="w-full p-3 rounded-lg" rows="3"></textarea>
-      </div>
-
-      <button id="saveRepairBtnPlanting" class="btn-main" onclick="saveRepairLogPlanting()">修理履歴を保存</button>
-      <button onclick="switchView('repairViewPlanting'); loadRepairDashboardPlanting();" class="btn-sub mt-4 w-full">修理履歴へ戻る</button>
-
     </div>
 
     <!-- Combine Section -->
     <div id="combine-section">
       <div id="combineView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+        <!-- コンバイン専用ヘッダー -->
+        <header class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
+          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+        </header>
+
         <div class="flex items-center gap-2 mb-1 mt-4">
-          <i class="fa-solid fa-wheat-awn text-[#6b8f71] text-lg"></i>
-          <span class="text-lg font-bold text-[#6b8f71]">コンバインログ入力</span>
+          <i class="fa-solid fa-wheat-awn text-[#c9a961] text-lg"></i>
+          <span class="text-lg font-bold text-[#c9a961]">コンバインログ入力</span>
         </div>
-        <div class="border-t-2 border-[#6b8f71] mb-6 opacity-50"></div>
+        <div class="border-t-2 border-[#c9a961] mb-6 opacity-50"></div>
 
         <div class="card">
+          <label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label>
+          <select id="combine_machineSelect" class="w-full p-3 rounded-lg" onchange="combine_autoFillHour()"></select>
+        </div>
+
+        <div class="card">
+          <label class="block text-xs font-bold text-gray-400 mb-1">作業日</label>
+          <input type="date" id="combine_workDate" class="w-full p-3 rounded-lg" />
+        </div>
+
+        <div class="card">
+          <label class="block text-xs font-bold text-gray-400 mb-1">オペレーター</label>
+          <select id="combine_operator" class="w-full p-3 rounded-lg">
+            <option value="">読込中...</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <label class="block text-xs font-bold text-gray-400 mb-1">作業内容</label>
+          <select id="combine_work_name" class="w-full p-3 rounded-lg">
+            <option value="">読込中...</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <div class="flex gap-2">
+            <div style="flex: 1 1 0; min-width: 0;">
+              <label class="block text-xs font-bold text-gray-400 mb-1">稼働前</label>
+              <input type="number" id="combine_hourBefore" class="w-full p-3 rounded-lg font-bold" step="0.1"
+                oninput="combine_calcDiff()" />
+            </div>
+            <div style="flex: 1 1 0; min-width: 0;">
+              <label class="block text-xs font-bold text-gray-400 mb-1">稼働後</label>
+              <input type="number" id="combine_hourAfter" class="w-full p-3 rounded-lg font-bold" step="0.1" oninput="combine_calcDiff()" />
+            </div>
+            <div class="flex items-end">
+              <input type="file" id="combine_hourAfterImage" accept="image/*" capture="environment" class="hidden" onchange="combine_handleHourAfterImage(this)">
+              <button type="button" onclick="document.getElementById('combine_hourAfterImage').click()"
+                class="p-3 bg-white border rounded-lg text-[#c9a961] shadow-sm hover:bg-[#faf6ed]"><i class="fa-solid fa-camera"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div id="combine_hourDiffDisplay" class="text-right font-black text-[#c9a961] mb-6 text-xl">稼働時間: 0.0 h</div>
+
+        <div class="card">
+          <div class="flex gap-4">
+            <div class="flex-1">
+              <label class="block text-xs font-bold text-gray-400 mb-1">油種</label>
+              <select id="combine_fuelType" class="w-full p-3 rounded-lg">
+                <option value="">読込中...</option>
+              </select>
+            </div>
+            <div class="flex-[2]">
+              <label class="block text-xs font-bold text-gray-400 mb-1">給油量 (L)</label>
+              <input type="number" id="combine_fuelAmount" class="w-full p-3 rounded-lg" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
+          <textarea id="combine_memoInput" class="w-full p-3 rounded-lg" rows="2"></textarea>
+        </div>
+
+        <button id="combine_saveBtn" class="btn-main" onclick="combine_saveLog()">ログを保存する</button>
+      </div>
+
+      <!-- 本日の稼働状況 (コンバイン) -->
+      <div id="todayViewCombine" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+        <!-- コンバイン専用ヘッダー -->
+        <header class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
+          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+        </header>
+
+        <div class="flex items-center gap-2 mb-4 font-bold text-[#c9a961] border-b-2 border-[#c9a961] pb-2 text-lg"><i
+            class="fa-solid fa-calendar-day"></i> 本日の稼働状況</div>
+        <div id="todayLogListCombine" class="space-y-4"></div>
+        <button onclick="switchView('combineView')" class="btn-sub">TOPに戻る</button>
+      </div>
+
+      <!-- 稼働履歴・検索 (コンバイン) -->
+      <div id="historyViewCombine" class="view px-4 py-6 max-w-3xl mx-auto pb-10">
+        <!-- コンバイン専用ヘッダー -->
+        <header class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
+          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+        </header>
+
+        <div class="flex items-center gap-2 mb-6 font-bold text-[#c9a961] border-b-2 border-[#c9a961] pb-3 text-lg w-full">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>稼働履歴検索</span>
+        </div>
+
+        <div class="card space-y-3 text-sm mb-6">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex flex-col gap-1">
+              <label class="text-[10px] text-gray-400 font-bold ml-1">対象月</label>
+              <input type="month" id="filterMonthCombine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="text-[10px] text-gray-400 font-bold ml-1">機械</label>
+              <select id="filterMachineCombine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+                <option value="">すべての機械</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 mt-1">
+            <div class="flex flex-col gap-1">
+              <label class="text-[10px] text-gray-400 font-bold ml-1">オペレーター</label>
+              <select id="filterOperatorCombine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm text-sm text-gray-600">
+                <option value="">全オペレーター</option>
+              </select>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <label class="text-[10px] text-gray-400 font-bold ml-1">作業内容</label>
+              <select id="filterCategoryCombine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm text-sm text-gray-600">
+                <option value="">全作業内容</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="loadLogsCombine('historyLogListCombine', false)" class="btn-main mt-2 shadow-md">
+            検索を実行
+          </button>
+        </div>
+
+        <div class="flex justify-end items-center mb-4 px-1">
+          <div id="historyTotalHoursCombine" class="text-sm font-black text-[#c9a961] opacity-80 bg-white px-4 py-2 rounded-full shadow-sm">
+            合計: 0.0 h
+          </div>
+        </div>
+
+        <div id="historyLogListCombine" class="space-y-4"></div>
+
+        <button onclick="switchView('combineView')" class="btn-sub mt-8">
+          <i class="fa-solid fa-house mr-2"></i>TOPに戻る
+        </button>
+      </div>
+
+      <!-- コンバイン メンテナンス機械一覧 -->
+      <div id="maintenanceMachineListViewCombine" class="view px-4 max-w-3xl mx-auto pb-10">
+        <!-- コンバイン専用ヘッダー -->
+        <header class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
+          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+        </header>
+
+        <div class="flex items-center gap-2 mb-4 font-bold text-[#c9a961] border-b-2 border-[#c9a961] pb-2 text-lg">
+          <i class="fa-solid fa-wrench"></i> コンバイン メンテナンス記録
+        </div>
+
+        <div id="maintenanceMachineGridCombine" class="space-y-6">
+        </div>
+
+        <button onclick="switchView('combineView')" class="btn-sub mt-10 w-full">
+          <i class="fa-solid fa-house mr-2"></i>TOPに戻る
+        </button>
+      </div>
+
+      <!-- コンバイン メンテナンス詳細 -->
+      <div id="maintenanceDetailViewCombine" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+        <!-- コンバイン専用ヘッダー -->
+        <header class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+              class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
+          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+        </header>
+
+        <!-- タイトル（機械名は JS で差し替える） -->
+        <div class="flex items-center gap-2 mb-4 font-bold text-[#c9a961] border-b-2 border-[#c9a961] pb-2 text-lg">
+          <i class="fa-solid fa-wheat-awn"></i>
+          <span id="maintenanceMachineNameCombine">機械名</span>
+        </div>
+
+        <div class="card mb-4">
+          <p class="font-bold text-sm text-gray-500 mb-2">メンテナンス進捗</p>
+          <div id="maintenanceSummaryCombine" class="text-xs mt-1">
+            未着手
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <p class="font-bold text-sm text-gray-500 mb-2">点検項目</p>
+          <div id="maintenanceChecklistCombine" class="space-y-2">
+          </div>
+        </div>
+
+        <!-- 作業履歴タイムライン -->
+        <div class="card mb-4">
+          <p class="font-bold text-sm text-gray-500 mb-2">作業履歴</p>
+          <div id="maintenanceHistoryLogCombine" class="space-y-3 text-sm">
+            <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
+          </div>
+        </div>
+
+        <div class="card mb-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <p class="font-bold text-sm text-[#c9a961] mb-4 flex items-center">
+            <i class="fas fa-tools mr-2"></i>部品交換を記録
+          </p>
+
+          <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
+          <input id="newMaintenanceItemCombine" type="text"
+            class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#c9a961] outline-none"
+            placeholder="例：オイルエレメント">
+
+          <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
+          <select id="newMaintenanceOperatorCombine"
+            class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#c9a961] outline-none">
+            <option value="">担当者を選択</option>
+          </select>
+
+          <label class="block text-xs font-bold text-gray-400 mb-1">状態</label>
+          <select id="newMaintenanceStatusCombine"
+            class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#c9a961] outline-none">
+            <option value="done">完了</option>
+            <option value="progress">作業中</option>
+          </select>
+
+          <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
+          <textarea id="newMaintenanceMemoCombine" class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-4" rows="2"
+            placeholder="備考"></textarea>
+
+          <button onclick="saveMaintenanceRecordCombine()"
+            class="btn-main w-full py-3 bg-[#c9a961] text-white rounded-lg font-bold hover:bg-[#b8985a] transition-all shadow-md">
+            部品交換を保存する
+          </button>
+        </div>
+
+        <div class="flex justify-center w-full mt-6 mb-8">
+          <button onclick="switchView('maintenanceMachineListViewCombine')"
+            class="bg-gray-500 text-white px-6 py-2.5 rounded-lg hover:bg-gray-600 transition-colors whitespace-nowrap text-[13px] sm:text-sm shadow-md flex items-center justify-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            <span>機械一覧ページに戻る</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- コンバイン Dashboard (準備中) -->
+      <div id="dashboardCombine" class="view">
+        <div class="bi-header">
+          <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
+              class="fa-solid fa-bars"></i></button>
+          <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
+            <i class="fa-solid fa-chart-column mr-3"></i> 2026 COMBINE DASHBOARD
+          </h1>
+        </div>
+        <div class="card mt-8">
           <p class="text-center text-gray-500 py-8">準備中...</p>
         </div>
       </div>
@@ -1385,6 +1673,14 @@
     </div>
 
     <div id="maintenanceMachineListView" class="view px-4 max-w-3xl mx-auto pb-10">
+      <!-- トラクター専用ヘッダー -->
+      <header class="flex flex-col items-center justify-center py-8 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
+        <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+      </header>
+
       <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
         <i class="fa-solid fa-wrench"></i> トラクター メンテナンス記録
       </div>
@@ -1398,10 +1694,17 @@
     </div>
 
     <div id="repairView" class="view px-4 max-w-5xl mx-auto pb-16 hidden" style="background-color: #e2e8e3;">
+      <!-- トラクター専用ヘッダー -->
+      <header class="flex flex-col items-center justify-center py-8 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
+        <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+      </header>
 
-      <div class="flex justify-between items-center pt-8 mb-6">
+      <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl md:text-2xl font-extrabold text-[#6b8f71] flex items-center gap-2">
-          <i class="fa-solid fa-screwdriver-wrench"></i> Tractor 修理履歴
+          <i class="fa-solid fa-screwdriver-wrench"></i> 修理履歴
         </h2>
         <button onclick="switchView('invoiceOCRView'); populateMachineSelect();"
           class="bg-[#6b8f71] text-white px-5 py-2 rounded-full shadow-lg active:scale-95 transition-all text-xs font-bold">
@@ -1455,9 +1758,16 @@
     </div>
 
     <div id="invoiceOCRView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10 hidden">
+      <!-- トラクター専用ヘッダー -->
+      <header class="flex flex-col items-center justify-center py-8 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
+        <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+      </header>
 
       <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-screwdriver-wrench"></i> 修理履歴の登録
+        <i class="fa-solid fa-screwdriver-wrench"></i> 修理の登録
       </div>
 
       <!-- 請求書の読み取り -->
@@ -1477,6 +1787,14 @@
           <img id="invoicePreviewImg" src="" class="w-full rounded-lg shadow-md mb-2 opacity-50">
           <p class="text-[10px] text-gray-500">解析用プレビュー（画像は保存されません）</p>
         </div>
+      </div>
+
+      <!-- 種別選択 -->
+      <div class="card">
+        <label class="block text-xs font-bold text-gray-400 mb-1">種別</label>
+        <select id="repairMachineType" class="w-full p-3 rounded-lg" onchange="filterMachinesByType()">
+          <option value="">選択してください</option>
+        </select>
       </div>
 
       <!-- 自動入力される項目 -->
@@ -1582,7 +1900,15 @@
       </div>
     </div>
 
-    <div id="versionView" class="view pt-8 px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+    <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+      <!-- トラクター専用ヘッダー -->
+      <header class="flex flex-col items-center justify-center py-8 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
+        <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+      </header>
+
       <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
         <i class="fa-solid fa-code-branch"></i> バージョン情報
       </div>
@@ -1610,7 +1936,7 @@
         </div>
       </div>
 
-      <button onclick="switchView('tractorView')" class="btn-sub mt-6">TOPに戻る</button>
+      <button onclick="switchView('portalView')" class="btn-sub mt-6">portalに戻る</button>
 
     </div>
   </div>
@@ -2219,6 +2545,65 @@
         memoField.value = "❌ 解析エラー";
       } finally {
         if (saveBtn) saveBtn.disabled = false; // エラーでも成功でもボタンを復活させる
+      }
+    }
+
+    async function populateMachineSelect() {
+      const { data: machines } = await client
+        .from('machines')
+        .select('*')
+        .order('name');
+
+      // 全機械を保存（フィルタリング用）
+      window.allMachinesForRepair = machines || [];
+
+      // 種別セレクトボックスを設定
+      const typeSelect = document.getElementById('repairMachineType');
+      if (typeSelect && machines) {
+        const uniqueTypes = [...new Set(machines.map(m => m.machine_type))].filter(Boolean);
+        typeSelect.innerHTML = '<option value="">選択してください</option>';
+        uniqueTypes.forEach(type => {
+          const opt = document.createElement('option');
+          opt.value = type;
+          opt.textContent = type === 'tractor' ? 'トラクター' : type === 'transplanter' ? '田植え機' : type;
+          typeSelect.appendChild(opt);
+        });
+      }
+
+      // 機械セレクトボックスは初期状態では空
+      const select = document.getElementById('repairMachineSelect');
+      if (select) {
+        select.innerHTML = '<option value="">まず種別を選択してください</option>';
+      }
+    }
+
+    function filterMachinesByType() {
+      const typeSelect = document.getElementById('repairMachineType');
+      const machineSelect = document.getElementById('repairMachineSelect');
+      const selectedType = typeSelect.value;
+
+      if (!machineSelect || !window.allMachinesForRepair) return;
+
+      machineSelect.innerHTML = '<option value="">選択してください</option>';
+
+      if (!selectedType) {
+        machineSelect.innerHTML = '<option value="">まず種別を選択してください</option>';
+        return;
+      }
+
+      const filteredMachines = window.allMachinesForRepair.filter(m => m.machine_type === selectedType);
+
+      if (filteredMachines.length > 0) {
+        filteredMachines.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.id;
+          opt.textContent = m.name;
+          machineSelect.appendChild(opt);
+        });
+      } else {
+        const opt = document.createElement('option');
+        opt.textContent = `${selectedType}が登録されていません`;
+        machineSelect.appendChild(opt);
       }
     }
 
