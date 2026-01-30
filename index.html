@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex">
   <link rel="manifest" href="/tractorlog/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
   <title>和農日向 Tractor Log</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -163,6 +166,35 @@
       background-color: #3a8080;
     }
 
+    /* dashboardPlanting専用のスタイル（ブルーグリーン系） */
+    #dashboardPlanting .bi-header {
+      background: #2d5555 !important;
+    }
+
+    #dashboardPlanting .kpi-card {
+      background: #4a9b9b !important;
+    }
+
+    #dashboardPlanting .chart-title {
+      color: #4a9b9b !important;
+    }
+
+    #dashboardPlanting .donut-icon {
+      color: #4a9b9b !important;
+    }
+
+    #dashboardPlanting .tab-btn.active {
+      background: #2d5555 !important;
+    }
+
+    #dashboardPlanting .tab-btn.inactive {
+      color: #4a9b9b !important;
+    }
+
+    #dashboardPlanting .nav-item.active {
+      border-left-color: #4a9b9b !important;
+    }
+
     /* combineView専用のボタンスタイル */
     #combineView .btn-main,
     #todayViewCombine .btn-main,
@@ -208,6 +240,35 @@
     #maintenanceDetailViewCombine,
     #dashboardCombine {
       background-color: #faf8f3;
+    }
+
+    /* dashboardCombine専用のスタイル（ゴールド系） */
+    #dashboardCombine .bi-header {
+      background: #8b7344 !important;
+    }
+
+    #dashboardCombine .kpi-card {
+      background: #c9a961 !important;
+    }
+
+    #dashboardCombine .chart-title {
+      color: #c9a961 !important;
+    }
+
+    #dashboardCombine .donut-icon {
+      color: #c9a961 !important;
+    }
+
+    #dashboardCombine .tab-btn.active {
+      background: #8b7344 !important;
+    }
+
+    #dashboardCombine .tab-btn.inactive {
+      color: #c9a961 !important;
+    }
+
+    #dashboardCombine .nav-item.active {
+      border-left-color: #c9a961 !important;
     }
 
     .log-badge {
@@ -495,65 +556,278 @@
       margin: 0;
       border-radius: 0;
       position: relative;
-      justify-content: center;
       color: #ffffff;
-      padding: 80px 40px;
-      background-image: url('https://images.unsplash.com/photo-1614831884597-ff157b5656f1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-      background-size: cover;
-      background-position: center center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      padding: 60px 40px;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 60px;
+      align-items: start;
+      overflow: hidden;
+    }
+    
+    .portal-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(138, 43, 226, 0.06) 0%, transparent 50%);
+      pointer-events: none;
     }
 
-    .portal-title { font-size: 36px; font-weight: 900; letter-spacing: .06em; }
+    .portal-title { 
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 56px; 
+      font-weight: 900; 
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #a0d8d8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .portal-subtitle {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 32px;
+      text-transform: uppercase;
+    }
+    
+    .portal-description {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 24px;
+    }
+    
+    .portal-author {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      margin-top: auto;
+      padding-top: 40px;
+    }
+    
+    .portal-author a {
+      color: #4fd1c5;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .portal-author a:hover {
+      color: #81e6d9;
+    }
+    
+    .portal-left {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      padding-top: 200px;
+    }
+    
     .portal-sub { opacity: 0.95; margin-top: 8px; color: rgba(255,255,255,0.95); }
     /* Ensure title/sub are explicitly visible on all devices */
     .portal-title, .portal-sub { color: rgba(234,242,234,1); text-shadow: 0 1px 2px rgba(0,0,0,0.35); }
     .portal-hero > div { position: relative; z-index: 2; }
+    
+    /* ベントーグリッドレイアウト */
     .portal-grid {
+      position: relative;
+      z-index: 2;
       display: grid;
-      /* narrower cards with centered grid to allow side gutters */
-      grid-template-columns: repeat(3, minmax(180px, 260px));
-      gap: 24px;
-      margin-top: 40px;
-      justify-content: center;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 160px;
+      gap: 20px;
     }
+    
     .portal-grid .portal-card {
-      background: rgba(245,245,245,0.25);
-      border-radius: 12px;
-      padding: 24px;
-      min-height: 120px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 32px;
       text-align: center;
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
-      box-shadow: 0 8px 20px rgba(107,143,113,0.06);
+      transition: all .3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      color: rgba(234,242,234,1);
+      align-items: center;
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
     }
-    .portal-grid .portal-card i { color: inherit !important; }
+    
+    .portal-grid .portal-card .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      opacity: 0.9;
+    }
+    
+    .portal-grid .portal-card .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+    
+    .portal-grid .portal-card .card-subtitle {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      opacity: 0.6;
+      text-transform: uppercase;
+    }
+    
+    .portal-grid .portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
+      opacity: 0;
+      transition: opacity .4s ease;
+    }
+    
+    .portal-grid .portal-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity .4s ease;
+    }
+    
+    .portal-grid .portal-card:hover::before {
+      opacity: 1;
+    }
+    
+    .portal-grid .portal-card:hover::after {
+      opacity: 1;
+    }
+    
+    .portal-grid .portal-card i { 
+      color: inherit !important; 
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+      transition: all .4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
     .portal-grid .portal-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 22px 48px rgba(107,143,113,0.12);
-      background: rgba(245,245,245,0.45);
+      transform: translateY(-8px) scale(1.03) rotate(0.5deg);
+      box-shadow: 
+        0 20px 60px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.3),
+        0 1px 3px rgba(0,0,0,0.1);
+      background: linear-gradient(145deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 100%);
+      border-color: rgba(255,255,255,0.3);
     }
+    
+    .portal-grid .portal-card:hover i {
+      transform: scale(1.1) rotate(-5deg);
+      filter: drop-shadow(0 6px 16px rgba(0,0,0,0.3));
+    }
+    
+    /* 各カードに微妙な色付け */
+    .portal-card:nth-child(1) { 
+      background: linear-gradient(145deg, rgba(107,143,113,0.3) 0%, rgba(107,143,113,0.15) 100%);
+    }
+    .portal-card:nth-child(2) { 
+      background: linear-gradient(145deg, rgba(74,155,155,0.3) 0%, rgba(74,155,155,0.15) 100%);
+    }
+    .portal-card:nth-child(3) { 
+      background: linear-gradient(145deg, rgba(201,169,97,0.3) 0%, rgba(201,169,97,0.15) 100%);
+    }
+    .portal-card:nth-child(4) { 
+      background: linear-gradient(145deg, rgba(139,92,246,0.3) 0%, rgba(139,92,246,0.15) 100%);
+    }
+    .portal-card:nth-child(5) { 
+      background: linear-gradient(145deg, rgba(239,68,68,0.3) 0%, rgba(239,68,68,0.15) 100%);
+    }
+    .portal-card:nth-child(6) { 
+      background: linear-gradient(145deg, rgba(59,130,246,0.3) 0%, rgba(59,130,246,0.15) 100%);
+    }
+    .portal-card:nth-child(7) { 
+      background: linear-gradient(145deg, rgba(234,179,8,0.3) 0%, rgba(234,179,8,0.15) 100%);
+    }
+    .portal-card:nth-child(8) { 
+      background: linear-gradient(145deg, rgba(148,163,184,0.3) 0%, rgba(148,163,184,0.15) 100%);
+    }
+    
+    /* ベントーグリッドのアイテム配置 */
+    /* 左半分 */
+    .portal-card:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 3; } /* トラクター - 上（大）*/
+    .portal-card:nth-child(3) { grid-column: 1 / 3; grid-row: 3; } /* 田植え機 - 中 */
+    .portal-card:nth-child(5) { grid-column: 1 / 3; grid-row: 4; } /* コンバイン - 下 */
+    /* 右半分 */
+    .portal-card:nth-child(2) { grid-column: 3 / 5; grid-row: 1; } /* メンテナンス - 上 */
+    .portal-card:nth-child(4) { grid-column: 3 / 5; grid-row: 2; } /* 修理 - 中 */
+    .portal-card:nth-child(6) { grid-column: 3; grid-row: 3 / 5; } /* その他の機械 - 下左（縦長）*/
+    .portal-card:nth-child(7) { grid-column: 4; grid-row: 3; } /* エクスポート - 下右上 */
+    .portal-card:nth-child(8) { grid-column: 4; grid-row: 4; } /* バージョン情報 - 下右下 */
+    
+    /* トラクターカード（最初のカード）のアイコンを大きく */
+    .portal-card:nth-child(1) i {
+      font-size: 5rem;
+    }
+    
     @media (max-width: 1024px) {
-      .portal-grid { grid-template-columns: repeat(2, minmax(180px, 320px)); }
+      .portal-grid { 
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 120px;
+      }
+      .portal-card:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 3; }
+      .portal-card:nth-child(2) { grid-column: 3 / 5; grid-row: 1; }
+      .portal-card:nth-child(3) { grid-column: 1 / 3; grid-row: 3; }
+      .portal-card:nth-child(4) { grid-column: 3 / 5; grid-row: 2; }
+      .portal-card:nth-child(5) { grid-column: 1 / 3; grid-row: 4; }
+      .portal-card:nth-child(6) { grid-column: 3; grid-row: 3 / 5; }
+      .portal-card:nth-child(7) { grid-column: 4; grid-row: 3; }
+      .portal-card:nth-child(8) { grid-column: 4; grid-row: 4; }
     }
+    
     @media (max-width: 640px) {
-      .portal-grid { grid-template-columns: repeat(1, 1fr); }
+      .portal-grid { 
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 100px;
+        gap: 12px;
+      }
+      .portal-card:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 3; }
+      .portal-card:nth-child(2) { grid-column: 1 / 3; grid-row: 3; }
+      .portal-card:nth-child(3) { grid-column: 1 / 3; grid-row: 4; }
+      .portal-card:nth-child(4) { grid-column: 1 / 3; grid-row: 5; }
+      .portal-card:nth-child(5) { grid-column: 1 / 3; grid-row: 6; }
+      .portal-card:nth-child(6) { grid-column: 1; grid-row: 7 / 9; }
+      .portal-card:nth-child(7) { grid-column: 2; grid-row: 7; }
+      .portal-card:nth-child(8) { grid-column: 2; grid-row: 8; }
       .portal-hero { padding: calc(24px + env(safe-area-inset-top)) 18px 18px; justify-content: flex-start; }
-      .portal-title { font-size: 24px; }
-      .portal-sub { font-size: 14px; }
-      .portal-grid .portal-card { padding: 18px; min-height: 100px; }
+      .portal-hero { grid-template-columns: 1fr; gap: 32px; }
+      .portal-left { text-align: center; }
+      .portal-title { font-size: 32px; }
+      .portal-subtitle { font-size: 10px; }
+      .portal-grid .portal-card { padding: 16px; }
+      .portal-card:nth-child(1) i { font-size: 3.5rem; }
     }
 
-    /* Version card centered on desktop; on narrower screens it becomes full-width */
-    .portal-card.version-card { grid-column: 2 / 3; }
-    @media (max-width: 1024px) {
-      .portal-card.version-card { grid-column: 1 / -1; justify-self: center; max-width: 520px; }
-    }
+
 
   </style>
 
@@ -578,7 +852,7 @@
       <button onclick="switchView('historyView')" class="menu-item"><i
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
       <button onclick="switchView('dashboard')" class="menu-item"><i
-          class="fa-solid fa-chart-line w-8 text-lg"></i>DASHBOARD</button>
+          class="fa-solid fa-chart-line w-8 text-lg"></i>データ分析</button>
       <button onclick="switchView('maintenanceMachineListView'); loadMachineList();" class="menu-item"><i
           class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス記録</button>
     </nav>
@@ -602,7 +876,7 @@
       <button onclick="switchView('maintenanceMachineListViewPlanting'); loadMachineListPlanting();" class="menu-item"><i
           class="fa-solid fa-wrench w-8 text-lg"></i>メンテナンス情報</button>
       <button onclick="switchView('dashboardPlanting')" class="menu-item"><i
-          class="fa-solid fa-chart-line w-8 text-lg"></i>分析</button>
+          class="fa-solid fa-chart-line w-8 text-lg"></i>データ分析</button>
     </nav>
   </div>
 
@@ -624,7 +898,7 @@
       <button onclick="switchView('maintenanceMachineListViewCombine'); loadMachineListCombine();" class="menu-item"><i
           class="fa-solid fa-wrench w-8 text-lg"></i>メンテナンス情報</button>
       <button onclick="switchView('dashboardCombine')" class="menu-item"><i
-          class="fa-solid fa-chart-line w-8 text-lg"></i>分析</button>
+          class="fa-solid fa-chart-line w-8 text-lg"></i>データ分析</button>
     </nav>
   </div>
 
@@ -682,46 +956,52 @@
     <!-- Portal View: entry hub -->
     <div id="portalView" class="view">
       <div class="portal-hero" style="min-height:100vh; padding:80px 48px; border-radius:0;">
-        <div style="text-align:center; width:100%;">
-          <i class="fa-solid fa-seedling text-6xl" style="color: #eaf2ea;"></i>
-          <div class="portal-title" style="margin-top:14px;">和農日向 機械管理App</div>
-          <div class="portal-sub">機械の稼働・メンテナンス・修理履歴・分析を一元管理</div>
+        <!-- 左側: タイトルエリア -->
+        <div class="portal-left">
+          <div class="portal-title">和農日向<br>機械管理App</div>
+          <div class="portal-subtitle">Agricultural Machinery Management System</div>
         </div>
 
+        <!-- 右側: ベントーグリッド -->
+        <!-- 右側: ベントーグリッド -->
         <div class="portal-grid">
           <div class="portal-card" onclick="switchView('tractorView')" style="cursor:pointer;">
-            <div class="text-4xl"><i class="fa-solid fa-tractor"></i></div>
-            <div class="font-bold mt-2">トラクター</div>
-          </div>
-
-          <div class="portal-card" onclick="switchView('plantingView')" style="cursor:pointer;">
-            <div class="text-4xl"><i class="fa-solid fa-seedling"></i></div>
-            <div class="font-bold mt-2">田植え機</div>
-          </div>
-
-          <div class="portal-card" onclick="switchView('combineView')" style="cursor:pointer;">
-            <div class="text-4xl"><i class="fa-solid fa-wheat-awn"></i></div>
-            <div class="font-bold mt-2">コンバイン</div>
+            <i class="fa-solid fa-tractor text-6xl"></i>
+            <div class="card-title">トラクター</div>
           </div>
 
           <div class="portal-card" onclick="switchView('maintenanceMachineListView'); loadMachineList();" style="cursor:pointer;">
-            <div class="text-4xl"><i class="fa-solid fa-toolbox"></i></div>
-            <div class="font-bold mt-2">メンテナンス</div>
+            <i class="fa-solid fa-toolbox text-5xl"></i>
+            <div class="card-title">メンテナンス</div>
+          </div>
+
+          <div class="portal-card" onclick="switchView('plantingView')" style="cursor:pointer;">
+            <i class="fa-solid fa-seedling text-5xl"></i>
+            <div class="card-title">田植え機</div>
           </div>
 
           <div class="portal-card" onclick="switchView('repairView'); loadRepairDashboard();" style="cursor:pointer;">
-            <div class="text-4xl"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-            <div class="font-bold mt-2">修理</div>
+            <i class="fa-solid fa-screwdriver-wrench text-5xl"></i>
+            <div class="card-title">修理</div>
+          </div>
+
+          <div class="portal-card" onclick="switchView('combineView')" style="cursor:pointer;">
+            <i class="fa-solid fa-wheat-awn text-5xl"></i>
+            <div class="card-title">コンバイン</div>
+          </div>
+
+          <div class="portal-card" onclick="showModal('その他の機械', 'その他の機械の管理ページは準備中です')" style="cursor:pointer;">
+            <i class="fa-solid fa-gears text-4xl"></i>
           </div>
 
           <div class="portal-card" onclick="showModal('エクスポート', 'エクスポート/印刷機能は準備中です')" style="cursor:pointer;">
-            <div class="text-4xl"><i class="fa-solid fa-file-export"></i></div>
-            <div class="font-bold mt-2">エクスポート/印刷</div>
+            <i class="fa-solid fa-file-export text-4xl"></i>
           </div>
 
           <div class="portal-card version-card" onclick="switchView('versionView')" style="cursor:pointer;">
-            <div class="text-4xl"><i class="fa-solid fa-info-circle"></i></div>
-            <div class="font-bold mt-2">バージョン情報</div>
+            <span class="version-badge" id="versionBadge"></span>
+            <i class="fa-solid fa-info-circle text-5xl"></i>
+            <div class="card-title">バージョン情報</div>
           </div>
         </div>
       </div>
@@ -818,7 +1098,7 @@
           <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
               class="fa-solid fa-bars"></i></button>
           <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
-            <i class="fa-solid fa-chart-column mr-3"></i> 2026 PLANTING DASHBOARD
+            <i class="fa-solid fa-chart-column mr-3"></i> 2026 Transplanter data analysis
           </h1>
         </div>
 
@@ -1473,7 +1753,7 @@
           <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
               class="fa-solid fa-bars"></i></button>
           <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
-            <i class="fa-solid fa-chart-column mr-3"></i> 2026 COMBINE DASHBOARD
+            <i class="fa-solid fa-chart-column mr-3"></i> 2026 Combine data-analysis
           </h1>
         </div>
         <div class="card mt-8">
@@ -1487,7 +1767,7 @@
         <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
             class="fa-solid fa-bars"></i></button>
         <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
-          <i class="fa-solid fa-chart-column mr-3"></i> 2026 OPERATION DASHBOARD
+          <i class="fa-solid fa-chart-column mr-3"></i> 2026 Tractor data analysis
         </h1>
       </div>
 
@@ -1900,7 +2180,7 @@
       </div>
     </div>
 
-    <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+    <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10" data-version="1.0.0">
       <!-- トラクター専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-8 relative">
         <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
@@ -2155,6 +2435,18 @@
       if (targetView) {
         targetView.classList.add('active');
         targetView.style.display = 'block';
+        
+        // バージョン情報ページを開いたら通知バッジを消す
+        if (id === 'versionView') {
+          const currentVersion = targetView.dataset.version || '1.0.0';
+          localStorage.setItem('lastViewedVersion', currentVersion);
+          checkVersionUpdate();
+        }
+        
+        // portalページ表示時に通知バッジをチェック
+        if (id === 'portalView') {
+          checkVersionUpdate();
+        }
       } else {
         console.error("エラー: ID '" + id + "' のビューが見つかりません。");
       }
@@ -2209,6 +2501,22 @@
       if (id === 'maintenanceDetailViewPlanting') {
         console.log("田植え機メンテナンス状態を復元中...");
         restoreMaintenanceChecksPlanting();
+      }
+    }
+    
+    // バージョン更新チェック
+    function checkVersionUpdate() {
+      const versionView = document.getElementById('versionView');
+      const currentVersion = versionView ? versionView.dataset.version || '1.0.0' : '1.0.0';
+      const lastViewedVersion = localStorage.getItem('lastViewedVersion') || '0.0.0';
+      const badge = document.getElementById('versionBadge');
+      
+      if (badge) {
+        if (currentVersion !== lastViewedVersion) {
+          badge.classList.add('show');
+        } else {
+          badge.classList.remove('show');
+        }
       }
     }
 
@@ -2347,6 +2655,9 @@
       if (document.getElementById("taue_workDate")) {
         document.getElementById("taue_workDate").value = today;
       }
+      if (document.getElementById("combine_workDate")) {
+        document.getElementById("combine_workDate").value = today;
+      }
       if (document.getElementById("filterMonth")) {
         document.getElementById("filterMonth").value = today.substring(0, 7);
       }
@@ -2357,6 +2668,9 @@
 
       // 田植え機用の初期化
       await initTauePage();
+
+      // コンバイン用の初期化
+      await initCombinePage();
 
       console.log("全データの初期化と日付セットが完了しました");
     });
@@ -2538,7 +2852,7 @@
         previewImg.src = "";
         memoField.value = "解析完了: " + fullText.substring(0, 50) + "..."; // 冒頭だけメモに残す
 
-        alert("解析完了！内容を確認して保存してください。");
+        showModal("解析完了", "内容を確認して保存してください。");
 
       } catch (error) {
         console.error("OCR Error:", error);
@@ -2619,7 +2933,7 @@
 
       // 2. 必須チェック
       if (!dateValue || !costValue) {
-        alert("「修理日」と「金額」を入力してください。");
+        showModal("入力エラー", "「修理日」と「金額」を入力してください。");
         return;
       }
 
@@ -2653,7 +2967,7 @@
         if (typeof showCustomModal === 'function') {
           showCustomModal("保存完了", "修理履歴を記録しました。ダッシュボードを更新します。");
         } else {
-          alert("保存完了しました！🚜🌾");
+          showModal("保存完了", "保存完了しました！🚜🌾");
         }
 
         // 3. 自動的に履歴トップ画面に戻す
@@ -2665,7 +2979,7 @@
 
       } catch (err) {
         console.error("❌ 保存に失敗しました:", err);
-        alert("エラーで保存できませんでした: " + err.message);
+        showModal("保存エラー", "エラーで保存できませんでした: " + err.message);
         btn.disabled = false;
         btn.innerText = "修理履歴を保存";
       }
@@ -3134,6 +3448,10 @@
 
       // Reveal the page after initial view switch to avoid flash of other views
       try { document.body.style.visibility = 'visible'; } catch(e) { /* ignore */ }
+      
+      // バージョン更新チェック
+      checkVersionUpdate();
+      
       console.log("✅ 全データの初期化命令を完了しました");
     }); // ← ここで DOMContentLoaded がスッキリ終了！
 
@@ -3275,12 +3593,12 @@
 
       // 数値じゃない（"all"や空っぽ）場合はエラーを出す
       if (isNaN(numericMachineId)) {
-        alert("機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
+        showModal("エラー", "機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
         return;
       }
 
       if (!item) {
-        alert("交換部品・項目名を入力してくださいね🌸");
+        showModal("入力エラー", "交換部品・項目名を入力してくださいね🌸");
         return;
       }
 
@@ -3298,7 +3616,7 @@
 
         if (error) throw error;
 
-        alert("メンテナンス情報を記録しました！✨");
+        showModal("保存完了", "メンテナンス情報を記録しました！✨");
 
         // 入力欄をクリア
         document.getElementById('newMaintenanceItem').value = '';
@@ -3311,7 +3629,7 @@
 
       } catch (err) {
         console.error("Maint Save Error:", err);
-        alert("保存に失敗しました: " + (err.message || JSON.stringify(err)));
+        showModal("保存エラー", "保存に失敗しました: " + (err.message || JSON.stringify(err)));
       }
     }
 
@@ -3327,9 +3645,9 @@
       const memo = document.getElementById('memoInput')?.value;
 
       // バリデーション（入力チェック）
-      if (!machineId) return alert("機械を選択してください");
-      if (!workDate || !workName) return alert("「作業日」「作業内容」は必須項目です");
-      if (hourAfter < hourBefore) return alert("エラー：稼働後の数値が稼働前より小さくなっています。");
+      if (!machineId) return showModal("入力エラー", "機械を選択してください");
+      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
 
       // 以前のスタイル：showModal を使って確認してから保存
       showModal("登録確認", "ログを登録しますか？", async () => {
@@ -3353,7 +3671,7 @@
 
         } catch (err) {
           console.error("Log Save Error:", err);
-          alert("保存に失敗しました: " + (err.message));
+          showModal("保存エラー", "保存に失敗しました: " + (err.message));
         }
       });
     }
@@ -3406,7 +3724,7 @@
 
         // OCR 実行
         const text = await performOCR(base64Image);
-        if (!text) return alert('読み取りに失敗しました。写真を変えて再試行してください。');
+        if (!text) return showModal('読み取り失敗', '読み取りに失敗しました。写真を変えて再試行してください。');
 
         // 数字（小数点含む）を抽出して input に反映
         const m = text.match(/\d+(?:\.\d+)?/);
@@ -3414,11 +3732,11 @@
           document.getElementById('hourAfter').value = m[0];
           calcDiff();
         } else {
-          alert('数字が検出されませんでした。読み取り結果:\n' + (text.substring(0,200) || '-----'));
+          showModal('検出失敗', '数字が検出されませんでした。読み取り結果:\n' + (text.substring(0,200) || '-----'));
         }
       } catch (err) {
         console.error('HourAfter OCR error', err);
-        alert('読み取り中にエラーが発生しました');
+        showModal('エラー', '読み取り中にエラーが発生しました');
       } finally {
         // ファイル入力をクリアして同じ画像を再選択できるようにする
         input.value = '';
@@ -3552,9 +3870,9 @@
       const fuel = parseFloat(document.getElementById('taue_fuelAmount')?.value) || 0;
       const memo = document.getElementById('taue_memoInput')?.value;
 
-      if (!machineId) return alert("機械を選択してください");
-      if (!workDate || !workName) return alert("「作業日」「作業内容」は必須項目です");
-      if (hourAfter < hourBefore) return alert("エラー：稼働後の数値が稼働前より小さくなっています。");
+      if (!machineId) return showModal("入力エラー", "機械を選択してください");
+      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
 
       showModal("登録確認", "ログを登録しますか？", async () => {
         try {
@@ -3575,7 +3893,7 @@
 
         } catch (err) {
           console.error("Log Save Error:", err);
-          alert("保存に失敗しました: " + (err.message));
+          showModal("保存エラー", "保存に失敗しました: " + (err.message));
         }
       });
     }
@@ -3591,19 +3909,206 @@
           reader.readAsDataURL(file);
         });
 
+        // OCR 実行
         const text = await performOCR(base64Image);
-        if (!text) return alert('読み取りに失敗しました。写真を変えて再試行してください。');
+        if (!text) return showModal('読み取り失敗', '読み取りに失敗しました。写真を変えて再試行してください。');
 
+        // 数字（小数点含む）を抽出して input に反映
         const m = text.match(/\d+(?:\.\d+)?/);
         if (m) {
           document.getElementById('taue_hourAfter').value = m[0];
           taue_calcDiff();
         } else {
-          alert('数字が検出されませんでした。読み取り結果:\n' + (text.substring(0,200) || '-----'));
+          showModal('検出失敗', '数字が検出されませんでした。読み取り結果:\n' + (text.substring(0,200) || '-----'));
         }
       } catch (err) {
-        console.error('HourAfter OCR error', err);
-        alert('読み取り中にエラーが発生しました');
+        console.error('TaueHourAfter OCR error', err);
+        showModal('エラー', '読み取り中にエラーが発生しました');
+      } finally {
+        // ファイル入力をクリアして同じ画像を再選択できるようにする
+        input.value = '';
+      }
+    }
+
+    // ========== コンバイン用の関数 ==========
+    async function initCombinePage() {
+      // コンバインの機械リストを取得
+      const { data: combineMachines } = await client
+        .from("machines")
+        .select("*")
+        .eq("machine_type", "combine")
+        .order("name");
+
+      // オペレーター取得
+      const { data: operators } = await client
+        .from("operators")
+        .select("*")
+        .order("id");
+
+      // 油種取得
+      const { data: fuelTypes } = await client
+        .from("fuel_types")
+        .select("*");
+
+      // 作業内容取得（category = '刈取り'）
+      const { data: workTypes, error: workTypesError } = await client
+        .from("work_types")
+        .select("*")
+        .eq("category", "刈取り");
+
+      console.log("コンバイン 作業内容データ:", workTypes);
+      console.log("コンバイン 作業内容エラー:", workTypesError);
+      if (workTypes && workTypes.length > 0) {
+        console.log("最初のデータのキー:", Object.keys(workTypes[0]));
+      }
+
+      // 機械選択
+      const combine_machineSelect = document.getElementById("combine_machineSelect");
+      if (combine_machineSelect) {
+        combine_machineSelect.innerHTML = '<option value="">選択</option>' +
+          (combineMachines || []).map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+      }
+
+      // オペレーター選択
+      const combine_operator = document.getElementById("combine_operator");
+      if (combine_operator) {
+        combine_operator.innerHTML = '<option value="">選択</option>' +
+          (operators || []).map(o => `<option value="${o.name}">${o.name}</option>`).join("");
+      }
+
+      // 油種選択
+      const combine_fuelType = document.getElementById("combine_fuelType");
+      if (combine_fuelType) {
+        combine_fuelType.innerHTML = '<option value="">選択</option>' +
+          (fuelTypes || []).map(f => `<option value="${f.name}">${f.name}</option>`).join("");
+      }
+
+      // 作業内容選択
+      const combine_work_name = document.getElementById("combine_work_name");
+      if (combine_work_name) {
+        combine_work_name.innerHTML = '<option value="">選択</option>' +
+          (workTypes || []).map(w => `<option value="${w.work_name}">${w.work_name}</option>`).join("");
+        console.log("コンバイン 作業内容セレクトボックス設定完了:", combine_work_name.innerHTML);
+      }
+
+      // 履歴検索フィルター - 機械選択
+      const filterMachineCombine = document.getElementById("filterMachineCombine");
+      if (filterMachineCombine) {
+        filterMachineCombine.innerHTML = '<option value="">すべて</option>' +
+          (combineMachines || []).map(m => `<option value="${m.id}">${m.name}</option>`).join("");
+      }
+
+      // 履歴検索フィルター - オペレーター選択
+      const filterOperatorCombine = document.getElementById("filterOperatorCombine");
+      if (filterOperatorCombine) {
+        filterOperatorCombine.innerHTML = '<option value="">すべて</option>' +
+          (operators || []).map(o => `<option value="${o.id}">${o.name}</option>`).join("");
+      }
+
+      // 履歴検索フィルター - 作業内容選択
+      const filterCategoryCombine = document.getElementById("filterCategoryCombine");
+      if (filterCategoryCombine) {
+        filterCategoryCombine.innerHTML = '<option value="">すべて</option>' +
+          (workTypes || []).map(w => `<option value="${w.work_name}">${w.work_name}</option>`).join("");
+      }
+
+      // 履歴検索フィルター - 月の初期値設定
+      const filterMonthCombine = document.getElementById("filterMonthCombine");
+      if (filterMonthCombine) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        filterMonthCombine.value = `${year}-${month}`;
+      }
+    }
+
+    async function combine_autoFillHour() {
+      const mId = document.getElementById("combine_machineSelect").value;
+      if (!mId) return;
+      const { data } = await client.from("combine_logs").select("end_hour").eq("machine_id", mId).order("date", { ascending: false }).order("created_at", { ascending: false }).limit(1);
+      if (data && data.length > 0) { document.getElementById("combine_hourBefore").value = data[0].end_hour; combine_calcDiff(); }
+    }
+
+    function combine_calcDiff() {
+      const b = parseFloat(document.getElementById("combine_hourBefore").value) || 0;
+      const a = parseFloat(document.getElementById("combine_hourAfter").value) || 0;
+      const d = a - b;
+      const disp = document.getElementById("combine_hourDiffDisplay");
+
+      if (a > 0 && a < b) {
+        disp.classList.remove("text-[#c9a961]");
+        disp.classList.add("text-red-500");
+        disp.textContent = `稼働時間: 0.0 h (入力エラー)`;
+      } else {
+        disp.classList.remove("text-red-500");
+        disp.classList.add("text-[#c9a961]");
+        disp.textContent = `稼働時間: ${d > 0 ? d.toFixed(1) : "0.0"} h`;
+      }
+    }
+
+    async function combine_saveLog() {
+      const machineId = document.getElementById('combine_machineSelect')?.value;
+      const workDate = document.getElementById('combine_workDate')?.value;
+      const operator = document.getElementById('combine_operator')?.value;
+      const workName = document.getElementById('combine_work_name')?.value;
+      const hourBefore = parseFloat(document.getElementById('combine_hourBefore')?.value) || 0;
+      const hourAfter = parseFloat(document.getElementById('combine_hourAfter')?.value) || 0;
+      const fuelType = document.getElementById('combine_fuelType')?.value;
+      const fuel = parseFloat(document.getElementById('combine_fuelAmount')?.value) || 0;
+      const memo = document.getElementById('combine_memoInput')?.value;
+
+      if (!machineId) return showModal("入力エラー", "機械を選択してください");
+      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
+
+      showModal("登録確認", "ログを登録しますか？", async () => {
+        try {
+          const { error } = await client.from('combine_logs').insert([{
+            date: workDate,
+            operator_id: operator ? parseInt(operator) : null,
+            machine_id: parseInt(machineId),
+            start_hour: hourBefore,
+            end_hour: hourAfter,
+            task: workName,
+            fuel_type_id: fuelType ? parseInt(fuelType) : null,
+            fuel_amount: fuel,
+            memo: memo
+          }]);
+
+          if (error) throw error;
+          location.reload();
+
+        } catch (err) {
+          console.error("Log Save Error:", err);
+          showModal("保存エラー", "保存に失敗しました: " + (err.message));
+        }
+      });
+    }
+
+    async function combine_handleHourAfterImage(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      try {
+        const base64Image = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.readAsDataURL(file);
+        });
+
+        const text = await performOCR(base64Image);
+        if (!text) return showModal('読み取り失敗', '読み取りに失敗しました。写真を変えて再試行してください。');
+
+        const m = text.match(/\d+(?:\.\d+)?/);
+        if (m) {
+          document.getElementById('combine_hourAfter').value = m[0];
+          combine_calcDiff();
+        } else {
+          showModal('検出失敗', '数字が検出されませんでした。読み取り結果:\n' + (text.substring(0,200) || '-----'));
+        }
+      } catch (err) {
+        console.error('CombineHourAfter OCR error', err);
+        showModal('エラー', '読み取り中にエラーが発生しました');
       } finally {
         input.value = '';
       }
@@ -3885,12 +4390,12 @@
       const numericMachineId = parseInt(mId);
 
       if (isNaN(numericMachineId)) {
-        alert("機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
+        showModal("エラー", "機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
         return;
       }
 
       if (!item) {
-        alert("交換部品・項目名を入力してくださいね🌸");
+        showModal("入力エラー", "交換部品・項目名を入力してくださいね🌸");
         return;
       }
 
@@ -3908,7 +4413,7 @@
 
         if (error) throw error;
 
-        alert("メンテナンス情報を記録しました！✨");
+        showModal("保存完了", "メンテナンス情報を記録しました！✨");
 
         document.getElementById('newMaintenanceItemPlanting').value = '';
         document.getElementById('newMaintenanceMemoPlanting').value = '';
@@ -3919,7 +4424,7 @@
 
       } catch (err) {
         console.error("Maint Save Error:", err);
-        alert("保存に失敗しました: " + (err.message || JSON.stringify(err)));
+        showModal("保存エラー", "保存に失敗しました: " + (err.message || JSON.stringify(err)));
       }
     }
 
@@ -4261,7 +4766,7 @@
 
       } catch (err) {
         console.error("OCR読み取りエラー:", err);
-        alert("画像の読み取りに失敗しました");
+        showModal("エラー", "画像の読み取りに失敗しました");
         saveBtn.disabled = false;
         saveBtn.innerText = "修理履歴を保存";
       }
@@ -4275,7 +4780,7 @@
       const memoValue = document.getElementById('repairMemoPlanting').value;
 
       if (!dateValue || !costValue) {
-        alert("修理日と金額は必須です");
+        showModal("入力エラー", "修理日と金額は必須です");
         return;
       }
 
@@ -4305,7 +4810,7 @@
         if (typeof showCustomModal === 'function') {
           showCustomModal("保存完了", "修理履歴を記録しました。ダッシュボードを更新します。");
         } else {
-          alert("保存完了しました！🌾");
+          showModal("保存完了", "保存完了しました！🌾");
         }
 
         setTimeout(() => {
@@ -4316,7 +4821,7 @@
 
       } catch (err) {
         console.error("❌ 保存に失敗しました:", err);
-        alert("エラーで保存できませんでした: " + err.message);
+        showModal("保存エラー", "エラーで保存できませんでした: " + err.message);
         btn.disabled = false;
         btn.innerText = "修理履歴を保存";
       }
