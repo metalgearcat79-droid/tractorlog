@@ -12,6 +12,7 @@
   <title>和農日向 Tractor Log</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
     /* --- 基本スタイル --- */
     body {
@@ -28,6 +29,13 @@
     .view.active {
       display: block;
     }
+    
+    /* PC表示時にサイドバーがある場合の調整 */
+    @media (min-width: 1024px) {
+      body.show-sidebar .view.active {
+        display: block;
+      }
+    }
 
     .sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu {
       position: fixed;
@@ -40,6 +48,45 @@
       transition: left 0.3s ease;
       padding: 20px;
       box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* PC表示時：サイドバーを常時表示（データ分析ページを除く） */
+    @media (min-width: 1024px) {
+      /* アクティブなメニューのみ表示 */
+      body.show-sidebar .sideMenu.active-menu,
+      body.show-sidebar #sideMenu.active-menu,
+      body.show-sidebar #tractorSideMenu.active-menu,
+      body.show-sidebar #plantingSideMenu.active-menu,
+      body.show-sidebar #combineSideMenu.active-menu {
+        left: 0;
+      }
+
+      /* サイドバー表示時にコンテンツにマージンを適用 */
+      body.show-sidebar #mainContainer {
+        margin-left: 280px;
+        margin-right: 0;
+      }
+      
+      /* サイドバー表示時、各viewのmax-widthコンテナを適切に配置 */
+      body.show-sidebar .view.active > div {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      body.show-sidebar #overlay {
+        display: none !important;
+      }
+
+      /* PC表示時にサイドメニューの×ボタンを非表示 */
+      body.show-sidebar .close-menu-btn {
+        display: none;
+      }
+
+      /* ハンバーガーメニューボタンをPC表示時は非表示 */
+      body.show-sidebar .view.active header button[onclick="openMenu()"],
+      body.show-sidebar .view.active .bi-header button[onclick="openMenu()"] {
+        display: none;
+      }
     }
 
     #overlay {
@@ -231,6 +278,7 @@
     /* combineView専用の背景色 */
     #combine-section {
       background-color: #faf8f3;
+      min-height: 100vh;
     }
 
     #combineView,
@@ -594,12 +642,15 @@
     
     .portal-subtitle {
       font-family: 'Zen Kaku Gothic New', sans-serif;
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 400;
       letter-spacing: 0.05em;
       color: rgba(255,255,255,0.6);
       margin-bottom: 32px;
       text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .portal-description {
@@ -823,7 +874,7 @@
       .portal-hero { grid-template-columns: 1fr; gap: 32px; }
       .portal-left { text-align: center; padding-top: 0 !important; }
       .portal-title { font-size: 32px; }
-      .portal-subtitle { font-size: 10px; }
+      .portal-subtitle { font-size: 9px; }
       .portal-grid .portal-card { padding: 12px; }
       .portal-card:nth-child(1) i { font-size: 2.5rem !important; }
       .portal-card i { font-size: 2rem !important; }
@@ -843,7 +894,7 @@
   <div id="tractorSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
       <h2 class="font-bold text-lg text-[#6b8f71]">トラクターメニュー</h2>
-      <button onclick="closeMenu()" class="text-2xl text-gray-400">&times;</button>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
@@ -865,7 +916,7 @@
   <div id="plantingSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
       <h2 class="font-bold text-lg text-[#4a9b9b]">田植え機メニュー</h2>
-      <button onclick="closeMenu()" class="text-2xl text-gray-400">&times;</button>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
@@ -887,7 +938,7 @@
   <div id="combineSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
       <h2 class="font-bold text-lg text-[#c9a961]">コンバインメニュー</h2>
-      <button onclick="closeMenu()" class="text-2xl text-gray-400">&times;</button>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
@@ -909,7 +960,7 @@
   <div id="sideMenu">
     <div class="flex justify-between items-center mb-6">
       <h2 class="font-bold text-lg text-[#6b8f71]">メニュー</h2>
-      <button onclick="closeMenu()" class="text-2xl text-gray-400">&times;</button>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
@@ -957,7 +1008,7 @@
 
   <div id="mainContainer">
     <!-- Portal View: entry hub -->
-    <div id="portalView" class="view">
+    <div id="portalView" class="view fullscreen-view">
       <div class="portal-hero" style="min-height:100vh; padding:80px 48px; border-radius:0;">
         <!-- 左側: タイトルエリア -->
         <div class="portal-left">
@@ -965,7 +1016,6 @@
           <div class="portal-subtitle">Agricultural Machinery Management System</div>
         </div>
 
-        <!-- 右側: ベントーグリッド -->
         <!-- 右側: ベントーグリッド -->
         <div class="portal-grid">
           <div class="portal-card" onclick="switchView('tractorView')" style="cursor:pointer;">
@@ -997,8 +1047,9 @@
             <i class="fa-solid fa-gears text-4xl"></i>
           </div>
 
-          <div class="portal-card" onclick="showModal('エクスポート', 'エクスポート/印刷機能は準備中です')" style="cursor:pointer;">
+          <div class="portal-card" onclick="switchView('exportView')" style="cursor:pointer;">
             <i class="fa-solid fa-file-export text-4xl"></i>
+            <div class="card-title">エクスポート/印刷</div>
           </div>
 
           <div class="portal-card version-card" onclick="switchView('versionView')" style="cursor:pointer;">
@@ -1096,7 +1147,7 @@
     <!-- Planting Section -->
     <div id="planting-section">
       <!-- 田植え機 Dashboard -->
-      <div id="dashboardPlanting" class="view">
+      <div id="dashboardPlanting" class="view fullscreen-view">
         <div class="bi-header">
           <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
               class="fa-solid fa-bars"></i></button>
@@ -1320,7 +1371,7 @@
       </div>
 
       <!-- 稼働履歴・検索 (田植え機) -->
-      <div id="historyViewPlanting" class="view px-4 py-6 max-w-3xl mx-auto pb-10">
+      <div id="historyViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
         <!-- 田植え機専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-8 relative">
           <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
@@ -1384,7 +1435,7 @@
     </div>
 
     <!-- 田植え機 メンテナンス機械一覧 -->
-    <div id="maintenanceMachineListViewPlanting" class="view px-4 max-w-3xl mx-auto pb-10">
+    <div id="maintenanceMachineListViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
       <!-- 田植え機専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-8 relative">
         <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
@@ -1587,7 +1638,7 @@
       </div>
 
       <!-- 稼働履歴・検索 (コンバイン) -->
-      <div id="historyViewCombine" class="view px-4 py-6 max-w-3xl mx-auto pb-10">
+      <div id="historyViewCombine" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
         <!-- コンバイン専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-8 relative">
           <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
@@ -1650,7 +1701,7 @@
       </div>
 
       <!-- コンバイン メンテナンス機械一覧 -->
-      <div id="maintenanceMachineListViewCombine" class="view px-4 max-w-3xl mx-auto pb-10">
+      <div id="maintenanceMachineListViewCombine" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
         <!-- コンバイン専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-8 relative">
           <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
@@ -1751,7 +1802,7 @@
       </div>
 
       <!-- コンバイン Dashboard (準備中) -->
-      <div id="dashboardCombine" class="view">
+      <div id="dashboardCombine" class="view fullscreen-view">
         <div class="bi-header">
           <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
               class="fa-solid fa-bars"></i></button>
@@ -1765,7 +1816,7 @@
       </div>
     </div>
 
-    <div id="dashboard" class="view">
+    <div id="dashboard" class="view fullscreen-view">
       <div class="bi-header">
         <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
             class="fa-solid fa-bars"></i></button>
@@ -1896,7 +1947,7 @@
       <button onclick="switchView('tractorView')" class="btn-sub">TOPに戻る</button>
     </div>
 
-    <div id="historyView" class="view px-4 py-6 max-w-3xl mx-auto pb-10">
+    <div id="historyView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
 
       <div
         class="flex items-center gap-2 mb-6 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-3 text-lg w-full">
@@ -1955,7 +2006,7 @@
       </button>
     </div>
 
-    <div id="maintenanceMachineListView" class="view px-4 max-w-3xl mx-auto pb-10">
+    <div id="maintenanceMachineListView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
       <!-- トラクター専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-8 relative">
         <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
@@ -2183,7 +2234,107 @@
       </div>
     </div>
 
-    <div id="versionView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10" data-version="1.0.0">
+    <!-- Export View -->
+    <div id="exportView" class="view fullscreen-view" style="background: #faf9f6; min-height: 100vh;">
+      <div class="px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10">
+        <header class="flex flex-col items-center justify-center py-8 relative">
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #203a43;"><i class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-file-export text-5xl" style="color: #203a43;"></i>
+          <h1 class="text-xl font-bold" style="color: #203a43;">和農日向 機械管理アプリ</h1>
+        </header>
+
+        <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #203a43; border-bottom: 2px solid #203a43;">
+          <i class="fa-solid fa-file-export"></i> データエクスポート
+        </div>
+
+      <!-- 絞り込み条件 -->
+      <div class="card mb-4">
+        <h3 class="font-bold mb-3 flex items-center gap-2" style="color: #203a43;">
+          <i class="fa-solid fa-filter"></i>絞り込み条件
+        </h3>
+        
+        <div class="space-y-3">
+          <!-- データタイプ選択 -->
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1">データタイプ</label>
+            <select id="exportDataType" class="w-full p-3 rounded-lg" onchange="updateExportPreview()">
+              <option value="tractor">トラクター稼働ログ</option>
+              <option value="planting">田植え機稼働ログ</option>
+              <option value="combine">コンバイン稼働ログ</option>
+              <option value="maintenance">メンテナンス記録</option>
+              <option value="repair">修理記録</option>
+            </select>
+          </div>
+
+          <!-- 期間選択 -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-400 mb-1">開始日</label>
+              <input type="date" id="exportStartDate" class="w-full p-3 rounded-lg" onchange="updateExportPreview()">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-400 mb-1">終了日</label>
+              <input type="date" id="exportEndDate" class="w-full p-3 rounded-lg" onchange="updateExportPreview()">
+            </div>
+          </div>
+
+          <!-- 機械選択 -->
+          <div id="exportMachineFilter">
+            <label class="block text-xs font-bold text-gray-400 mb-1">機械（オプション）</label>
+            <select id="exportMachine" class="w-full p-3 rounded-lg" onchange="updateExportPreview()">
+              <option value="">全ての機械</option>
+            </select>
+          </div>
+
+          <!-- オペレーター選択 -->
+          <div id="exportOperatorFilter">
+            <label class="block text-xs font-bold text-gray-400 mb-1">オペレーター（オプション）</label>
+            <select id="exportOperator" class="w-full p-3 rounded-lg" onchange="updateExportPreview()">
+              <option value="">全てのオペレーター</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- データプレビュー -->
+      <div class="card mb-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-bold flex items-center gap-2" style="color: #203a43;">
+            <i class="fa-solid fa-table"></i>データプレビュー
+          </h3>
+          <span id="previewCount" class="text-sm text-gray-600">0件</span>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <div id="exportPreviewTable" class="text-sm">
+            <p class="text-center text-gray-500 py-8">条件を選択してください</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- エクスポートボタン -->
+      <div class="card mb-4">
+        <button id="exportButton" onclick="executeExport()" class="btn w-full" disabled>
+          <i class="fa-solid fa-download mr-2"></i>このデータをExcelでダウンロード
+        </button>
+      </div>
+
+      <div class="card mb-4" style="background-color: #f0f7f1;">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="fa-solid fa-print text-xl" style="color: #203a43;"></i>
+          <h3 class="font-bold" style="color: #203a43;">印刷機能</h3>
+        </div>
+        <p class="text-sm mb-3" style="color: #203a43; opacity: 0.8;">現在表示しているページをそのまま印刷できます。印刷時にはボタンや入力欄などが自動的に非表示になります。</p>
+        <button onclick="window.print()" class="btn w-full">
+          <i class="fa-solid fa-print mr-2"></i>このページを印刷
+        </button>
+      </div>
+
+      <button onclick="switchView('portalView')" class="btn-sub mt-6">portalに戻る</button>
+      </div>
+    </div>
+
+    <div id="versionView" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-10" data-version="1.0.0">
       <!-- トラクター専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-8 relative">
         <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
@@ -2406,7 +2557,17 @@
     }
     
     function closeMenu() {
-      // すべてのメニューを閉じる
+      // PC表示でサイドバー常時表示モードの場合は閉じない
+      const isDesktop = window.innerWidth >= 1024;
+      const showSidebar = document.body.classList.contains('show-sidebar');
+      
+      if (isDesktop && showSidebar) {
+        // PC表示時はオーバーレイだけ閉じる（サイドバーは閉じない）
+        document.getElementById("overlay").style.display = "none";
+        return;
+      }
+      
+      // モバイル表示時は通常通りすべて閉じる
       document.getElementById("sideMenu").style.left = "-280px";
       document.getElementById("tractorSideMenu").style.left = "-280px";
       document.getElementById("plantingSideMenu").style.left = "-280px";
@@ -2438,6 +2599,50 @@
       if (targetView) {
         targetView.classList.add('active');
         targetView.style.display = 'block';
+        
+        // サイドバーを表示しないページのリスト
+        const noSidebarPages = ['portalView', 'dashboard', 'dashboardPlanting', 'dashboardCombine', 'versionView', 'exportView'];
+        
+        // サイドバー表示の制御
+        if (noSidebarPages.includes(id)) {
+          document.body.classList.remove('show-sidebar');
+          document.body.classList.add('fullscreen-mode');
+        } else {
+          document.body.classList.add('show-sidebar');
+          document.body.classList.remove('fullscreen-mode');
+        }
+        
+        // 適切なサイドメニューにactive-menuクラスを付与（ビューIDベース）
+        const tractorViews = ['tractorView', 'todayView', 'historyView', 'maintenanceMachineListView', 'maintenanceDetailView'];
+        const plantingViews = ['plantingView', 'todayViewPlanting', 'historyViewPlanting', 'maintenanceMachineListViewPlanting', 'maintenanceDetailViewPlanting'];
+        const combineViews = ['combineView', 'todayViewCombine', 'historyViewCombine', 'maintenanceMachineListViewCombine', 'maintenanceDetailViewCombine'];
+        
+        // 全てのメニューからactive-menuクラスを削除
+        document.getElementById("sideMenu").classList.remove('active-menu');
+        document.getElementById("tractorSideMenu").classList.remove('active-menu');
+        document.getElementById("plantingSideMenu").classList.remove('active-menu');
+        document.getElementById("combineSideMenu").classList.remove('active-menu');
+        
+        // 適切なメニューにactive-menuクラスを追加
+        let activeMenuId = 'sideMenu';
+        if (tractorViews.includes(id)) {
+          activeMenuId = 'tractorSideMenu';
+          document.getElementById("tractorSideMenu").classList.add('active-menu');
+        } else if (plantingViews.includes(id)) {
+          activeMenuId = 'plantingSideMenu';
+          document.getElementById("plantingSideMenu").classList.add('active-menu');
+        } else if (combineViews.includes(id)) {
+          activeMenuId = 'combineSideMenu';
+          document.getElementById("combineSideMenu").classList.add('active-menu');
+        } else {
+          document.getElementById("sideMenu").classList.add('active-menu');
+        }
+        
+        // PC表示でサイドバー表示モードの場合、アクティブメニューを明示的に開く
+        const isDesktop = window.innerWidth >= 1024;
+        if (isDesktop && !noSidebarPages.includes(id)) {
+          document.getElementById(activeMenuId).style.left = "0px";
+        }
         
         // バージョン情報ページを開いたら通知バッジを消す
         if (id === 'versionView') {
@@ -2504,6 +2709,9 @@
       if (id === 'maintenanceDetailViewPlanting') {
         console.log("田植え機メンテナンス状態を復元中...");
         restoreMaintenanceChecksPlanting();
+      }
+      if (id === 'exportView') {
+        initExportPage();
       }
     }
     
@@ -4829,6 +5037,547 @@
         btn.innerText = "修理履歴を保存";
       }
     }
+
+    // ==========================================
+    // エクスポート機能
+    // ==========================================
+
+    // エクスポートページ用のグローバル変数
+    let currentExportData = [];
+
+    // エクスポートページ初期化
+    async function initExportPage() {
+      // 機械リストを読み込み
+      const { data: machines } = await client
+        .from('machines')
+        .select('*')
+        .order('name');
+      
+      const machineSelect = document.getElementById('exportMachine');
+      if (machineSelect && machines) {
+        machineSelect.innerHTML = '<option value="">全ての機械</option>' +
+          machines.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+      }
+
+      // オペレーターリストを読み込み
+      const { data: operators } = await client
+        .from('operators')
+        .select('*')
+        .order('name');
+      
+      const operatorSelect = document.getElementById('exportOperator');
+      if (operatorSelect && operators) {
+        operatorSelect.innerHTML = '<option value="">全てのオペレーター</option>' +
+          operators.map(o => `<option value="${o.id}">${o.name}</option>`).join('');
+      }
+
+      // デフォルトで過去30日間を設定
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 30);
+      
+      document.getElementById('exportEndDate').valueAsDate = endDate;
+      document.getElementById('exportStartDate').valueAsDate = startDate;
+
+      // 初回プレビュー表示
+      updateExportPreview();
+    }
+
+    // データプレビュー更新
+    async function updateExportPreview() {
+      const dataType = document.getElementById('exportDataType').value;
+      const startDate = document.getElementById('exportStartDate').value;
+      const endDate = document.getElementById('exportEndDate').value;
+      const machineId = document.getElementById('exportMachine').value;
+      const operatorId = document.getElementById('exportOperator').value;
+
+      const previewDiv = document.getElementById('exportPreviewTable');
+      const countSpan = document.getElementById('previewCount');
+      const exportButton = document.getElementById('exportButton');
+
+      // ローディング表示
+      previewDiv.innerHTML = '<p class="text-center text-gray-500 py-8"><i class="fa-solid fa-spinner fa-spin mr-2"></i>読み込み中...</p>';
+
+      try {
+        let query;
+        let tableName;
+        let dateField;
+
+        // データタイプに応じてクエリを構築
+        if (dataType === 'tractor') {
+          tableName = 'hour_logs';
+          dateField = 'work_date';
+          query = client.from(tableName).select(`
+            *,
+            machines(name),
+            operators(name),
+            work_types(work_name, category)
+          `);
+        } else if (dataType === 'planting') {
+          tableName = 'planting_logs';
+          dateField = 'work_date';
+          query = client.from(tableName).select(`
+            *,
+            machines(name),
+            operators(name),
+            work_types(work_name, category)
+          `);
+        } else if (dataType === 'combine') {
+          tableName = 'combine_logs';
+          dateField = 'work_date';
+          query = client.from(tableName).select(`
+            *,
+            machines(name),
+            operators(name),
+            work_types(work_name, category)
+          `);
+        } else if (dataType === 'maintenance') {
+          tableName = 'maintenance_records';
+          dateField = 'maintenance_date';
+          query = client.from(tableName).select(`
+            *,
+            machines(name)
+          `);
+        } else if (dataType === 'repair') {
+          tableName = 'repair_logs';
+          dateField = 'repair_date';
+          query = client.from(tableName).select(`
+            *,
+            machines(name)
+          `);
+        }
+
+        // 期間フィルター
+        if (startDate) {
+          query = query.gte(dateField, startDate);
+        }
+        if (endDate) {
+          query = query.lte(dateField, endDate);
+        }
+
+        // 機械フィルター
+        if (machineId) {
+          query = query.eq('machine_id', machineId);
+        }
+
+        // オペレーターフィルター（稼働ログのみ）
+        if (operatorId && ['tractor', 'planting', 'combine'].includes(dataType)) {
+          query = query.eq('operator_id', operatorId);
+        }
+
+        query = query.order(dateField, { ascending: false }).limit(100);
+
+        const { data, error } = await query;
+
+        if (error) throw error;
+
+        currentExportData = data || [];
+
+        // プレビュー表示
+        if (currentExportData.length === 0) {
+          previewDiv.innerHTML = '<p class="text-center text-gray-500 py-8">該当するデータがありません</p>';
+          countSpan.textContent = '0件';
+          exportButton.disabled = true;
+        } else {
+          countSpan.textContent = `${currentExportData.length}件`;
+          exportButton.disabled = false;
+          
+          // テーブル生成
+          let tableHTML = '<table class="w-full text-xs border-collapse"><thead><tr class="bg-gray-100">';
+          
+          // ヘッダー
+          if (['tractor', 'planting', 'combine'].includes(dataType)) {
+            tableHTML += `
+              <th class="border p-2">作業日</th>
+              <th class="border p-2">機械名</th>
+              <th class="border p-2">オペレーター</th>
+              <th class="border p-2">種別</th>
+              <th class="border p-2">作業内容</th>
+              <th class="border p-2">稼働前(h)</th>
+              <th class="border p-2">稼働後(h)</th>
+              <th class="border p-2">稼働時間(h)</th>
+              <th class="border p-2">備考</th>
+            `;
+          } else if (dataType === 'maintenance') {
+            tableHTML += `
+              <th class="border p-2">メンテナンス日</th>
+              <th class="border p-2">機械名</th>
+              <th class="border p-2">内容</th>
+              <th class="border p-2">詳細</th>
+              <th class="border p-2">次回予定</th>
+              <th class="border p-2">費用</th>
+            `;
+          } else if (dataType === 'repair') {
+            tableHTML += `
+              <th class="border p-2">修理日</th>
+              <th class="border p-2">機械名</th>
+              <th class="border p-2">故障内容</th>
+              <th class="border p-2">修理内容</th>
+              <th class="border p-2">修理先</th>
+              <th class="border p-2">費用</th>
+            `;
+          }
+          
+          tableHTML += '</tr></thead><tbody>';
+
+          // データ行（最大10件まで表示）
+          currentExportData.slice(0, 10).forEach(row => {
+            tableHTML += '<tr>';
+            
+            if (['tractor', 'planting', 'combine'].includes(dataType)) {
+              tableHTML += `
+                <td class="border p-2">${row.work_date || ''}</td>
+                <td class="border p-2">${row.machines?.name || ''}</td>
+                <td class="border p-2">${row.operators?.name || ''}</td>
+                <td class="border p-2">${row.work_types?.category || ''}</td>
+                <td class="border p-2">${row.work_types?.work_name || ''}</td>
+                <td class="border p-2">${row.start_hour || ''}</td>
+                <td class="border p-2">${row.end_hour || ''}</td>
+                <td class="border p-2">${row.diff_hour || ''}</td>
+                <td class="border p-2">${row.memo || ''}</td>
+              `;
+            } else if (dataType === 'maintenance') {
+              tableHTML += `
+                <td class="border p-2">${row.maintenance_date || ''}</td>
+                <td class="border p-2">${row.machines?.name || ''}</td>
+                <td class="border p-2">${row.maintenance_type || ''}</td>
+                <td class="border p-2">${row.details || ''}</td>
+                <td class="border p-2">${row.next_maintenance_date || ''}</td>
+                <td class="border p-2">${row.cost || ''}</td>
+              `;
+            } else if (dataType === 'repair') {
+              tableHTML += `
+                <td class="border p-2">${row.repair_date || ''}</td>
+                <td class="border p-2">${row.machines?.name || ''}</td>
+                <td class="border p-2">${row.issue || ''}</td>
+                <td class="border p-2">${row.repair_details || ''}</td>
+                <td class="border p-2">${row.shop || ''}</td>
+                <td class="border p-2">${row.cost || ''}</td>
+              `;
+            }
+            
+            tableHTML += '</tr>';
+          });
+
+          if (currentExportData.length > 10) {
+            tableHTML += `<tr><td colspan="9" class="border p-2 text-center text-gray-500">...他${currentExportData.length - 10}件</td></tr>`;
+          }
+
+          tableHTML += '</tbody></table>';
+          previewDiv.innerHTML = tableHTML;
+        }
+
+      } catch (error) {
+        console.error('プレビューエラー:', error);
+        previewDiv.innerHTML = '<p class="text-center text-red-500 py-8">データの読み込みに失敗しました</p>';
+        exportButton.disabled = true;
+      }
+    }
+
+    // Excelエクスポート実行
+    function executeExport() {
+      if (currentExportData.length === 0) {
+        showModal('エクスポート', 'エクスポートするデータがありません');
+        return;
+      }
+
+      const dataType = document.getElementById('exportDataType').value;
+      let exportData, fileName, sheetName;
+
+      try {
+        if (['tractor', 'planting', 'combine'].includes(dataType)) {
+          exportData = currentExportData.map(row => ({
+            '作業日': row.work_date || '',
+            '機械名': row.machines?.name || '',
+            'オペレーター': row.operators?.name || '',
+            '種別': row.work_types?.category || '',
+            '作業内容': row.work_types?.work_name || '',
+            '稼働前(h)': row.start_hour || '',
+            '稼働後(h)': row.end_hour || '',
+            '稼働時間(h)': row.diff_hour || '',
+            '備考': row.memo || ''
+          }));
+          sheetName = dataType === 'tractor' ? 'トラクター稼働ログ' : 
+                      dataType === 'planting' ? '田植え機稼働ログ' : 'コンバイン稼働ログ';
+        } else if (dataType === 'maintenance') {
+          exportData = currentExportData.map(row => ({
+            'メンテナンス日': row.maintenance_date || '',
+            '機械名': row.machines?.name || '',
+            'メンテナンス内容': row.maintenance_type || '',
+            '詳細': row.details || '',
+            '次回予定日': row.next_maintenance_date || '',
+            '費用(円)': row.cost || '',
+            '備考': row.memo || ''
+          }));
+          sheetName = 'メンテナンス記録';
+        } else if (dataType === 'repair') {
+          exportData = currentExportData.map(row => ({
+            '修理日': row.repair_date || '',
+            '機械名': row.machines?.name || '',
+            '故障内容': row.issue || '',
+            '修理内容': row.repair_details || '',
+            '修理先': row.shop || '',
+            '費用(円)': row.cost || '',
+            '備考': row.memo || ''
+          }));
+          sheetName = '修理記録';
+        }
+
+        // SheetJSでExcel生成
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+        // ファイル名生成
+        const now = new Date();
+        fileName = `${sheetName}_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`;
+
+        // ダウンロード
+        XLSX.writeFile(wb, fileName);
+        
+        showModal('エクスポート完了', `${currentExportData.length}件のデータをエクスポートしました`);
+      } catch (error) {
+        console.error('エクスポートエラー:', error);
+        showModal('エラー', 'データのエクスポートに失敗しました');
+      }
+    }
+
+    // トラクターデータエクスポート（旧関数 - 削除予定）
+    async function exportTractorData() {
+      try {
+        const { data, error } = await client
+          .from('hour_logs')
+          .select(`
+            *,
+            machines(name),
+            operators(name),
+            work_types(work_name, category)
+          `)
+          .order('work_date', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          showModal('エクスポート', 'エクスポートするデータがありません');
+          return;
+        }
+
+        // データを整形
+        const exportData = data.map(row => ({
+          '作業日': row.work_date || '',
+          '機械名': row.machines?.name || '',
+          'オペレーター': row.operators?.name || '',
+          '種別': row.work_types?.category || '',
+          '作業内容': row.work_types?.work_name || '',
+          '稼働前(h)': row.start_hour || '',
+          '稼働後(h)': row.end_hour || '',
+          '稼働時間(h)': row.diff_hour || '',
+          '備考': row.memo || ''
+        }));
+
+        // SheetJSでExcel生成
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'トラクター稼働ログ');
+
+        // ファイル名生成（現在日時）
+        const now = new Date();
+        const fileName = `トラクター稼働ログ_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`;
+
+        // ダウンロード
+        XLSX.writeFile(wb, fileName);
+        
+        showModal('エクスポート完了', `${data.length}件のデータをエクスポートしました`);
+      } catch (error) {
+        console.error('エクスポートエラー:', error);
+        showModal('エラー', 'データのエクスポートに失敗しました');
+      }
+    }
+
+    // 田植え機データエクスポート
+    async function exportPlantingData() {
+      try {
+        const { data, error } = await client
+          .from('planting_logs')
+          .select(`
+            *,
+            machines(name),
+            operators(name),
+            work_types(work_name, category)
+          `)
+          .order('work_date', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          showModal('エクスポート', 'エクスポートするデータがありません');
+          return;
+        }
+
+        const exportData = data.map(row => ({
+          '作業日': row.work_date || '',
+          '機械名': row.machines?.name || '',
+          'オペレーター': row.operators?.name || '',
+          '種別': row.work_types?.category || '',
+          '作業内容': row.work_types?.work_name || '',
+          '稼働前(h)': row.start_hour || '',
+          '稼働後(h)': row.end_hour || '',
+          '稼働時間(h)': row.diff_hour || '',
+          '備考': row.memo || ''
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '田植え機稼働ログ');
+
+        const now = new Date();
+        const fileName = `田植え機稼働ログ_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`;
+
+        XLSX.writeFile(wb, fileName);
+        
+        showModal('エクスポート完了', `${data.length}件のデータをエクスポートしました`);
+      } catch (error) {
+        console.error('エクスポートエラー:', error);
+        showModal('エラー', 'データのエクスポートに失敗しました');
+      }
+    }
+
+    // コンバインデータエクスポート
+    async function exportCombineData() {
+      try {
+        const { data, error } = await client
+          .from('combine_logs')
+          .select(`
+            *,
+            machines(name),
+            operators(name),
+            work_types(work_name, category)
+          `)
+          .order('work_date', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          showModal('エクスポート', 'エクスポートするデータがありません');
+          return;
+        }
+
+        const exportData = data.map(row => ({
+          '作業日': row.work_date || '',
+          '機械名': row.machines?.name || '',
+          'オペレーター': row.operators?.name || '',
+          '種別': row.work_types?.category || '',
+          '作業内容': row.work_types?.work_name || '',
+          '稼働前(h)': row.start_hour || '',
+          '稼働後(h)': row.end_hour || '',
+          '稼働時間(h)': row.diff_hour || '',
+          '備考': row.memo || ''
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'コンバイン稼働ログ');
+
+        const now = new Date();
+        const fileName = `コンバイン稼働ログ_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`;
+
+        XLSX.writeFile(wb, fileName);
+        
+        showModal('エクスポート完了', `${data.length}件のデータをエクスポートしました`);
+      } catch (error) {
+        console.error('エクスポートエラー:', error);
+        showModal('エラー', 'データのエクスポートに失敗しました');
+      }
+    }
+
+    // メンテナンスデータエクスポート
+    async function exportMaintenanceData() {
+      try {
+        const { data, error } = await client
+          .from('maintenance_records')
+          .select(`
+            *,
+            machines(name)
+          `)
+          .order('maintenance_date', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          showModal('エクスポート', 'エクスポートするデータがありません');
+          return;
+        }
+
+        const exportData = data.map(row => ({
+          'メンテナンス日': row.maintenance_date || '',
+          '機械名': row.machines?.name || '',
+          'メンテナンス内容': row.maintenance_type || '',
+          '詳細': row.details || '',
+          '次回予定日': row.next_maintenance_date || '',
+          '費用(円)': row.cost || '',
+          '備考': row.memo || ''
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'メンテナンス記録');
+
+        const now = new Date();
+        const fileName = `メンテナンス記録_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`;
+
+        XLSX.writeFile(wb, fileName);
+        
+        showModal('エクスポート完了', `${data.length}件のデータをエクスポートしました`);
+      } catch (error) {
+        console.error('エクスポートエラー:', error);
+        showModal('エラー', 'データのエクスポートに失敗しました');
+      }
+    }
+
+    // 修理データエクスポート
+    async function exportRepairData() {
+      try {
+        const { data, error } = await client
+          .from('repair_logs')
+          .select(`
+            *,
+            machines(name)
+          `)
+          .order('repair_date', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          showModal('エクスポート', 'エクスポートするデータがありません');
+          return;
+        }
+
+        const exportData = data.map(row => ({
+          '修理日': row.repair_date || '',
+          '機械名': row.machines?.name || '',
+          '故障内容': row.issue || '',
+          '修理内容': row.repair_details || '',
+          '修理先': row.shop || '',
+          '費用(円)': row.cost || '',
+          '備考': row.memo || ''
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '修理記録');
+
+        const now = new Date();
+        const fileName = `修理記録_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`;
+
+        XLSX.writeFile(wb, fileName);
+        
+        showModal('エクスポート完了', `${data.length}件のデータをエクスポートしました`);
+      } catch (error) {
+        console.error('エクスポートエラー:', error);
+        showModal('エラー', 'データのエクスポートに失敗しました');
+      }
+    }
+
   </script>
 </body>
 
