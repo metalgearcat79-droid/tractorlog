@@ -820,11 +820,13 @@
       .portal-card:nth-child(8) { grid-column: 2; grid-row: 8; }
       .portal-hero { padding: calc(24px + env(safe-area-inset-top)) 18px 18px; justify-content: flex-start; }
       .portal-hero { grid-template-columns: 1fr; gap: 32px; }
-      .portal-left { text-align: center; }
+      .portal-left { text-align: center; padding-top: 0 !important; }
       .portal-title { font-size: 32px; }
       .portal-subtitle { font-size: 10px; }
-      .portal-grid .portal-card { padding: 16px; }
-      .portal-card:nth-child(1) i { font-size: 3.5rem; }
+      .portal-grid .portal-card { padding: 12px; }
+      .portal-card:nth-child(1) i { font-size: 2.5rem !important; }
+      .portal-card i { font-size: 2rem !important; }
+      .portal-card .card-title { font-size: 14px; margin-top: 8px; }
     }
 
 
@@ -1994,10 +1996,10 @@
 
       <div class="bg-gradient-to-br from-[#6b8f71] to-[#4b634d] rounded-[2rem] p-6 text-white shadow-xl mb-8 relative overflow-hidden">
         <div class="relative z-10">
-          <p class="text-[#d1e0d3] text-[10px] md:text-xs font-medium mb-1 uppercase tracking-widest">2026年度 累計修理費</p>
+          <p class="text-[#d1e0d3] text-[16px] md:text-xs font-medium mb-1 uppercase tracking-widest">2026年度 累計修理費</p>
           <h3 id="totalRepairCost" class="text-3xl md:text-5xl font-black tracking-wider">¥ 0</h3>
-          <div class="mt-4 flex gap-4 text-[10px] text-[#d1e0d3]">
-            <span><i class="fa-solid fa-tractor mr-1"></i> トラクターのみの修理費</span>
+          <div class="mt-4 flex gap-4 text-[12px] text-[#d1e0d3]">
+            <span><i class="fa-solid fa-tractor mr-1"></i> 修理の登録は右上の「+新規登録」から</span>
           </div>
         </div>
         <i class="fa-solid fa-gears absolute -right-4 -bottom-4 text-white/10 text-7xl md:text-8xl rotate-12"></i>
