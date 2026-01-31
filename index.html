@@ -1300,6 +1300,8 @@
           class="fa-solid fa-calendar-day w-8 text-lg"></i>本日の稼働状況</button>
       <button onclick="switchView('historyViewOther')" class="menu-item"><i
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
+      <button onclick="switchView('dashboardOther')" class="menu-item"><i
+          class="fa-solid fa-chart-line w-8 text-lg"></i>データ分析</button>
     </nav>
   </div>
 
@@ -1535,7 +1537,7 @@
                   <div class="kpi-value-container"><span class="kpi-value" id="kpi-days-planting">0</span><span
                       class="kpi-unit">日</span></div>
                 </div>
-                <div class="kpi-card bg-[#4a6b50]"><span class="kpi-label">状 態</span><span
+                <div class="kpi-card" style="background-color: var(--planting-color);"><span class="kpi-label">状 態</span><span
                     class="kpi-value text-[15px]">良好</span></div>
               </div>
             </div>
@@ -1551,8 +1553,8 @@
           <div class="bi-left-col">
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px; color: var(--planting-color);"></i>
-                機械別修理コスト
+                <i class="fa-solid fa-seedling" style="margin-right: 8px; color: var(--planting-color);"></i>
+                作物別比率
               </p>
               <div class="chart-wrapper relative">
                 <canvas id="categoryShareChartPlanting"></canvas>
@@ -1561,8 +1563,8 @@
 
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-wheat-awn" style="margin-right: 8px; color: var(--planting-color);"></i>
-                作物別比率
+                <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--planting-color);"></i>
+                作業内容比率
               </p>
               <div class="chart-wrapper relative">
                 <canvas id="taskShareChartPlanting"></canvas>
@@ -2165,11 +2167,112 @@
           <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
               class="fa-solid fa-bars"></i></button>
           <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
-            <i class="fa-solid fa-chart-column mr-3"></i> 2026 Combine data-analysis
+            <i class="fa-solid fa-chart-column mr-3"></i> 2026 Combine data analysis
           </h1>
         </div>
-        <div class="card mt-8">
-          <p class="text-center text-gray-500 py-8">準備中...</p>
+
+        <div class="dashboard-top-bar">
+          <div class="main-top-row">
+            <div class="kpi-section">
+              <div id="machineTabsCombine" class="flex gap-2 overflow-x-auto pb-1"></div>
+              <div class="kpi-grid">
+                <div class="kpi-card"><span class="kpi-label">総 稼 働</span>
+                  <div class="kpi-value-container"><span class="kpi-value" id="kpi-hours-combine">0.0</span><span
+                      class="kpi-unit">h</span></div>
+                </div>
+                <div class="kpi-card"><span class="kpi-label">給 油</span>
+                  <div class="kpi-value-container"><span class="kpi-value" id="kpi-fuel-combine">0.0</span><span
+                      class="kpi-unit">L</span></div>
+                </div>
+                <div class="kpi-card"><span class="kpi-label">燃 費</span>
+                  <div class="kpi-value-container"><span class="kpi-value" id="kpi-avg-combine">0.0</span><span
+                      class="kpi-unit">L/h</span></div>
+                </div>
+                <div class="kpi-card"><span class="kpi-label">日 数</span>
+                  <div class="kpi-value-container"><span class="kpi-value" id="kpi-days-combine">0</span><span
+                      class="kpi-unit">日</span></div>
+                </div>
+                <div class="kpi-card" style="background-color: var(--combine-color);"><span class="kpi-label">状 態</span><span
+                    class="kpi-value text-[15px]">良好</span></div>
+              </div>
+            </div>
+            <div class="ranking-section">
+              <p class="text-[11px] font-bold mb-2 text-center" style="color: var(--combine-color)"><i
+                  class="fa-solid fa-trophy mr-1"></i>稼働ランキング</p>
+              <div id="rankListCombine" class="flex justify-around items-center"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bi-container">
+          <div class="bi-left-col">
+            <div class="card">
+              <p class="chart-title" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-layer-group" style="margin-right: 8px; color: var(--combine-color);"></i>
+                作業種別比率
+              </p>
+              <div class="chart-wrapper relative">
+                <canvas id="categoryShareChartCombine"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <p class="chart-title" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--combine-color);"></i>
+                作業内容比率
+              </p>
+              <div class="chart-wrapper relative">
+                <canvas id="taskShareChartCombine"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <p class="chart-title" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-user-check" style="margin-right: 8px; color: var(--combine-color);"></i>
+                オペレーター比率
+              </p>
+
+              <div class="chart-wrapper relative">
+                <canvas id="operatorShareChartCombine"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="bi-main-col">
+            <div class="lg:col-span-2 space-y-4">
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <p class="chart-title" style="display: flex; align-items: center;">
+                  <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: var(--combine-color);"></i>
+                  月別稼働推移
+                </p>
+                <div class="relative h-40"> <canvas id="detailChartCombine"></canvas>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <p class="chart-title" style="display: flex; align-items: center;">
+                  <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--combine-color);"></i>
+                  作業内容分析
+                </p>
+                <div class="relative h-[480px]">
+                  <canvas id="gradientBarChartCombine"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bi-right-col">
+            <div class="card yoy-card text-center relative">
+              <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: var(--combine-color);"></i>
+                前年実績比 (YoY)
+              </p>
+              <div class="chart-wrapper relative">
+                <canvas id="yearComparisonGaugeCombine"></canvas>
+                <div class="absolute inset-0 flex items-center justify-center pt-14">
+                  <p id="detailCompareValueCombine" class="text-2xl font-black" style="color: var(--combine-color)">--%</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2549,6 +2652,126 @@
       <button onclick="switchView('otherMachineryView')" class="btn-sub mt-6 w-full">
         <i class="fa-solid fa-arrow-left mr-2"></i>ログ入力に戻る
       </button>
+    </div>
+
+    <!-- その他の機械 Dashboard -->
+    <div id="dashboardOther" class="view fullscreen-view">
+      <div class="bi-header">
+        <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
+            class="fa-solid fa-bars"></i></button>
+        <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
+          <i class="fa-solid fa-chart-column mr-3"></i> 2026 Other Machinery Data Analysis
+        </h1>
+      </div>
+
+      <div class="dashboard-top-bar">
+        <div class="main-top-row">
+          <div class="kpi-section">
+            <div id="machineTabsOther" class="flex gap-2 overflow-x-auto pb-1"></div>
+            <div class="kpi-grid">
+              <div class="kpi-card"><span class="kpi-label">総 稼 働</span>
+                <div class="kpi-value-container"><span class="kpi-value" id="kpi-hours-other">0.0</span><span
+                    class="kpi-unit">h</span></div>
+              </div>
+              <div class="kpi-card"><span class="kpi-label">給 油</span>
+                <div class="kpi-value-container"><span class="kpi-value" id="kpi-fuel-other">0.0</span><span
+                    class="kpi-unit">L</span></div>
+              </div>
+              <div class="kpi-card"><span class="kpi-label">燃 費</span>
+                <div class="kpi-value-container"><span class="kpi-value" id="kpi-avg-other">0.0</span><span
+                    class="kpi-unit">L/h</span></div>
+              </div>
+              <div class="kpi-card"><span class="kpi-label">日 数</span>
+                <div class="kpi-value-container"><span class="kpi-value" id="kpi-days-other">0</span><span
+                    class="kpi-unit">日</span></div>
+              </div>
+              <div class="kpi-card" style="background-color: var(--other-color);"><span class="kpi-label">状 態</span><span
+                  class="kpi-value text-[15px]">良好</span></div>
+            </div>
+          </div>
+          <div class="ranking-section">
+            <p class="text-[11px] font-bold mb-2 text-center" style="color: var(--other-color)"><i
+                class="fa-solid fa-trophy mr-1"></i>稼働ランキング</p>
+            <div id="rankListOther" class="flex justify-around items-center"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bi-container">
+        <div class="bi-left-col">
+          <div class="card">
+            <p class="chart-title" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-tasks" style="margin-right: 8px; color: var(--other-color);"></i>
+              作業種別比率
+            </p>
+            <div class="chart-wrapper relative">
+              <canvas id="categoryShareChartOther"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <p class="chart-title" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-tools" style="margin-right: 8px; color: var(--other-color);"></i>
+              作業内容比率
+            </p>
+            <div class="chart-wrapper relative">
+              <canvas id="taskShareChartOther"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <p class="chart-title" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-user-check" style="margin-right: 8px; color: var(--other-color);"></i>
+              オペレーター比率
+            </p>
+            <div class="chart-wrapper relative">
+              <canvas id="operatorShareChartOther"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="bi-main-col">
+          <div class="lg:col-span-2 space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <p class="chart-title" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: var(--other-color);"></i>
+                月別稼働推移
+              </p>
+              <div class="relative h-40"> <canvas id="detailChartOther"></canvas></div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <p class="chart-title" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--other-color);"></i>
+                作業内容分析
+              </p>
+              <div class="relative h-[480px]">
+                <canvas id="gradientBarChartOther"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bi-right-col">
+          <div class="card yoy-card text-center relative">
+            <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
+              <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: var(--other-color);"></i>
+              前年実績比 (YoY)
+            </p>
+            <div class="text-center py-6">
+              <p class="text-[13px] text-gray-500 mb-2">2025 年度</p>
+              <p class="text-5xl font-black tracking-wider mb-2" style="color: var(--other-color);" id="yoy-last-year-other">0.0<span
+                  class="text-base ml-1">h</span></p>
+              <div class="my-3"><i class="fa-solid fa-arrow-down text-2xl" style="color: var(--other-color);"></i></div>
+              <p class="text-[13px] text-gray-500 mb-2">2026 年度</p>
+              <p class="text-5xl font-black tracking-wider" style="color: var(--other-color);" id="yoy-this-year-other">0.0<span
+                  class="text-base ml-1">h</span></p>
+              <div class="mt-4 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-400">前年比</p>
+                <p class="text-3xl font-black" style="color: var(--other-color);" id="yoy-change-other">--</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     </div>
 
@@ -3132,7 +3355,7 @@
         targetView.style.display = 'block';
         
         // サイドバーを表示しないページのリスト
-        const noSidebarPages = ['portalView', 'dashboard', 'dashboardPlanting', 'dashboardCombine'];
+        const noSidebarPages = ['portalView', 'dashboard', 'dashboardPlanting', 'dashboardCombine', 'dashboardOther'];
         
         // サイドバー表示の制御
         if (noSidebarPages.includes(id)) {
@@ -3156,7 +3379,7 @@
         const versionViews = ['versionView'];
         const repairViews = ['repairView', 'invoiceOCRView'];
         const otherMachineryViews = ['otherMachineryView', 'todayViewOther', 'historyViewOther'];
-        const dashboardViews = ['dashboard', 'dashboardPlanting', 'dashboardCombine'];
+        const dashboardViews = ['dashboard', 'dashboardPlanting', 'dashboardCombine', 'dashboardOther'];
         
         // body背景色を変更
         if (tractorViews.includes(id) || dashboardViews.includes(id)) {
@@ -3251,6 +3474,12 @@
       }
       if (id === 'dashboardPlanting') {
         setTimeout(() => renderDashboardPlanting('all'), 100);
+      }
+      if (id === 'dashboardCombine') {
+        setTimeout(() => renderDashboardCombine('all'), 100);
+      }
+      if (id === 'dashboardOther') {
+        setTimeout(() => renderDashboardOther('all'), 100);
       }
       if (id === 'todayView') {
         console.log("本日ログ読込実行");
@@ -5325,129 +5554,6 @@
       }
     }
 
-    // ========== 田植え機用 Dashboard 描画関数 ==========
-    async function renderDashboardPlanting(machineId = 'all') {
-      const machineTabs = document.getElementById("machineTabsPlanting");
-      if (!machineTabs) return;
-
-      window.currentViewMachineIdPlanting = machineId;
-      console.log("🌾 田植え機ダッシュボード描画中... ID:", machineId);
-      const currentId = machineId;
-      const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
-
-      // 田植え機リストを取得
-      const { data: plantingMachines } = await client
-        .from("machines")
-        .select("*")
-        .eq("machine_type", "transplanter")
-        .order("name");
-
-      let tabsHTML = `
-        <button onclick="renderDashboardPlanting('all')" 
-                class="tab-btn ${allBtnClass}" 
-                style="min-width: 80px; letter-spacing: 0.2em;">全 体</button>
-      `;
-
-      if (plantingMachines && plantingMachines.length > 0) {
-        tabsHTML += plantingMachines.map(m => {
-          const isActive = (String(m.id) === String(currentId)) ? 'active' : 'inactive';
-          return `
-            <button onclick="renderDashboardPlanting(${m.id})" 
-                    class="tab-btn ${isActive}">${m.name}</button>
-          `;
-        }).join("");
-      }
-      machineTabs.innerHTML = tabsHTML;
-
-      try {
-        // 2026年以降のplanting_logsデータを取得
-        let query = client
-          .from("planting_logs")
-          .select("*")
-          .gte("date", "2026-01-01")
-          .order("date", { ascending: false });
-
-        if (machineId !== 'all') {
-          query = query.eq("machine_id", machineId);
-        }
-
-        const { data, error } = await query;
-        if (error) throw error;
-
-        if (!data || data.length === 0) {
-          console.warn("⚠️ 2026年の田植え機データが見つかりません");
-          const rankingContainer = document.getElementById("rankListPlanting");
-          if (rankingContainer) rankingContainer.innerHTML = "データなし";
-          return;
-        }
-
-        // 機械ごとの稼働時間集計
-        const summary = {};
-        data.forEach(log => {
-          let name = "不明";
-          if (plantingMachines) {
-            const m = plantingMachines.find(item => String(item.id) === String(log.machine_id));
-            if (m) name = m.name;
-          }
-          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
-          summary[name] = (summary[name] || 0) + (h > 0 ? h : 0);
-        });
-
-        // ランキング表示（上位3位）
-        const sorted = Object.entries(summary).sort((a, b) => b[1] - a[1]);
-        const rankingContainer = document.getElementById("rankListPlanting");
-        if (rankingContainer) {
-          const crownColors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
-          rankingContainer.innerHTML = sorted.slice(0, 3).map(([name, hours], i) => `
-            <div class="flex flex-col items-center px-1 text-center" style="min-width: 75px;">
-              <div class="mb-1"><i class="fa-solid fa-crown ${crownColors[i]} text-xl"></i></div>
-              <span class="text-[10px] font-bold text-gray-700 truncate w-20 leading-tight">${name}</span>
-            </div>
-          `).join('');
-        }
-
-        // KPIカードの集計と反映
-        if (data) {
-          let totalH = 0;
-          let totalF = 0;
-          const daysSet = new Set();
-
-          data.forEach(log => {
-            const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
-            totalH += (h > 0 ? h : 0);
-            totalF += (parseFloat(log.fuel_amount) || 0);
-            if (log.date) daysSet.add(log.date);
-          });
-
-          const fuelAvg = totalH > 0 ? (totalF / totalH).toFixed(2) : "0.00";
-
-          const elH = document.getElementById("kpi-hours-planting");
-          const elF = document.getElementById("kpi-fuel-planting");
-          const elA = document.getElementById("kpi-avg-planting");
-          const elD = document.getElementById("kpi-days-planting");
-
-          if (elH) elH.innerText = totalH.toFixed(1);
-          if (elF) elF.innerText = totalF.toFixed(1);
-          if (elA) elA.innerText = fuelAvg;
-          if (elD) elD.innerText = daysSet.size;
-
-          console.log("✅ 田植え機 KPI更新完了:", { totalH, totalF, fuelAvg });
-        }
-
-        // チャート描画（田植え機用のチャートを描画する関数があればここで呼び出す）
-        if (typeof drawChartsPlanting === 'function') {
-          drawChartsPlanting(data);
-        }
-
-      } catch (e) {
-        console.error("❌ 田植え機ダッシュボード描画エラー:", e);
-      }
-    }
-
-    // Duplicate/old secondary `loadRepairDashboard` removed.
-    // The primary `loadRepairDashboard` (defined earlier) is used to populate
-    // 年ごとの修理費 / 機械ごとの修理費 / 最近の修理一覧 など。
-
     // ========== 田植え機用の修理履歴読み込み関数 ==========
     async function loadRepairDashboardPlanting() {
       try {
@@ -6611,6 +6717,733 @@
         `;
         container.appendChild(card);
       });
+    }
+
+    // ========================================
+    // ダッシュボードグラフ描画関数
+    // ========================================
+
+    // 田植え機ダッシュボード描画関数を更新（グラフ追加）
+    async function renderDashboardPlanting(machineId = 'all') {
+      const machineTabs = document.getElementById("machineTabsPlanting");
+      if (!machineTabs) return;
+
+      window.currentViewMachineIdPlanting = machineId;
+      console.log("🌾 田植え機ダッシュボード描画中... ID:", machineId);
+      const currentId = machineId;
+      const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
+
+      const { data: plantingMachines } = await client
+        .from("machines")
+        .select("*")
+        .eq("machine_type", "transplanter")
+        .order("name");
+
+      let tabsHTML = `
+        <button onclick="renderDashboardPlanting('all')" 
+                class="tab-btn ${allBtnClass}" 
+                style="min-width: 80px; letter-spacing: 0.2em;">全 体</button>
+      `;
+
+      if (plantingMachines && plantingMachines.length > 0) {
+        tabsHTML += plantingMachines.map(m => {
+          const isActive = (String(m.id) === String(currentId)) ? 'active' : 'inactive';
+          return `
+            <button onclick="renderDashboardPlanting(${m.id})" 
+                    class="tab-btn ${isActive}">${m.name}</button>
+          `;
+        }).join("");
+      }
+      machineTabs.innerHTML = tabsHTML;
+
+      try {
+        // planting_logsデータを取得
+        let query = client
+          .from("planting_logs")
+          .select("*")
+          .gte("date", "2026-01-01")
+          .order("date", { ascending: false });
+
+        if (machineId !== 'all') {
+          query = query.eq("machine_id", machineId);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        // machine_typeでフィルタ
+        const plantingData = data?.filter(log => {
+          const machine = plantingMachines?.find(m => m.id === log.machine_id);
+          return machine !== undefined;
+        }) || [];
+
+        // 関連データを取得
+        const { data: workTypes } = await client.from("work_types").select("*");
+        const { data: operators } = await client.from("operators").select("*");
+        const { data: crops } = await client.from("crops").select("*");
+
+        // データを結合
+        const enrichedData = plantingData.map(log => ({
+          ...log,
+          work_types: workTypes?.find(w => w.id === log.work_type_id) || { name: '不明' },
+          operators: operators?.find(o => o.id === log.operator_id) || { name: '不明' },
+          categories: crops?.find(c => c.id === log.crop_id) || { name: '不明' }
+        }));
+
+        if (enrichedData.length === 0) {
+          console.warn("⚠️ 田植え機データが見つかりません");
+          return;
+        }
+
+        // 機械ごとの稼働時間集計
+        const summary = {};
+        enrichedData.forEach(log => {
+          let name = "不明";
+          const m = plantingMachines?.find(item => String(item.id) === String(log.machine_id));
+          if (m) name = m.name;
+          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+          summary[name] = (summary[name] || 0) + (h > 0 ? h : 0);
+        });
+
+        // ランキング表示
+        const sorted = Object.entries(summary).sort((a, b) => b[1] - a[1]);
+        const rankingContainer = document.getElementById("rankListPlanting");
+        if (rankingContainer) {
+          const crownColors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
+          rankingContainer.innerHTML = sorted.slice(0, 3).map(([name, hours], i) => `
+            <div class="flex flex-col items-center px-1 text-center" style="min-width: 75px;">
+              <div class="mb-1"><i class="fa-solid fa-crown ${crownColors[i]} text-xl"></i></div>
+              <span class="text-[10px] font-bold text-gray-700 truncate w-20 leading-tight">${name}</span>
+            </div>
+          `).join('');
+        }
+
+        // KPI集計
+        let totalH = 0, totalF = 0;
+        const daysSet = new Set();
+        enrichedData.forEach(log => {
+          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          totalH += (h > 0 ? h : 0);
+          totalF += (parseFloat(log.fuel_amount) || 0);
+          if (log.date) daysSet.add(log.date);
+        });
+
+        const fuelAvg = totalH > 0 ? (totalF / totalH).toFixed(2) : "0.00";
+
+        const kpiHours = document.getElementById("kpi-hours-planting");
+        const kpiFuel = document.getElementById("kpi-fuel-planting");
+        const kpiAvg = document.getElementById("kpi-avg-planting");
+        const kpiDays = document.getElementById("kpi-days-planting");
+
+        if (kpiHours) kpiHours.innerText = totalH.toFixed(1);
+        if (kpiFuel) kpiFuel.innerText = totalF.toFixed(1);
+        if (kpiAvg) kpiAvg.innerText = fuelAvg;
+        if (kpiDays) kpiDays.innerText = daysSet.size;
+
+        // グラフ描画
+        drawChartsPlanting(enrichedData);
+
+      } catch (e) {
+        console.error("❌ 田植え機ダッシュボード描画エラー:", e);
+        console.error("エラー詳細:", e.message, e.stack);
+      }
+    }
+
+    function drawChartsPlanting(data) {
+      // 1. 作業種別比率（作物比率）
+      const categoryData = {};
+      data.forEach(log => {
+        const cat = log.categories?.name || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+        categoryData[cat] = (categoryData[cat] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx1 = document.getElementById('categoryShareChartPlanting');
+      if (ctx1) {
+        if (window.categoryShareChartPlantingInstance) window.categoryShareChartPlantingInstance.destroy();
+        window.categoryShareChartPlantingInstance = new Chart(ctx1, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(categoryData),
+            datasets: [{
+              data: Object.values(categoryData),
+              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      // 2. 作業内容比率
+      const taskData = {};
+      data.forEach(log => {
+        const task = log.work_types?.name || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+        taskData[task] = (taskData[task] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx2 = document.getElementById('taskShareChartPlanting');
+      if (ctx2) {
+        if (window.taskShareChartPlantingInstance) window.taskShareChartPlantingInstance.destroy();
+        window.taskShareChartPlantingInstance = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(taskData),
+            datasets: [{
+              data: Object.values(taskData),
+              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448', '#7d6340']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      // 3. オペレーター比率
+      const operatorData = {};
+      data.forEach(log => {
+        const op = log.operators?.name || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+        operatorData[op] = (operatorData[op] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx3 = document.getElementById('operatorShareChartPlanting');
+      if (ctx3) {
+        if (window.operatorShareChartPlantingInstance) window.operatorShareChartPlantingInstance.destroy();
+        window.operatorShareChartPlantingInstance = new Chart(ctx3, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(operatorData),
+            datasets: [{
+              data: Object.values(operatorData),
+              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      // 4. 月別稼働推移
+      const monthData = {};
+      data.forEach(log => {
+        const month = log.date?.substring(0, 7) || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+        monthData[month] = (monthData[month] || 0) + (h > 0 ? h : 0);
+      });
+
+      const sortedMonths = Object.keys(monthData).sort();
+      const ctx4 = document.getElementById('detailChartPlanting');
+      if (ctx4) {
+        if (window.detailChartPlantingInstance) window.detailChartPlantingInstance.destroy();
+        window.detailChartPlantingInstance = new Chart(ctx4, {
+          type: 'line',
+          data: {
+            labels: sortedMonths,
+            datasets: [{
+              label: '稼働時間',
+              data: sortedMonths.map(m => monthData[m]),
+              borderColor: '#c9a961',
+              backgroundColor: 'rgba(201, 169, 97, 0.1)',
+              tension: 0.4
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+
+      // 5. 作業内容分析（棒グラフ）
+      const ctx5 = document.getElementById('gradientBarChartPlanting');
+      if (ctx5) {
+        if (window.gradientBarChartPlantingInstance) window.gradientBarChartPlantingInstance.destroy();
+        window.gradientBarChartPlantingInstance = new Chart(ctx5, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(taskData),
+            datasets: [{
+              label: '稼働時間',
+              data: Object.values(taskData),
+              backgroundColor: '#c9a961'
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+    }
+
+    // コンバインダッシュボード描画関数
+    async function renderDashboardCombine(machineId = 'all') {
+      const machineTabs = document.getElementById("machineTabsCombine");
+      if (!machineTabs) return;
+
+      window.currentViewMachineIdCombine = machineId;
+      console.log("🌾 コンバインダッシュボード描画中... ID:", machineId);
+      const currentId = machineId;
+      const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
+
+      const { data: combineMachines } = await client
+        .from("machines")
+        .select("*")
+        .eq("machine_type", "combine")
+        .order("name");
+
+      let tabsHTML = `
+        <button onclick="renderDashboardCombine('all')" 
+                class="tab-btn ${allBtnClass}" 
+                style="min-width: 80px; letter-spacing: 0.2em;">全 体</button>
+      `;
+
+      if (combineMachines && combineMachines.length > 0) {
+        tabsHTML += combineMachines.map(m => {
+          const isActive = (String(m.id) === String(currentId)) ? 'active' : 'inactive';
+          return `
+            <button onclick="renderDashboardCombine(${m.id})" 
+                    class="tab-btn ${isActive}">${m.name}</button>
+          `;
+        }).join("");
+      }
+      machineTabs.innerHTML = tabsHTML;
+
+      try {
+        // hour_logsデータを取得
+        let query = client
+          .from("hour_logs")
+          .select("*")
+          .gte("work_date", "2026-01-01")
+          .order("work_date", { ascending: false });
+
+        if (machineId !== 'all') {
+          query = query.eq("machine_id", machineId);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        const combineData = data?.filter(log => {
+          const machine = combineMachines?.find(m => m.id === log.machine_id);
+          return machine !== undefined;
+        }) || [];
+
+        // 関連データを取得
+        const { data: workTypes } = await client.from("work_types").select("*");
+        const { data: operators } = await client.from("operators").select("*");
+        const { data: categories } = await client.from("categories").select("*");
+
+        // データを結合
+        const enrichedCombineData = combineData.map(log => ({
+          ...log,
+          work_types: workTypes?.find(w => w.id === log.work_type_id) || { name: '不明' },
+          operators: operators?.find(o => o.id === log.operator_id) || { name: '不明' },
+          categories: categories?.find(c => c.id === log.category_id) || { name: '不明' }
+        }));
+
+        if (enrichedCombineData.length === 0) {
+          console.warn("⚠️ コンバインデータが見つかりません");
+          return;
+        }
+
+        // 機械ごとの稼働時間集計
+        const summary = {};
+        enrichedCombineData.forEach(log => {
+          let name = "不明";
+          const m = combineMachines?.find(item => String(item.id) === String(log.machine_id));
+          if (m) name = m.name;
+          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          summary[name] = (summary[name] || 0) + (h > 0 ? h : 0);
+        });
+
+        const sorted = Object.entries(summary).sort((a, b) => b[1] - a[1]);
+        const rankingContainer = document.getElementById("rankListCombine");
+        if (rankingContainer) {
+          const crownColors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
+          rankingContainer.innerHTML = sorted.slice(0, 3).map(([name, hours], i) => `
+            <div class="flex flex-col items-center px-1 text-center" style="min-width: 75px;">
+              <div class="mb-1"><i class="fa-solid fa-crown ${crownColors[i]} text-xl"></i></div>
+              <span class="text-[10px] font-bold text-gray-700 truncate w-20 leading-tight">${name}</span>
+            </div>
+          `).join('');
+        }
+
+        // KPI集計
+        let totalH = 0, totalF = 0;
+        const daysSet = new Set();
+        enrichedCombineData.forEach(log => {
+          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          totalH += (h > 0 ? h : 0);
+          totalF += (parseFloat(log.fuel_amount) || 0);
+          if (log.date) daysSet.add(log.date);
+        });
+
+        const fuelAvg = totalH > 0 ? (totalF / totalH).toFixed(2) : "0.00";
+
+        const kpiHours = document.getElementById("kpi-hours-combine");
+        const kpiFuel = document.getElementById("kpi-fuel-combine");
+        const kpiAvg = document.getElementById("kpi-avg-combine");
+        const kpiDays = document.getElementById("kpi-days-combine");
+
+        if (kpiHours) kpiHours.innerText = totalH.toFixed(1);
+        if (kpiFuel) kpiFuel.innerText = totalF.toFixed(1);
+        if (kpiAvg) kpiAvg.innerText = fuelAvg;
+        if (kpiDays) kpiDays.innerText = daysSet.size;
+
+        drawChartsCombine(enrichedCombineData);
+
+      } catch (e) {
+        console.error("❌ コンバインダッシュボード描画エラー:", e);
+        console.error("エラー詳細:", e.message, e.stack);
+      }
+    }
+
+    function drawChartsCombine(data) {
+      // 各種グラフ描画（田植え機と同様）
+      const categoryData = {};
+      data.forEach(log => {
+        const cat = log.categories?.name || '不明';
+        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        categoryData[cat] = (categoryData[cat] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx1 = document.getElementById('categoryShareChartCombine');
+      if (ctx1) {
+        if (window.categoryShareChartCombineInstance) window.categoryShareChartCombineInstance.destroy();
+        window.categoryShareChartCombineInstance = new Chart(ctx1, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(categoryData),
+            datasets: [{
+              data: Object.values(categoryData),
+              backgroundColor: ['#c97c73', '#b86b62', '#a75a51', '#964940']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      const taskData = {};
+      data.forEach(log => {
+        const task = log.work_types?.name || '不明';
+        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        taskData[task] = (taskData[task] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx2 = document.getElementById('taskShareChartCombine');
+      if (ctx2) {
+        if (window.taskShareChartCombineInstance) window.taskShareChartCombineInstance.destroy();
+        window.taskShareChartCombineInstance = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(taskData),
+            datasets: [{
+              data: Object.values(taskData),
+              backgroundColor: ['#c97c73', '#b86b62', '#a75a51', '#964940', '#854830']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      const operatorData = {};
+      data.forEach(log => {
+        const op = log.operators?.name || '不明';
+        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        operatorData[op] = (operatorData[op] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx3 = document.getElementById('operatorShareChartCombine');
+      if (ctx3) {
+        if (window.operatorShareChartCombineInstance) window.operatorShareChartCombineInstance.destroy();
+        window.operatorShareChartCombineInstance = new Chart(ctx3, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(operatorData),
+            datasets: [{
+              data: Object.values(operatorData),
+              backgroundColor: ['#c97c73', '#b86b62', '#a75a51', '#964940']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      const monthData = {};
+      data.forEach(log => {
+        const month = log.date?.substring(0, 7) || '不明';
+        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        monthData[month] = (monthData[month] || 0) + (h > 0 ? h : 0);
+      });
+
+      const sortedMonths = Object.keys(monthData).sort();
+      const ctx4 = document.getElementById('detailChartCombine');
+      if (ctx4) {
+        if (window.detailChartCombineInstance) window.detailChartCombineInstance.destroy();
+        window.detailChartCombineInstance = new Chart(ctx4, {
+          type: 'line',
+          data: {
+            labels: sortedMonths,
+            datasets: [{
+              label: '稼働時間',
+              data: sortedMonths.map(m => monthData[m]),
+              borderColor: '#c97c73',
+              backgroundColor: 'rgba(201, 124, 115, 0.1)',
+              tension: 0.4
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+
+      const ctx5 = document.getElementById('gradientBarChartCombine');
+      if (ctx5) {
+        if (window.gradientBarChartCombineInstance) window.gradientBarChartCombineInstance.destroy();
+        window.gradientBarChartCombineInstance = new Chart(ctx5, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(taskData),
+            datasets: [{
+              label: '稼働時間',
+              data: Object.values(taskData),
+              backgroundColor: '#c97c73'
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+    }
+
+    // その他の機械ダッシュボード描画関数
+    async function renderDashboardOther(machineId = 'all') {
+      const machineTabs = document.getElementById("machineTabsOther");
+      if (!machineTabs) return;
+
+      window.currentViewMachineIdOther = machineId;
+      console.log("🔧 その他の機械ダッシュボード描画中... ID:", machineId);
+      const currentId = machineId;
+      const allBtnClass = (currentId === 'all') ? 'active' : 'inactive';
+
+      const { data: otherMachines } = await client
+        .from("machines")
+        .select("*")
+        .eq("machine_type", "other machinery")
+        .order("name");
+
+      let tabsHTML = `
+        <button onclick="renderDashboardOther('all')" 
+                class="tab-btn ${allBtnClass}" 
+                style="min-width: 80px; letter-spacing: 0.2em;">全 体</button>
+      `;
+
+      if (otherMachines && otherMachines.length > 0) {
+        tabsHTML += otherMachines.map(m => {
+          const isActive = (String(m.id) === String(currentId)) ? 'active' : 'inactive';
+          return `
+            <button onclick="renderDashboardOther(${m.id})" 
+                    class="tab-btn ${isActive}">${m.name}</button>
+          `;
+        }).join("");
+      }
+      machineTabs.innerHTML = tabsHTML;
+
+      try {
+        // hour_logsデータを取得
+        let query = client
+          .from("hour_logs")
+          .select("*")
+          .gte("work_date", "2026-01-01")
+          .order("work_date", { ascending: false });
+
+        if (machineId !== 'all') {
+          query = query.eq("machine_id", machineId);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        const otherData = data?.filter(log => {
+          const machine = otherMachines?.find(m => m.id === log.machine_id);
+          return machine !== undefined;
+        }) || [];
+
+        // 関連データを取得
+        const { data: workTypes } = await client.from("work_types").select("*");
+        const { data: operators } = await client.from("operators").select("*");
+        const { data: categories } = await client.from("categories").select("*");
+
+        // データを結合
+        const enrichedOtherData = otherData.map(log => ({
+          ...log,
+          work_types: workTypes?.find(w => w.id === log.work_type_id) || { name: '不明' },
+          operators: operators?.find(o => o.id === log.operator_id) || { name: '不明' },
+          categories: categories?.find(c => c.id === log.category_id) || { name: '不明' }
+        }));
+
+        if (enrichedOtherData.length === 0) {
+          console.warn("⚠️ その他の機械データが見つかりません");
+          return;
+        }
+
+        // 機械ごとの稼働時間集計
+        const summary = {};
+        enrichedOtherData.forEach(log => {
+          let name = "不明";
+          const m = otherMachines?.find(item => String(item.id) === String(log.machine_id));
+          if (m) name = m.name;
+          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          summary[name] = (summary[name] || 0) + (h > 0 ? h : 0);
+        });
+
+        const sorted = Object.entries(summary).sort((a, b) => b[1] - a[1]);
+        const rankingContainer = document.getElementById("rankListOther");
+        if (rankingContainer) {
+          const crownColors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
+          rankingContainer.innerHTML = sorted.slice(0, 3).map(([name, hours], i) => `
+            <div class="flex flex-col items-center px-1 text-center" style="min-width: 75px;">
+              <div class="mb-1"><i class="fa-solid fa-crown ${crownColors[i]} text-xl"></i></div>
+              <span class="text-[10px] font-bold text-gray-700 truncate w-20 leading-tight">${name}</span>
+            </div>
+          `).join('');
+        }
+
+        // KPI集計
+        let totalH = 0, totalF = 0;
+        const daysSet = new Set();
+        enrichedOtherData.forEach(log => {
+          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          totalH += (h > 0 ? h : 0);
+          totalF += (parseFloat(log.fuel_amount) || 0);
+          if (log.date) daysSet.add(log.date);
+        });
+
+        const fuelAvg = totalH > 0 ? (totalF / totalH).toFixed(2) : "0.00";
+
+        const kpiHours = document.getElementById("kpi-hours-other");
+        const kpiFuel = document.getElementById("kpi-fuel-other");
+        const kpiAvg = document.getElementById("kpi-avg-other");
+        const kpiDays = document.getElementById("kpi-days-other");
+
+        if (kpiHours) kpiHours.innerText = totalH.toFixed(1);
+        if (kpiFuel) kpiFuel.innerText = totalF.toFixed(1);
+        if (kpiAvg) kpiAvg.innerText = fuelAvg;
+        if (kpiDays) kpiDays.innerText = daysSet.size;
+
+        drawChartsOther(enrichedOtherData);
+
+      } catch (e) {
+        console.error("❌ その他の機械ダッシュボード描画エラー:", e);
+        console.error("エラー詳細:", e.message, e.stack);
+      }
+    }
+
+    function drawChartsOther(data) {
+      const categoryData = {};
+      data.forEach(log => {
+        const cat = log.categories?.name || '不明';
+        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        categoryData[cat] = (categoryData[cat] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx1 = document.getElementById('categoryShareChartOther');
+      if (ctx1) {
+        if (window.categoryShareChartOtherInstance) window.categoryShareChartOtherInstance.destroy();
+        window.categoryShareChartOtherInstance = new Chart(ctx1, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(categoryData),
+            datasets: [{
+              data: Object.values(categoryData),
+              backgroundColor: ['#006888', '#005270', '#004158', '#003040']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      const taskData = {};
+      data.forEach(log => {
+        const task = log.work_types?.name || '不明';
+        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        taskData[task] = (taskData[task] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx2 = document.getElementById('taskShareChartOther');
+      if (ctx2) {
+        if (window.taskShareChartOtherInstance) window.taskShareChartOtherInstance.destroy();
+        window.taskShareChartOtherInstance = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(taskData),
+            datasets: [{
+              data: Object.values(taskData),
+              backgroundColor: ['#006888', '#005270', '#004158', '#003040', '#002028']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      const operatorData = {};
+      data.forEach(log => {
+        const op = log.operators?.name || '不明';
+        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        operatorData[op] = (operatorData[op] || 0) + (h > 0 ? h : 0);
+      });
+
+      const ctx3 = document.getElementById('operatorShareChartOther');
+      if (ctx3) {
+        if (window.operatorShareChartOtherInstance) window.operatorShareChartOtherInstance.destroy();
+        window.operatorShareChartOtherInstance = new Chart(ctx3, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(operatorData),
+            datasets: [{
+              data: Object.values(operatorData),
+              backgroundColor: ['#006888', '#005270', '#004158', '#003040']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      const monthData = {};
+      data.forEach(log => {
+        const month = log.date?.substring(0, 7) || '不明';
+        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        monthData[month] = (monthData[month] || 0) + (h > 0 ? h : 0);
+      });
+
+      const sortedMonths = Object.keys(monthData).sort();
+      const ctx4 = document.getElementById('detailChartOther');
+      if (ctx4) {
+        if (window.detailChartOtherInstance) window.detailChartOtherInstance.destroy();
+        window.detailChartOtherInstance = new Chart(ctx4, {
+          type: 'line',
+          data: {
+            labels: sortedMonths,
+            datasets: [{
+              label: '稼働時間',
+              data: sortedMonths.map(m => monthData[m]),
+              borderColor: '#006888',
+              backgroundColor: 'rgba(0, 104, 136, 0.1)',
+              tension: 0.4
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
+
+      const ctx5 = document.getElementById('gradientBarChartOther');
+      if (ctx5) {
+        if (window.gradientBarChartOtherInstance) window.gradientBarChartOtherInstance.destroy();
+        window.gradientBarChartOtherInstance = new Chart(ctx5, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(taskData),
+            datasets: [{
+              label: '稼働時間',
+              data: Object.values(taskData),
+              backgroundColor: '#006888'
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+      }
     }
 
   </script>
