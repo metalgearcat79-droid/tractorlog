@@ -14,6 +14,50 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
+    /* --- CSS変数でカラーテーマを管理 --- */
+    :root {
+      /* トラクターセクションのテーマカラー */
+      --tractor-color: #6b8f71;
+      --tractor-hover: #5a7760;
+      --tractor-light: #f0f7f1;
+      
+      /* 田植え機セクションのテーマカラー */
+      --planting-color: #c9a961;
+      --planting-hover: #b8985a;
+      --planting-dark: #a08550;
+      --planting-bg: #faf8f0;
+      
+      /* コンバインセクションのテーマカラー */
+      --combine-color: #c97c73;
+      --combine-hover: #b86b62;
+      --combine-light: #f8e8e6;
+      --combine-bg: #faf5f4;
+      
+      /* エクスポートセクションのテーマカラー */
+      --export-color: #808000;
+      --export-hover: #666600;
+      --export-light: #fef9c3;
+      --export-bg: #fefce8;
+      
+      /* 修理セクションのテーマカラー */
+      --repair-color: #9b7cb6;
+      --repair-hover: #826a9a;
+      --repair-light: #ede9fe;
+      --repair-bg: #f7f6fb;
+      
+      /* バージョン情報のテーマカラー */
+      --version-color: #7e837f;
+      --version-hover: #696d6a;
+      --version-light: #f1f5f9;
+      --version-bg: #f8fafc;
+      
+      /* メンテナンスセクションのテーマカラー */
+      --maintenance-color: #5f9ea0;
+      --maintenance-hover: #4a8385;
+      --maintenance-light: #e0f2f2;
+      --maintenance-bg: #f0f9f9;
+    }
+    
     /* --- 基本スタイル --- */
     html, body {
       margin: 0;
@@ -21,17 +65,22 @@
     }
     
     body {
-      background-color: #e2e8e3;
       color: #3a3a3a;
       font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+      min-height: 100vh;
     }
 
     .view {
       display: none;
+      min-height: 100vh;
     }
 
     .view.active {
       display: block;
+    }
+    
+    .view.fullscreen-view {
+      min-height: 100vh;
     }
     
     #mainContainer {
@@ -122,11 +171,23 @@
     }
 
     #plantingSideMenu .menu-item {
-      color: #4a9b9b;
+      color: var(--planting-color);
     }
 
     #combineSideMenu .menu-item {
-      color: #c9a961;
+      color: var(--combine-color);
+    }
+
+    #maintenanceSideMenu .menu-item {
+      color: var(--maintenance-color);
+    }
+
+    #exportSideMenu .menu-item {
+      color: var(--export-color);
+    }
+
+    #versionSideMenu .menu-item {
+      color: var(--version-color);
     }
 
     select,
@@ -156,7 +217,6 @@
     }
 
     .btn-main {
-      background-color: #6b8f71;
       color: white;
       padding: 14px;
       border-radius: 12px;
@@ -167,7 +227,6 @@
     }
 
     .btn-sub {
-      background-color: #6b8f71;
       color: white;
       padding: 12px;
       border-radius: 10px;
@@ -181,107 +240,156 @@
       cursor: pointer;
     }
 
-    /* plantingView専用のボタンスタイル */
-    #plantingView .btn-main,
-    #todayViewPlanting .btn-main,
-    #historyViewPlanting .btn-main,
-    #maintenanceMachineListViewPlanting .btn-main,
-    #maintenanceDetailViewPlanting .btn-main,
-    #repairViewPlanting .btn-main,
-    #invoiceOCRViewPlanting .btn-main {
-      background-color: #4a9b9b;
+    /* トラクターセクション用のボタンスタイル */
+    #tractor-section .btn-main {
+      background-color: var(--tractor-color);
     }
 
-    #plantingView .btn-main:hover,
-    #todayViewPlanting .btn-main:hover,
-    #historyViewPlanting .btn-main:hover,
-    #maintenanceMachineListViewPlanting .btn-main:hover,
-    #maintenanceDetailViewPlanting .btn-main:hover,
-    #repairViewPlanting .btn-main:hover,
-    #invoiceOCRViewPlanting .btn-main:hover {
-      background-color: #3a8080;
+    #tractor-section .btn-main:hover {
+      background-color: var(--tractor-hover);
     }
 
-    #plantingView .btn-sub,
-    #todayViewPlanting .btn-sub,
-    #historyViewPlanting .btn-sub,
-    #maintenanceMachineListViewPlanting .btn-sub,
-    #maintenanceDetailViewPlanting .btn-sub,
-    #repairViewPlanting .btn-sub,
-    #invoiceOCRViewPlanting .btn-sub {
-      background-color: #4a9b9b;
+    #tractor-section .btn-sub {
+      background-color: var(--tractor-color);
     }
 
-    #plantingView .btn-sub:hover,
-    #todayViewPlanting .btn-sub:hover,
-    #historyViewPlanting .btn-sub:hover,
-    #maintenanceMachineListViewPlanting .btn-sub:hover,
-    #maintenanceDetailViewPlanting .btn-sub:hover,
-    #repairViewPlanting .btn-sub:hover,
-    #invoiceOCRViewPlanting .btn-sub:hover {
-      background-color: #3a8080;
+    #tractor-section .btn-sub:hover {
+      background-color: var(--tractor-hover);
+    }
+
+    /* 移植機セクション用のボタンスタイル */
+    #planting-section .btn-main {
+      background-color: var(--planting-color);
+    }
+
+    #planting-section .btn-main:hover {
+      background-color: var(--planting-hover);
+    }
+
+    #planting-section .btn-sub {
+      background-color: var(--planting-color);
+    }
+
+    #planting-section .btn-sub:hover {
+      background-color: var(--planting-hover);
+    }
+
+    /* コンバインセクション用のボタンスタイル */
+    #combine-section .btn-main {
+      background-color: var(--combine-color);
+    }
+
+    #combine-section .btn-main:hover {
+      background-color: var(--combine-hover);
+    }
+
+    #combine-section .btn-sub {
+      background-color: var(--combine-color);
+    }
+
+    #combine-section .btn-sub:hover {
+      background-color: var(--combine-hover);
+    }
+
+    /* メンテナンスセクション用のボタンスタイル */
+    #maintenanceMachineListView .btn-main,
+    #maintenanceDetailView .btn-main {
+      background-color: var(--maintenance-color);
+    }
+
+    #maintenanceMachineListView .btn-main:hover,
+    #maintenanceDetailView .btn-main:hover {
+      background-color: var(--maintenance-hover);
+    }
+
+    #maintenanceMachineListView .btn-sub,
+    #maintenanceDetailView .btn-sub {
+      background-color: var(--maintenance-color);
+    }
+
+    #maintenanceMachineListView .btn-sub:hover,
+    #maintenanceDetailView .btn-sub:hover {
+      background-color: var(--maintenance-hover);
+    }
+
+    /* 修理セクション用のボタンスタイル */
+    #repair-section .btn-main {
+      background-color: var(--repair-color);
+    }
+
+    #repair-section .btn-main:hover {
+      background-color: var(--repair-hover);
+    }
+
+    #repair-section .btn-sub {
+      background-color: var(--repair-color);
+    }
+
+    #repair-section .btn-sub:hover {
+      background-color: var(--repair-hover);
+    }
+
+    /* エクスポートビュー用のボタンスタイル */
+    #exportView .btn-main {
+      background-color: var(--export-color);
+    }
+
+    #exportView .btn-main:hover {
+      background-color: var(--export-hover);
+    }
+
+    #exportView .btn-sub {
+      background-color: var(--export-color);
+    }
+
+    #exportView .btn-sub:hover {
+      background-color: var(--export-hover);
+    }
+
+    /* バージョン情報用のボタンスタイル */
+    #versionView .btn-main {
+      background-color: var(--version-color);
+    }
+
+    #versionView .btn-main:hover {
+      background-color: var(--version-hover);
+    }
+
+    #versionView .btn-sub {
+      background-color: var(--version-color);
+    }
+
+    #versionView .btn-sub:hover {
+      background-color: var(--version-hover);
     }
 
     /* dashboardPlanting専用のスタイル（ブルーグリーン系） */
     #dashboardPlanting .bi-header {
-      background: #2d5555 !important;
+      background: var(--planting-dark) !important;
     }
 
     #dashboardPlanting .kpi-card {
-      background: #4a9b9b !important;
+      background: var(--planting-color) !important;
     }
 
     #dashboardPlanting .chart-title {
-      color: #4a9b9b !important;
+      color: var(--planting-color) !important;
     }
 
     #dashboardPlanting .donut-icon {
-      color: #4a9b9b !important;
+      color: var(--planting-color) !important;
     }
 
     #dashboardPlanting .tab-btn.active {
-      background: #2d5555 !important;
+      background: var(--planting-dark) !important;
     }
 
     #dashboardPlanting .tab-btn.inactive {
-      color: #4a9b9b !important;
+      color: var(--planting-color) !important;
     }
 
     #dashboardPlanting .nav-item.active {
-      border-left-color: #4a9b9b !important;
-    }
-
-    /* combineView専用のボタンスタイル */
-    #combineView .btn-main,
-    #todayViewCombine .btn-main,
-    #historyViewCombine .btn-main,
-    #maintenanceMachineListViewCombine .btn-main,
-    #maintenanceDetailViewCombine .btn-main {
-      background-color: #c9a961;
-    }
-
-    #combineView .btn-main:hover,
-    #todayViewCombine .btn-main:hover,
-    #historyViewCombine .btn-main:hover,
-    #maintenanceMachineListViewCombine .btn-main:hover,
-    #maintenanceDetailViewCombine .btn-main:hover {
-      background-color: #b8985a;
-    }
-
-    #combineView .btn-sub,
-    #todayViewCombine .btn-sub,
-    #historyViewCombine .btn-sub,
-    #maintenanceMachineListViewCombine .btn-sub,
-    #maintenanceDetailViewCombine .btn-sub {
-      background-color: #c9a961;
-    }
-
-    #combineView .btn-sub:hover,
-    #todayViewCombine .btn-sub:hover,
-    #historyViewCombine .btn-sub:hover,
-    #maintenanceMachineListViewCombine .btn-sub:hover,
-    #maintenanceDetailViewCombine .btn-sub:hover {
-      background-color: #b8985a;
+      border-left-color: var(--planting-color) !important;
     }
 
     /* combineView専用の背景色 */
@@ -293,12 +401,14 @@
 
     #tractorView,
     #todayView,
-    #historyView,
-    #maintenanceMachineListView,
-    #maintenanceDetailView,
-    #repairView,
-    #invoiceOCRView {
+    #historyView {
       background-color: #e2e8e3;
+      min-height: 100vh;
+    }
+    
+    #maintenanceMachineListView,
+    #maintenanceDetailView {
+      background-color: var(--maintenance-bg);
       min-height: 100vh;
     }
 
@@ -306,8 +416,20 @@
       background-color: #e2e8e3;
     }
 
+    #repair-section {
+      background-color: var(--repair-bg);
+      margin: 0;
+      padding: 0;
+    }
+
+    #repairView,
+    #invoiceOCRView {
+      background-color: var(--repair-bg);
+      min-height: 100vh;
+    }
+
     #planting-section {
-      background-color: #e2e8e3;
+      background-color: var(--planting-bg);
       margin: 0;
       padding: 0;
     }
@@ -317,22 +439,26 @@
     #historyViewPlanting,
     #maintenanceMachineListViewPlanting,
     #maintenanceDetailViewPlanting {
-      background-color: #e2e8e3;
+      background-color: var(--planting-bg);
       min-height: 100vh;
     }
 
     #dashboardPlanting {
-      background-color: #e2e8e3;
+      background-color: var(--planting-bg);
     }
 
-    #exportView,
+    #exportView {
+      background-color: var(--export-bg);
+      min-height: 100vh;
+    }
+    
     #versionView {
-      background-color: #faf9f6;
+      background-color: var(--version-bg);
       min-height: 100vh;
     }
 
     #combine-section {
-      background-color: #faf8f3;
+      background-color: var(--combine-bg);
       margin: 0;
       padding: 0;
     }
@@ -342,12 +468,12 @@
     #historyViewCombine,
     #maintenanceMachineListViewCombine,
     #maintenanceDetailViewCombine {
-      background-color: #faf8f3;
+      background-color: var(--combine-bg);
       min-height: 100vh;
     }
 
     #dashboardCombine {
-      background-color: #faf8f3;
+      background-color: var(--combine-bg);
     }
 
     /* dashboardCombine専用のスタイル（ゴールド系） */
@@ -356,15 +482,15 @@
     }
 
     #dashboardCombine .kpi-card {
-      background: #c9a961 !important;
+      background: var(--combine-color) !important;
     }
 
     #dashboardCombine .chart-title {
-      color: #c9a961 !important;
+      color: var(--combine-color) !important;
     }
 
     #dashboardCombine .donut-icon {
-      color: #c9a961 !important;
+      color: var(--combine-color) !important;
     }
 
     #dashboardCombine .tab-btn.active {
@@ -372,11 +498,11 @@
     }
 
     #dashboardCombine .tab-btn.inactive {
-      color: #c9a961 !important;
+      color: var(--combine-color) !important;
     }
 
     #dashboardCombine .nav-item.active {
-      border-left-color: #c9a961 !important;
+      border-left-color: var(--combine-color) !important;
     }
 
     .log-badge {
@@ -439,7 +565,7 @@
     }
 
     .kpi-card {
-      background: #6b8f71;
+      background: var(--tractor-color);
       color: white;
       padding: 8px 2px;
       border-radius: 10px;
@@ -544,7 +670,7 @@
     .chart-title {
       font-size: 14px !important;
       font-weight: bold !important;
-      color: #6b8f71 !important;
+      color: var(--tractor-color) !important;
       margin-bottom: 8px;
       display: block;
     }
@@ -562,7 +688,7 @@
     .donut-icon {
       position: absolute;
       font-size: 24px;
-      color: #6b8f71;
+      color: var(--tractor-color);
       opacity: 0.3;
       pointer-events: none;
     }
@@ -608,7 +734,7 @@
 
     .tab-btn.inactive {
       background: rgba(255, 255, 255, 0.5);
-      color: #6b8f71;
+      color: var(--tractor-color);
     }
 
     .dashboard-sidebar {
@@ -643,7 +769,7 @@
     .nav-item.active {
       background: rgba(255, 255, 255, 0.1);
       color: white;
-      border-left: 4px solid #6b8f71;
+      border-left: 4px solid var(--tractor-color);
     }
 
     .dashboard-main-content {
@@ -944,7 +1070,80 @@
       .portal-card .card-title { font-size: 14px; margin-top: 0 !important; }
     }
 
+    /* ページ下部の余白 */
+    .view {
+      padding-bottom: 60px !important;
+    }
 
+    /* 印刷時のスタイル */
+    @media print {
+      /* ヘッダーを非表示 */
+      header,
+      .bi-header {
+        display: none !important;
+      }
+
+      /* サイドメニューとその影を非表示 */
+      .sideMenu,
+      #sideMenu,
+      #tractorSideMenu,
+      #plantingSideMenu,
+      #combineSideMenu,
+      #overlay {
+        display: none !important;
+      }
+
+      /* ボタン類を非表示 */
+      button,
+      .btn,
+      .btn-main,
+      .btn-sub {
+        display: none !important;
+      }
+
+      /* 入力欄を非表示 */
+      input,
+      select,
+      textarea {
+        display: none !important;
+      }
+
+      /* 印刷機能カード全体を非表示 */
+      #exportView .card:has(button[onclick="window.print()"]) {
+        display: none !important;
+      }
+
+      /* ヘッダーのハンバーガーメニューボタンを非表示 */
+      header button[onclick="openMenu()"],
+      .bi-header button[onclick="openMenu()"] {
+        display: none !important;
+      }
+
+      /* コンテンツの左マージンをリセット */
+      #mainContainer {
+        margin-left: 0 !important;
+      }
+
+      /* ページの余白を調整 */
+      body {
+        background: white;
+      }
+
+      .view {
+        padding-bottom: 20px !important;
+      }
+
+      /* 絞り込み条件のカードを非表示 */
+      #exportView .card:has(#exportDataType),
+      #exportView .card:has(#exportStartDate) {
+        display: none !important;
+      }
+
+      /* エクスポートボタンのカードを非表示 */
+      #exportView .card:has(#exportButton) {
+        display: none !important;
+      }
+    }
 
   </style>
 
@@ -956,7 +1155,7 @@
   <!-- Tractor Side Menu -->
   <div id="tractorSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg text-[#6b8f71]">トラクターメニュー</h2>
+      <h2 class="font-bold text-lg" style="color: var(--tractor-color)">Tractor Menu</h2>
       <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
@@ -970,15 +1169,13 @@
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
       <button onclick="switchView('dashboard')" class="menu-item"><i
           class="fa-solid fa-chart-line w-8 text-lg"></i>データ分析</button>
-      <button onclick="switchView('maintenanceMachineListView'); loadMachineList();" class="menu-item"><i
-          class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス記録</button>
     </nav>
   </div>
 
   <!-- Planting Side Menu -->
   <div id="plantingSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg text-[#4a9b9b]">田植え機メニュー</h2>
+      <h2 class="font-bold text-lg" style="color: var(--planting-color)">Transplanter Menu</h2>
       <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
@@ -990,8 +1187,6 @@
           class="fa-solid fa-calendar-day w-8 text-lg"></i>本日の稼働状況</button>
       <button onclick="switchView('historyViewPlanting')" class="menu-item"><i
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
-      <button onclick="switchView('maintenanceMachineListViewPlanting'); loadMachineListPlanting();" class="menu-item"><i
-          class="fa-solid fa-wrench w-8 text-lg"></i>メンテナンス情報</button>
       <button onclick="switchView('dashboardPlanting')" class="menu-item"><i
           class="fa-solid fa-chart-line w-8 text-lg"></i>データ分析</button>
     </nav>
@@ -1000,7 +1195,7 @@
   <!-- Combine Side Menu -->
   <div id="combineSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg text-[#c9a961]">コンバインメニュー</h2>
+      <h2 class="font-bold text-lg" style="color: var(--combine-color)">Combine Menu</h2>
       <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
@@ -1012,17 +1207,59 @@
           class="fa-solid fa-calendar-day w-8 text-lg"></i>本日の稼働状況</button>
       <button onclick="switchView('historyViewCombine')" class="menu-item"><i
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
-      <button onclick="switchView('maintenanceMachineListViewCombine'); loadMachineListCombine();" class="menu-item"><i
-          class="fa-solid fa-wrench w-8 text-lg"></i>メンテナンス情報</button>
       <button onclick="switchView('dashboardCombine')" class="menu-item"><i
           class="fa-solid fa-chart-line w-8 text-lg"></i>データ分析</button>
+    </nav>
+  </div>
+
+  <!-- Export Side Menu -->
+  <div id="exportSideMenu" class="sideMenu">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-bold text-lg" style="color: var(--export-color);">Data Export Menu</h2>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
+    </div>
+    <nav class="space-y-1">
+      <button onclick="switchView('portalView')" class="menu-item"><i
+          class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
+      <button onclick="switchView('exportView')" class="menu-item"><i
+          class="fa-solid fa-file-export w-8 text-lg"></i>エクスポート/印刷</button>
+      <button onclick="switchView('versionView')" class="menu-item"><i
+          class="fa-solid fa-code-branch w-8 text-lg"></i>バージョン情報</button>
+    </nav>
+  </div>
+
+  <!-- Maintenance Side Menu -->
+  <div id="maintenanceSideMenu" class="sideMenu">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-bold text-lg" style="color: var(--maintenance-color);">Maintenance Menu</h2>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
+    </div>
+    <nav class="space-y-1">
+      <button onclick="switchView('portalView')" class="menu-item"><i
+          class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
+      <button onclick="switchView('maintenanceMachineListView')" class="menu-item"><i
+          class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス記録</button>
+    </nav>
+  </div>
+
+  <!-- Version Side Menu -->
+  <div id="versionSideMenu" class="sideMenu">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-bold text-lg" style="color: var(--version-color);">Version情報</h2>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
+    </div>
+    <nav class="space-y-1">
+      <button onclick="switchView('portalView')" class="menu-item"><i
+          class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
+      <button onclick="switchView('versionView')" class="menu-item"><i
+          class="fa-solid fa-code-branch w-8 text-lg"></i>バージョン情報</button>
     </nav>
   </div>
 
   <!-- Portal/Global Side Menu -->
   <div id="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg text-[#6b8f71]">メニュー</h2>
+      <h2 class="font-bold text-lg text-[#6b8f71]">Menu</h2>
       <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
@@ -1129,17 +1366,17 @@
       <div id="tractorView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <!-- トラクター専用ヘッダー -->
         <header id="pageHeader" class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--tractor-color)"><i
               class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
-          <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+          <i class="fa-solid fa-tractor text-5xl" style="color: var(--tractor-color)"></i>
+          <h1 class="text-xl font-bold" style="color: var(--tractor-color)">和農日向 機械管理アプリ</h1>
         </header>
 
         <div class="flex items-center gap-2 mb-1 mt-4">
-          <i class="fa-solid fa-pen-to-square text-[#6b8f71] text-lg"></i>
-          <span class="text-lg font-bold text-[#6b8f71]">ログ入力</span>
+          <i class="fa-solid fa-pen-to-square text-lg" style="color: var(--tractor-color)"></i>
+          <span class="text-lg font-bold" style="color: var(--tractor-color)">ログ入力</span>
         </div>
-        <div class="border-t-2 border-[#6b8f71] mb-6 opacity-50"></div>
+        <div class="border-t-2 mb-6 opacity-50" style="border-color: var(--tractor-color)"></div>
 
         <div class="card">
         <label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label>
@@ -1191,11 +1428,21 @@
         </div>
       </div>
 
-      <div id="hourDiffDisplay" class="text-right font-black text-[#6b8f71] mb-6 text-xl">稼働時間: 0.0 h</div>
+      <div id="hourDiffDisplay" class="text-right font-black mb-6 text-xl" style="color: var(--tractor-color)">稼働時間: 0.0 h</div>
 
       <div class="card">
-        <label class="block text-xs font-bold text-gray-400 mb-1">給油量 (L)</label>
-        <input type="number" id="fuelAmount" class="w-full p-3 rounded-lg" />
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block text-xs font-bold text-gray-400 mb-1">油種</label>
+            <select id="fuelType" class="w-full p-3 rounded-lg">
+              <option value="">読込中...</option>
+            </select>
+          </div>
+          <div class="flex-[2]">
+            <label class="block text-xs font-bold text-gray-400 mb-1">給油量 (L)</label>
+            <input type="number" id="fuelAmount" class="w-full p-3 rounded-lg" />
+          </div>
+        </div>
       </div>
 
       <div class="card">
@@ -1245,7 +1492,7 @@
               </div>
             </div>
             <div class="ranking-section">
-              <p class="text-[11px] font-bold text-[#4a9b9b] mb-2 text-center"><i
+              <p class="text-[11px] font-bold mb-2 text-center" style="color: var(--planting-color)"><i
                   class="fa-solid fa-trophy mr-1"></i>稼働ランキング</p>
               <div id="rankListPlanting" class="flex justify-around items-center"></div>
             </div>
@@ -1256,7 +1503,7 @@
           <div class="bi-left-col">
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px; color: #4a9b9b;"></i>
+                <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px; color: var(--planting-color);"></i>
                 機械別修理コスト
               </p>
               <div class="chart-wrapper relative">
@@ -1266,7 +1513,7 @@
 
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-wheat-awn" style="margin-right: 8px; color: #4a9b9b;"></i>
+                <i class="fa-solid fa-wheat-awn" style="margin-right: 8px; color: var(--planting-color);"></i>
                 作物別比率
               </p>
               <div class="chart-wrapper relative">
@@ -1276,7 +1523,7 @@
 
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-user-check" style="margin-right: 8px; color: #4a9b9b;"></i>
+                <i class="fa-solid fa-user-check" style="margin-right: 8px; color: var(--planting-color);"></i>
                 オペレーター比率
               </p>
 
@@ -1289,7 +1536,7 @@
             <div class="lg:col-span-2 space-y-4">
               <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <p class="chart-title" style="display: flex; align-items: center;">
-                  <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: #4a9b9b;"></i>
+                  <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: var(--planting-color);"></i>
                   月別稼働推移
                 </p>
                 <div class="relative h-40"> <canvas id="detailChartPlanting"></canvas>
@@ -1297,7 +1544,7 @@
               </div>
               <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <p class="chart-title" style="display: flex; align-items: center;">
-                  <i class="fa-solid fa-list-check" style="margin-right: 8px; color: #4a9b9b;"></i>
+                  <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--planting-color);"></i>
                   作業内容分析
                 </p>
                 <div class="relative h-[480px]">
@@ -1310,20 +1557,20 @@
           <div class="bi-right-col">
             <div class="card yoy-card text-center relative">
               <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
-                <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: #4a9b9b;"></i>
+                <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: var(--planting-color);"></i>
                 前年実績比 (YoY)
               </p>
               <div class="chart-wrapper relative">
                 <canvas id="yearComparisonGaugePlanting"></canvas>
                 <div class="absolute inset-0 flex items-center justify-center pt-14">
-                  <p id="detailCompareValuePlanting" class="text-2xl font-black text-[#4a9b9b]">--%</p>
+                  <p id="detailCompareValuePlanting" class="text-2xl font-black" style="color: var(--planting-color)">--%</p>
                 </div>
               </div>
             </div>
 
             <div class="card maint-card overflow-hidden">
               <p class="chart-title border-b pb-1" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-clipboard-list" style="margin-right: 8px; color: #4a9b9b;"></i>
+                <i class="fa-solid fa-clipboard-list" style="margin-right: 8px; color: var(--planting-color);"></i>
                 メンテナンス情報
               </p>
               <div id="maintenanceLogPlanting" class="text-[10px] space-y-2 opacity-80 pt-2 flex-1 overflow-y-auto">
@@ -1337,17 +1584,17 @@
       <div id="plantingView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <!-- 田植え機専用ヘッダー -->
         <header id="plantingHeader" class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--planting-color)"><i
               class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
-          <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+          <i class="fa-solid fa-seedling text-5xl" style="color: var(--planting-color)"></i>
+          <h1 class="text-xl font-bold" style="color: var(--planting-color)">和農日向 機械管理アプリ</h1>
         </header>
 
         <div class="flex items-center gap-2 mb-1 mt-4">
-          <i class="fa-solid fa-seedling text-[#4a9b9b] text-lg"></i>
-          <span class="text-lg font-bold text-[#4a9b9b]">田植え機ログ入力</span>
+          <i class="fa-solid fa-seedling text-lg" style="color: var(--planting-color)"></i>
+          <span class="text-lg font-bold" style="color: var(--planting-color)">田植え機ログ入力</span>
         </div>
-        <div class="border-t-2 border-[#4a9b9b] mb-6 opacity-50"></div>
+        <div class="border-t-2 mb-6 opacity-50" style="border-color: var(--planting-color)"></div>
 
         <div class="card">
           <label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label>
@@ -1387,12 +1634,12 @@
             <div class="flex items-end">
               <input type="file" id="taue_hourAfterImage" accept="image/*" capture="environment" class="hidden" onchange="taue_handleHourAfterImage(this)">
               <button type="button" onclick="document.getElementById('taue_hourAfterImage').click()"
-                class="p-3 bg-white border rounded-lg text-[#4a9b9b] shadow-sm hover:bg-[#e0f2f2]"><i class="fa-solid fa-camera"></i></button>
+                class="p-3 bg-white border rounded-lg shadow-sm hover:bg-[#e0f2f2]" style="color: var(--planting-color)"><i class="fa-solid fa-camera"></i></button>
             </div>
           </div>
         </div>
 
-        <div id="taue_hourDiffDisplay" class="text-right font-black text-[#4a9b9b] mb-6 text-xl">稼働時間: 0.0 h</div>
+        <div id="taue_hourDiffDisplay" class="text-right font-black mb-6 text-xl" style="color: var(--planting-color)">稼働時間: 0.0 h</div>
 
         <div class="card">
           <div class="flex gap-4">
@@ -1421,13 +1668,13 @@
       <div id="todayViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <!-- 田植え機専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--planting-color)"><i
               class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
-          <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+          <i class="fa-solid fa-seedling text-5xl" style="color: var(--planting-color)"></i>
+          <h1 class="text-xl font-bold" style="color: var(--planting-color)">和農日向 機械管理アプリ</h1>
         </header>
 
-        <div class="flex items-center gap-2 mb-4 font-bold text-[#4a9b9b] border-b-2 border-[#4a9b9b] pb-2 text-lg"><i
+        <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--planting-color); border-bottom: 2px solid var(--planting-color)"><i
             class="fa-solid fa-calendar-day"></i> 本日の稼働状況</div>
         <div id="todayLogListPlanting" class="space-y-4"></div>
         <button onclick="switchView('plantingView')" class="btn-sub">TOPに戻る</button>
@@ -1437,13 +1684,13 @@
       <div id="historyViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <!-- 田植え機専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--planting-color)"><i
               class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
-          <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+          <i class="fa-solid fa-seedling text-5xl" style="color: var(--planting-color)"></i>
+          <h1 class="text-xl font-bold" style="color: var(--planting-color)">和農日向 機械管理アプリ</h1>
         </header>
 
-        <div class="flex items-center gap-2 mb-6 font-bold text-[#4a9b9b] border-b-2 border-[#4a9b9b] pb-3 text-lg w-full">
+        <div class="flex items-center gap-2 mb-6 font-bold pb-3 text-lg w-full" style="color: var(--planting-color); border-bottom: 2px solid var(--planting-color)">
           <i class="fa-solid fa-magnifying-glass"></i>
           <span>稼働履歴検索</span>
         </div>
@@ -1484,7 +1731,7 @@
         </div>
 
         <div class="flex justify-end items-center mb-4 px-1">
-          <div id="historyTotalHoursPlanting" class="text-sm font-black text-[#4a9b9b] opacity-80 bg-white px-4 py-2 rounded-full shadow-sm">
+          <div id="historyTotalHoursPlanting" class="text-sm font-black opacity-80 bg-white px-4 py-2 rounded-full shadow-sm" style="color: var(--planting-color)">
             合計: 0.0 h
           </div>
         </div>
@@ -1501,13 +1748,13 @@
     <div id="maintenanceMachineListViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
       <!-- 田植え機専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-4 relative">
-        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--planting-color)"><i
             class="fa-solid fa-bars"></i></button>
-        <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
-        <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+        <i class="fa-solid fa-seedling text-5xl" style="color: var(--planting-color)"></i>
+        <h1 class="text-xl font-bold" style="color: var(--planting-color)">和農日向 機械管理アプリ</h1>
       </header>
 
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#4a9b9b] border-b-2 border-[#4a9b9b] pb-2 text-lg">
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--planting-color); border-bottom: 2px solid var(--planting-color)">
         <i class="fa-solid fa-wrench"></i> 田植え機 メンテナンス記録
       </div>
 
@@ -1523,10 +1770,10 @@
     <div id="maintenanceDetailViewPlanting" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
       <!-- 田植え機専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-4 relative">
-        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#4a9b9b] p-2"><i
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--planting-color)"><i
             class="fa-solid fa-bars"></i></button>
-        <i class="fa-solid fa-seedling text-5xl text-[#4a9b9b]"></i>
-        <h1 class="text-xl font-bold text-[#4a9b9b]">和農日向 機械管理アプリ</h1>
+        <i class="fa-solid fa-seedling text-5xl" style="color: var(--planting-color)"></i>
+        <h1 class="text-xl font-bold" style="color: var(--planting-color)">和農日向 機械管理アプリ</h1>
       </header>
 
       <!-- タイトル（機械名は JS で差し替える） -->
@@ -1557,7 +1804,7 @@
       </div>
 
       <div class="card mb-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-        <p class="font-bold text-sm text-[#4a9b9b] mb-4 flex items-center">
+        <p class="font-bold text-sm mb-4 flex items-center" style="color: var(--planting-color)">
           <i class="fas fa-tools mr-2"></i>部品交換を記録
         </p>
 
@@ -1604,17 +1851,17 @@
       <div id="combineView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <!-- コンバイン専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--combine-color)"><i
               class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
-          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+          <i class="fa-solid fa-wheat-awn text-5xl" style="color: var(--combine-color)"></i>
+          <h1 class="text-xl font-bold" style="color: var(--combine-color)">和農日向 機械管理アプリ</h1>
         </header>
 
         <div class="flex items-center gap-2 mb-1 mt-4">
-          <i class="fa-solid fa-wheat-awn text-[#c9a961] text-lg"></i>
-          <span class="text-lg font-bold text-[#c9a961]">コンバインログ入力</span>
+          <i class="fa-solid fa-wheat-awn text-lg" style="color: var(--combine-color)"></i>
+          <span class="text-lg font-bold" style="color: var(--combine-color)">コンバインログ入力</span>
         </div>
-        <div class="border-t-2 border-[#c9a961] mb-6 opacity-50"></div>
+        <div class="border-t-2 mb-6 opacity-50" style="border-color: var(--combine-color)"></div>
 
         <div class="card">
           <label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label>
@@ -1654,12 +1901,12 @@
             <div class="flex items-end">
               <input type="file" id="combine_hourAfterImage" accept="image/*" capture="environment" class="hidden" onchange="combine_handleHourAfterImage(this)">
               <button type="button" onclick="document.getElementById('combine_hourAfterImage').click()"
-                class="p-3 bg-white border rounded-lg text-[#c9a961] shadow-sm hover:bg-[#faf6ed]"><i class="fa-solid fa-camera"></i></button>
+                class="p-3 bg-white border rounded-lg shadow-sm hover:bg-[#faf6ed]" style="color: var(--combine-color)"><i class="fa-solid fa-camera"></i></button>
             </div>
           </div>
         </div>
 
-        <div id="combine_hourDiffDisplay" class="text-right font-black text-[#c9a961] mb-6 text-xl">稼働時間: 0.0 h</div>
+        <div id="combine_hourDiffDisplay" class="text-right font-black mb-6 text-xl" style="color: var(--combine-color)">稼働時間: 0.0 h</div>
 
         <div class="card">
           <div class="flex gap-4">
@@ -1688,13 +1935,13 @@
       <div id="todayViewCombine" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <!-- コンバイン専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--combine-color)"><i
               class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
-          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+          <i class="fa-solid fa-wheat-awn text-5xl" style="color: var(--combine-color)"></i>
+          <h1 class="text-xl font-bold" style="color: var(--combine-color)">和農日向 機械管理アプリ</h1>
         </header>
 
-        <div class="flex items-center gap-2 mb-4 font-bold text-[#c9a961] border-b-2 border-[#c9a961] pb-2 text-lg"><i
+        <div class="flex items-center gap-2 mb-4 font-bold border-b-2 pb-2 text-lg" style="color: var(--combine-color); border-color: var(--combine-color)"><i
             class="fa-solid fa-calendar-day"></i> 本日の稼働状況</div>
         <div id="todayLogListCombine" class="space-y-4"></div>
         <button onclick="switchView('combineView')" class="btn-sub">TOPに戻る</button>
@@ -1704,13 +1951,13 @@
       <div id="historyViewCombine" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <!-- コンバイン専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--combine-color)"><i
               class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
-          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+          <i class="fa-solid fa-wheat-awn text-5xl" style="color: var(--combine-color)"></i>
+          <h1 class="text-xl font-bold" style="color: var(--combine-color)">和農日向 機械管理アプリ</h1>
         </header>
 
-        <div class="flex items-center gap-2 mb-6 font-bold text-[#c9a961] border-b-2 border-[#c9a961] pb-3 text-lg w-full">
+        <div class="flex items-center gap-2 mb-6 font-bold border-b-2 pb-3 text-lg w-full" style="color: var(--combine-color); border-color: var(--combine-color)">
           <i class="fa-solid fa-magnifying-glass"></i>
           <span>稼働履歴検索</span>
         </div>
@@ -1751,7 +1998,7 @@
         </div>
 
         <div class="flex justify-end items-center mb-4 px-1">
-          <div id="historyTotalHoursCombine" class="text-sm font-black text-[#c9a961] opacity-80 bg-white px-4 py-2 rounded-full shadow-sm">
+          <div id="historyTotalHoursCombine" class="text-sm font-black opacity-80 bg-white px-4 py-2 rounded-full shadow-sm" style="color: var(--combine-color)">
             合計: 0.0 h
           </div>
         </div>
@@ -1767,10 +2014,10 @@
       <div id="maintenanceMachineListViewCombine" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <!-- コンバイン専用ヘッダー -->
         <header class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#c9a961] p-2"><i
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--combine-color)"><i
               class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-wheat-awn text-5xl text-[#c9a961]"></i>
-          <h1 class="text-xl font-bold text-[#c9a961]">和農日向 機械管理アプリ</h1>
+          <i class="fa-solid fa-wheat-awn text-5xl" style="color: var(--combine-color)"></i>
+          <h1 class="text-xl font-bold" style="color: var(--combine-color)">和農日向 機械管理アプリ</h1>
         </header>
 
         <div class="flex items-center gap-2 mb-4 font-bold text-[#c9a961] border-b-2 border-[#c9a961] pb-2 text-lg">
@@ -1914,7 +2161,7 @@
             </div>
           </div>
           <div class="ranking-section">
-            <p class="text-[11px] font-bold text-[#6b8f71] mb-2 text-center"><i
+            <p class="text-[11px] font-bold mb-2 text-center" style="color: var(--tractor-color)"><i
                 class="fa-solid fa-trophy mr-1"></i>稼働ランキング</p>
             <div id="rankList" class="flex justify-around items-center"></div>
           </div>
@@ -1985,7 +2232,7 @@
             <div class="chart-wrapper relative">
               <canvas id="yearComparisonGauge"></canvas>
               <div class="absolute inset-0 flex items-center justify-center pt-14">
-                <p id="detailCompareValue" class="text-2xl font-black text-[#6b8f71]">--%</p>
+                <p id="detailCompareValue" class="text-2xl font-black" style="color: var(--tractor-color)">--%</p>
               </div>
             </div>
           </div>
@@ -2004,16 +2251,29 @@
     </div>
 
     <div id="todayView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg"><i
+      <header class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--tractor-color)"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-tractor text-5xl" style="color: var(--tractor-color)"></i>
+        <h1 class="text-xl font-bold" style="color: var(--tractor-color)">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--tractor-color); border-bottom: 2px solid var(--tractor-color)"><i
           class="fa-solid fa-calendar-day"></i> 本日の稼働状況</div>
       <div id="todayLogList" class="space-y-4"></div>
       <button onclick="switchView('tractorView')" class="btn-sub">TOPに戻る</button>
     </div>
 
     <div id="historyView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
+      <header class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--tractor-color)"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-tractor text-5xl" style="color: var(--tractor-color)"></i>
+        <h1 class="text-xl font-bold" style="color: var(--tractor-color)">和農日向 機械管理アプリ</h1>
+      </header>
 
       <div
-        class="flex items-center gap-2 mb-6 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-3 text-lg w-full">
+        class="flex items-center gap-2 mb-6 font-bold pb-3 text-lg w-full" style="color: var(--tractor-color); border-bottom: 2px solid var(--tractor-color)">
         <i class="fa-solid fa-magnifying-glass"></i>
         <span>稼働履歴検索</span>
       </div>
@@ -2069,52 +2329,54 @@
       </button>
     </div>
 
-    <div id="maintenanceMachineListView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
-      <!-- トラクター専用ヘッダー -->
+    <div id="maintenanceMachineListView" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
+      <!-- メンテナンス専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-4 relative">
-        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--maintenance-color);"><i
             class="fa-solid fa-bars"></i></button>
-        <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
-        <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+        <i class="fa-solid fa-toolbox text-5xl" style="color: var(--maintenance-color);"></i>
+        <h1 class="text-xl font-bold" style="color: var(--maintenance-color);">和農日向 機械管理アプリ</h1>
       </header>
 
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-wrench"></i> トラクター メンテナンス記録
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--maintenance-color); border-bottom: 2px solid var(--maintenance-color);">
+        <i class="fa-solid fa-wrench"></i> メンテナンス記録
       </div>
 
       <div id="maintenanceMachineGrid" class="space-y-6">
       </div>
 
-      <button onclick="switchView('tractorView')" class="btn-sub mt-6 w-full">
-        <i class="fa-solid fa-house mr-2"></i>TOPに戻る
+      <button onclick="switchView('portalView')" class="btn-sub mt-6 w-full">
+        <i class="fa-solid fa-home mr-2"></i>Portalに戻る
       </button>
     </div>
 
-    <div id="repairView" class="view px-4 max-w-5xl mx-auto pb-0 hidden" style="background-color: #e2e8e3;">
-      <!-- トラクター専用ヘッダー -->
+    <!-- Repair Section -->
+    <div id="repair-section">
+    <div id="repairView" class="view px-4 max-w-5xl mx-auto pb-0 hidden" style="background-color: var(--repair-bg);">
+      <!-- 修理専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-4 relative">
-        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--repair-color);"><i
             class="fa-solid fa-bars"></i></button>
-        <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
-        <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+        <i class="fa-solid fa-screwdriver-wrench text-5xl" style="color: var(--repair-color);"></i>
+        <h1 class="text-xl font-bold" style="color: var(--repair-color);">和農日向 機械管理アプリ</h1>
       </header>
 
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl md:text-2xl font-extrabold text-[#6b8f71] flex items-center gap-2">
+        <h2 class="text-xl md:text-2xl font-extrabold flex items-center gap-2" style="color: var(--repair-color);">
           <i class="fa-solid fa-screwdriver-wrench"></i> 修理履歴
         </h2>
         <button onclick="switchView('invoiceOCRView'); populateMachineSelect();"
-          class="bg-[#6b8f71] text-white px-5 py-2 rounded-full shadow-lg active:scale-95 transition-all text-xs font-bold">
+          class="text-white px-5 py-2 rounded-full shadow-lg active:scale-95 transition-all text-xs font-bold" style="background-color: var(--repair-color);">
           <i class="fa-solid fa-plus mr-1"></i> 新規登録
         </button>
       </div>
 
-      <div class="bg-gradient-to-br from-[#6b8f71] to-[#4b634d] rounded-[2rem] p-6 text-white shadow-xl mb-8 relative overflow-hidden">
+      <div class="rounded-[2rem] p-6 text-white shadow-xl mb-8 relative overflow-hidden" style="background: linear-gradient(to bottom right, var(--repair-color), var(--repair-hover));">
         <div class="relative z-10">
-          <p class="text-[#d1e0d3] text-[16px] md:text-xs font-medium mb-1 uppercase tracking-widest">2026年度 累計修理費</p>
+          <p class="text-white/80 text-[16px] md:text-xs font-medium mb-1 uppercase tracking-widest">2026年度 累計修理費</p>
           <h3 id="totalRepairCost" class="text-3xl md:text-5xl font-black tracking-wider">¥ 0</h3>
-          <div class="mt-4 flex gap-4 text-[12px] text-[#d1e0d3]">
-            <span><i class="fa-solid fa-tractor mr-1"></i> 修理の登録は右上の「+新規登録」から</span>
+          <div class="mt-4 flex gap-4 text-[12px] text-white/80">
+            <span><i class="fa-solid fa-screwdriver-wrench mr-1"></i> 修理の登録は右上の「+新規登録」から</span>
           </div>
         </div>
         <i class="fa-solid fa-gears absolute -right-4 -bottom-4 text-white/10 text-7xl md:text-8xl rotate-12"></i>
@@ -2123,7 +2385,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
-          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
+          <div class="flex items-center gap-2 mb-4 font-bold border-b border-gray-50 pb-2 text-sm" style="color: var(--repair-color);">
             <i class="fa-solid fa-calendar-days"></i> 年ごとの修理費
           </div>
           <div id="yearlyRepairContainer" class="space-y-2 flex-grow text-sm">
@@ -2131,7 +2393,7 @@
         </div>
 
         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
-          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
+          <div class="flex items-center gap-2 mb-4 font-bold border-b border-gray-50 pb-2 text-sm" style="color: var(--repair-color);">
             <i class="fa-solid fa-microchip"></i> 機械ごとの集計
           </div>
           <div id="machineRepairContainer" class="space-y-2 flex-grow text-sm">
@@ -2139,7 +2401,7 @@
         </div>
 
         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
-          <div class="flex items-center gap-2 mb-4 text-[#6b8f71] font-bold border-b border-gray-50 pb-2 text-sm">
+          <div class="flex items-center gap-2 mb-4 font-bold border-b border-gray-50 pb-2 text-sm" style="color: var(--repair-color);">
             <i class="fa-solid fa-clock-rotate-left"></i> 最近の修理
           </div>
           <div id="recentRepairContainer" class="space-y-3 flex-grow">
@@ -2226,11 +2488,11 @@
 
     </div>
 
-    <div id="maintenanceDetailView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
+    <div id="maintenanceDetailView" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
 
       <!-- タイトル（機械名は JS で差し替える） -->
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
-        <i class="fa-solid fa-tractor"></i>
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--maintenance-color); border-bottom: 2px solid var(--maintenance-color);">
+        <i class="fa-solid fa-toolbox"></i>
         <span id="maintenanceMachineName">機械名</span>
       </div>
 
@@ -2296,23 +2558,24 @@
         </button>
       </div>
     </div>
+    </div>
 
     <!-- Export View -->
     <div id="exportView" class="view fullscreen-view" style="background: #faf9f6;">
       <div class="px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
         <header class="flex flex-col items-center justify-center py-4 relative">
-          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #203a43;"><i class="fa-solid fa-bars"></i></button>
-          <i class="fa-solid fa-file-export text-5xl" style="color: #203a43;"></i>
-          <h1 class="text-xl font-bold" style="color: #203a43;">和農日向 機械管理アプリ</h1>
+          <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--export-color);"><i class="fa-solid fa-bars"></i></button>
+          <i class="fa-solid fa-file-export text-5xl" style="color: var(--export-color);"></i>
+          <h1 class="text-xl font-bold" style="color: var(--export-color);">和農日向 機械管理アプリ</h1>
         </header>
 
-        <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #203a43; border-bottom: 2px solid #203a43;">
-          <i class="fa-solid fa-file-export"></i> データエクスポート
+        <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--export-color); border-bottom: 2px solid var(--export-color);">
+          <i class="fa-solid fa-file-export"></i> Data Export
         </div>
 
       <!-- 絞り込み条件 -->
       <div class="card mb-4">
-        <h3 class="font-bold mb-3 flex items-center gap-2" style="color: #203a43;">
+        <h3 class="font-bold mb-3 flex items-center gap-2" style="color: var(--export-color);">
           <i class="fa-solid fa-filter"></i>絞り込み条件
         </h3>
         
@@ -2362,8 +2625,8 @@
       <!-- データプレビュー -->
       <div class="card mb-4">
         <div class="flex items-center justify-between mb-3">
-          <h3 class="font-bold flex items-center gap-2" style="color: #203a43;">
-            <i class="fa-solid fa-table"></i>データプレビュー
+          <h3 class="font-bold flex items-center gap-2" style="color: var(--export-color);">
+            <i class="fa-solid fa-table"></i>Data Preview
           </h3>
           <span id="previewCount" class="text-sm text-gray-600">0件</span>
         </div>
@@ -2382,31 +2645,33 @@
         </button>
       </div>
 
-      <div class="card mb-4" style="background-color: #f0f7f1;">
+      <div class="card mb-4" style="background-color: #e8f0f2;">
         <div class="flex items-center gap-2 mb-2">
-          <i class="fa-solid fa-print text-xl" style="color: #203a43;"></i>
-          <h3 class="font-bold" style="color: #203a43;">印刷機能</h3>
+          <i class="fa-solid fa-print text-xl" style="color: var(--export-color);"></i>
+          <h3 class="font-bold" style="color: var(--export-color);">印刷機能</h3>
         </div>
-        <p class="text-sm mb-3" style="color: #203a43; opacity: 0.8;">現在表示しているページをそのまま印刷できます。印刷時にはボタンや入力欄などが自動的に非表示になります。</p>
-        <button onclick="window.print()" class="btn w-full">
+        <p class="text-sm mb-3" style="color: var(--export-color); opacity: 0.8;">現在表示しているページをそのまま印刷できます。印刷時にはボタンや入力欄などが自動的に非表示になります。</p>
+        <button onclick="window.print()" class="w-full py-3 px-6 rounded-lg font-bold transition-all shadow-md" style="background-color: var(--export-color); color: white;">
           <i class="fa-solid fa-print mr-2"></i>このページを印刷
         </button>
       </div>
 
-      <button onclick="switchView('portalView')" class="btn-sub mt-6">portalに戻る</button>
+      <button onclick="switchView('portalView')" class="btn-sub mt-8">
+        <i class="fa-solid fa-home mr-2"></i>portalに戻る
+      </button>
       </div>
     </div>
 
     <div id="versionView" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0" data-version="1.0.0">
-      <!-- トラクター専用ヘッダー -->
+      <!-- バージョン情報専用ヘッダー -->
       <header class="flex flex-col items-center justify-center py-4 relative">
-        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl text-[#6b8f71] p-2"><i
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--version-color);"><i
             class="fa-solid fa-bars"></i></button>
-        <i class="fa-solid fa-tractor text-5xl text-[#6b8f71]"></i>
-        <h1 class="text-xl font-bold text-[#6b8f71]">和農日向 機械管理アプリ</h1>
+        <i class="fa-solid fa-code-branch text-5xl" style="color: var(--version-color);"></i>
+        <h1 class="text-xl font-bold" style="color: var(--version-color);">和農日向 機械管理アプリ</h1>
       </header>
 
-      <div class="flex items-center gap-2 mb-4 font-bold text-[#6b8f71] border-b-2 border-[#6b8f71] pb-2 text-lg">
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--version-color); border-bottom: 2px solid var(--version-color);">
         <i class="fa-solid fa-code-branch"></i> バージョン情報
       </div>
 
@@ -2415,14 +2680,14 @@
         <p><span class="font-bold">最終更新日:</span> 2026-01-19</p>
 
         <div>
-          <p class="font-bold text-[#6b8f71] mb-1">更新内容</p>
+          <p class="font-bold mb-1" style="color: var(--version-color);">更新内容</p>
           <ul class="list-disc pl-5 space-y-1">
             <li>初期リリース</li>
           </ul>
         </div>
 
         <div>
-          <p class="font-bold text-[#6b8f71] mb-1">使用技術</p>
+          <p class="font-bold mb-1" style="color: var(--version-color);">使用技術</p>
           <ul class="list-disc pl-5 space-y-1">
             <li>HTML / CSS / JavaScript</li>
             <li>Tailwind CSS</li>
@@ -2664,27 +2929,58 @@
         targetView.style.display = 'block';
         
         // サイドバーを表示しないページのリスト
-        const noSidebarPages = ['portalView', 'dashboard', 'dashboardPlanting', 'dashboardCombine', 'versionView', 'exportView'];
+        const noSidebarPages = ['portalView', 'dashboard', 'dashboardPlanting', 'dashboardCombine'];
         
         // サイドバー表示の制御
         if (noSidebarPages.includes(id)) {
           document.body.classList.remove('show-sidebar');
           document.body.classList.add('fullscreen-mode');
+          // 全てのサイドメニューを閉じる
+          document.querySelectorAll('.sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu, #exportSideMenu, #maintenanceSideMenu, #versionSideMenu').forEach(menu => {
+            menu.style.left = '-280px';
+          });
         } else {
           document.body.classList.add('show-sidebar');
           document.body.classList.remove('fullscreen-mode');
         }
         
         // 適切なサイドメニューにactive-menuクラスを付与（ビューIDベース）
-        const tractorViews = ['tractorView', 'todayView', 'historyView', 'maintenanceMachineListView', 'maintenanceDetailView'];
+        const tractorViews = ['tractorView', 'todayView', 'historyView'];
         const plantingViews = ['plantingView', 'todayViewPlanting', 'historyViewPlanting', 'maintenanceMachineListViewPlanting', 'maintenanceDetailViewPlanting'];
         const combineViews = ['combineView', 'todayViewCombine', 'historyViewCombine', 'maintenanceMachineListViewCombine', 'maintenanceDetailViewCombine'];
+        const exportViews = ['exportView'];
+        const maintenanceViews = ['maintenanceMachineListView', 'maintenanceDetailView'];
+        const versionViews = ['versionView'];
+        const repairViews = ['repairView', 'invoiceOCRView'];
+        const dashboardViews = ['dashboard', 'dashboardPlanting', 'dashboardCombine'];
+        
+        // body背景色を変更
+        if (tractorViews.includes(id) || dashboardViews.includes(id)) {
+          document.body.style.backgroundColor = '#e2e8e3';
+        } else if (plantingViews.includes(id)) {
+          document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--planting-bg');
+        } else if (combineViews.includes(id)) {
+          document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--combine-bg');
+        } else if (maintenanceViews.includes(id)) {
+          document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--maintenance-bg');
+        } else if (repairViews.includes(id)) {
+          document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--repair-bg');
+        } else if (exportViews.includes(id)) {
+          document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--export-bg');
+        } else if (versionViews.includes(id)) {
+          document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--version-bg');
+        } else if (id === 'portalView') {
+          document.body.style.backgroundColor = '#faf9f6';
+        }
         
         // 全てのメニューからactive-menuクラスを削除
         document.getElementById("sideMenu").classList.remove('active-menu');
         document.getElementById("tractorSideMenu").classList.remove('active-menu');
         document.getElementById("plantingSideMenu").classList.remove('active-menu');
         document.getElementById("combineSideMenu").classList.remove('active-menu');
+        document.getElementById("exportSideMenu").classList.remove('active-menu');
+        document.getElementById("maintenanceSideMenu").classList.remove('active-menu');
+        document.getElementById("versionSideMenu").classList.remove('active-menu');
         
         // 適切なメニューにactive-menuクラスを追加
         let activeMenuId = 'sideMenu';
@@ -2697,6 +2993,15 @@
         } else if (combineViews.includes(id)) {
           activeMenuId = 'combineSideMenu';
           document.getElementById("combineSideMenu").classList.add('active-menu');
+        } else if (exportViews.includes(id)) {
+          activeMenuId = 'exportSideMenu';
+          document.getElementById("exportSideMenu").classList.add('active-menu');
+        } else if (maintenanceViews.includes(id)) {
+          activeMenuId = 'maintenanceSideMenu';
+          document.getElementById("maintenanceSideMenu").classList.add('active-menu');
+        } else if (versionViews.includes(id)) {
+          activeMenuId = 'versionSideMenu';
+          document.getElementById("versionSideMenu").classList.add('active-menu');
         } else {
           document.getElementById("sideMenu").classList.add('active-menu');
         }
@@ -2753,6 +3058,14 @@
         console.log("田植え機 履歴ログ読込実行");
         loadLogsPlanting("historyLogListPlanting", false);
       }
+      if (id === 'todayViewCombine') {
+        console.log("コンバイン 本日ログ読込実行");
+        loadLogsCombine("todayLogListCombine", true);
+      }
+      if (id === 'historyViewCombine') {
+        console.log("コンバイン 履歴ログ読込実行");
+        loadLogsCombine("historyLogListCombine", false);
+      }
       if (id === 'repairView') {
         loadRepairDashboard();
       }
@@ -2768,6 +3081,11 @@
       }
       if (id === 'maintenanceMachineListViewPlanting') {
         loadMachineListPlanting();
+      }
+      if (id === 'maintenanceMachineListViewCombine') {
+        if (typeof loadMachineListCombine === 'function') {
+          loadMachineListCombine();
+        }
       }
       if (id === 'maintenanceDetailViewPlanting') {
         console.log("田植え機メンテナンス状態を復元中...");
@@ -2934,6 +3252,14 @@
       }
       if (document.getElementById("filterMonth")) {
         document.getElementById("filterMonth").value = today.substring(0, 7);
+      }
+
+      // 油種の取得と設定（トラクター用）
+      const { data: fuelTypes } = await client.from("fuel_types").select("*");
+      const fuelTypeSelect = document.getElementById("fuelType");
+      if (fuelTypeSelect && fuelTypes) {
+        fuelTypeSelect.innerHTML = '<option value="">選択</option>' +
+          fuelTypes.map(f => `<option value="${f.id}">${f.name}</option>`).join("");
       }
 
       // 安全のため、機械選択に change リスナを確実に追加
@@ -3445,7 +3771,7 @@
             card.innerHTML = `
               <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-3">
-                  <div style="color: #6b8f71;" class="text-xl flex-shrink-0">
+                  <div style="color: var(--tractor-color);" class="text-xl flex-shrink-0">
                     <i class="fa-solid fa-tractor"></i>
                   </div>
                   <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
@@ -3915,6 +4241,7 @@
       const workName = document.getElementById('work_name')?.value;
       const hourBefore = parseFloat(document.getElementById('hourBefore')?.value) || 0;
       const hourAfter = parseFloat(document.getElementById('hourAfter')?.value) || 0;
+      const fuelType = document.getElementById('fuelType')?.value;
       const fuel = parseFloat(document.getElementById('fuelAmount')?.value) || 0;
       const memo = document.getElementById('memoInput')?.value;
 
@@ -3934,6 +4261,7 @@
             end_hour: hourAfter,
             category: category,
             task: workName,
+            fuel_type_id: fuelType ? parseInt(fuelType) : null,
             fuel_amount: fuel,
             memo: memo
           }]);
@@ -4247,14 +4575,14 @@
       const combine_operator = document.getElementById("combine_operator");
       if (combine_operator) {
         combine_operator.innerHTML = '<option value="">選択</option>' +
-          (operators || []).map(o => `<option value="${o.name}">${o.name}</option>`).join("");
+          (operators || []).map(o => `<option value="${o.id}">${o.name}</option>`).join("");
       }
 
       // 油種選択
       const combine_fuelType = document.getElementById("combine_fuelType");
       if (combine_fuelType) {
         combine_fuelType.innerHTML = '<option value="">選択</option>' +
-          (fuelTypes || []).map(f => `<option value="${f.name}">${f.name}</option>`).join("");
+          (fuelTypes || []).map(f => `<option value="${f.id}">${f.name}</option>`).join("");
       }
 
       // 作業内容選択
@@ -4456,6 +4784,88 @@
       });
     }
 
+    // ========== コンバイン用のログ読み込み関数 ==========
+    async function loadLogsCombine(elId, todayOnly) {
+      const list = document.getElementById(elId);
+      list.innerHTML = "<p class='text-center py-10 opacity-50 text-xs'>読込中...</p>";
+
+      try {
+        // まず機械とオペレーターのマスタデータを取得
+        const { data: machines } = await client.from("machines").select("id, name");
+        const { data: operators } = await client.from("operators").select("id, name");
+
+        const machineMap = {};
+        const operatorMap = {};
+        (machines || []).forEach(m => machineMap[m.id] = m.name);
+        (operators || []).forEach(o => operatorMap[o.id] = o.name);
+
+        // combine_logsを取得
+        let query = client.from("combine_logs").select("*").order("date", { ascending: false });
+
+        if (todayOnly) {
+          const jstToday = new Date().toLocaleDateString('sv-SE');
+          query = query.eq("date", jstToday);
+        } else {
+          const month = document.getElementById("filterMonthCombine").value;
+          const machine = document.getElementById("filterMachineCombine").value;
+          const operator = document.getElementById("filterOperatorCombine").value;
+          const category = document.getElementById("filterCategoryCombine").value;
+
+          if (month) query = query.gte("date", `${month}-01`).lte("date", `${month}-31`);
+          if (machine) query = query.eq("machine_id", machine);
+          if (operator) query = query.eq("operator_id", operator);
+          if (category) query = query.eq("task", category);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        let total = 0;
+        const displayData = todayOnly ? [...(data || [])].reverse() : (data || []);
+
+        list.innerHTML = displayData.map(l => {
+          const diff = (l.end_hour - l.start_hour);
+          total += diff;
+          const machineName = machineMap[l.machine_id] || '不明';
+          const operatorName = operatorMap[l.operator_id] || '不明';
+          
+          return `<div class="card border-l-4 border-[#c9a961] !mb-3 !py-3 flex justify-between items-center">
+                <div>
+                  <b class="text-sm">${l.date} - ${machineName}</b>
+                  <p class="text-xs opacity-70 mt-1">${operatorName} | ${l.task}</p>
+                  <div class="flex gap-4 mt-2">
+                    <span class="text-[11px] font-bold log-badge px-2 py-1 rounded"><i class="fa-solid fa-clock mr-1 text-[#c9a961]"></i>${diff.toFixed(1)} h</span>
+                    <span class="text-[11px] font-bold log-badge px-2 py-1 rounded"><i class="fa-solid fa-gas-pump mr-1 text-[#c9a961]"></i>${l.fuel_amount || 0} L</span>
+                    ${l.fuel_type_id ? `<span class="text-[11px] font-bold log-badge px-2 py-1 rounded">ID:${l.fuel_type_id}</span>` : ''}
+                  </div>
+                </div>
+                <button onclick="deleteLogCombine(${l.id})" class="text-gray-400 p-2 hover:text-red-500 transition-colors">
+                  <i class="fa-regular fa-trash-can text-lg"></i>
+                </button>
+              </div>`;
+        }).join("");
+
+        if (!todayOnly) {
+          const totalEl = document.getElementById("historyTotalHoursCombine");
+          if (totalEl) totalEl.innerText = `合計: ${total.toFixed(1)} h`;
+        }
+      } catch (error) {
+        console.error("データ取得エラー:", error);
+        console.error("エラー詳細:", error.message, error.details, error.hint);
+        list.innerHTML = `<p class='text-center py-10 text-red-500 text-xs'>エラー: ${error.message}</p>`;
+      }
+    }
+
+    async function deleteLogCombine(id) {
+      showModal("削除確認", "このログを削除しますか？", async () => {
+        const { error } = await client.from("combine_logs").delete().eq("id", id);
+        if (!error) {
+          if (document.getElementById("todayViewCombine").classList.contains("active")) loadLogsCombine("todayLogListCombine", true);
+          else loadLogsCombine("historyLogListCombine", false);
+        }
+      });
+    }
+
     // ========== 田植え機用 メンテナンス記録関数 ==========
     async function loadMachineListPlanting() {
       try {
@@ -4495,7 +4905,7 @@
             card.innerHTML = `
               <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-3">
-                  <div style="color: #6b8f71;" class="text-xl flex-shrink-0">
+                  <div style="color: var(--tractor-color);" class="text-xl flex-shrink-0">
                     <i class="fa-solid fa-seedling"></i>
                   </div>
                   <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
@@ -5118,8 +5528,39 @@
       
       const machineSelect = document.getElementById('exportMachine');
       if (machineSelect && machines) {
-        machineSelect.innerHTML = '<option value="">全ての機械</option>' +
-          machines.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+        // 機械タイプごとにグループ化
+        const tractors = machines.filter(m => m.machine_type === 'tractor');
+        const transplanters = machines.filter(m => m.machine_type === 'transplanter');
+        const combines = machines.filter(m => m.machine_type === 'combine');
+        const others = machines.filter(m => !['tractor', 'transplanter', 'combine'].includes(m.machine_type));
+        
+        let optionsHTML = '<option value="">全ての機械</option>';
+        
+        if (tractors.length > 0) {
+          optionsHTML += '<optgroup label="トラクター">';
+          optionsHTML += tractors.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+          optionsHTML += '</optgroup>';
+        }
+        
+        if (transplanters.length > 0) {
+          optionsHTML += '<optgroup label="田植え機">';
+          optionsHTML += transplanters.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+          optionsHTML += '</optgroup>';
+        }
+        
+        if (combines.length > 0) {
+          optionsHTML += '<optgroup label="コンバイン">';
+          optionsHTML += combines.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+          optionsHTML += '</optgroup>';
+        }
+        
+        if (others.length > 0) {
+          optionsHTML += '<optgroup label="その他">';
+          optionsHTML += others.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+          optionsHTML += '</optgroup>';
+        }
+        
+        machineSelect.innerHTML = optionsHTML;
       }
 
       // オペレーターリストを読み込み
@@ -5162,6 +5603,19 @@
       previewDiv.innerHTML = '<p class="text-center text-gray-500 py-8"><i class="fa-solid fa-spinner fa-spin mr-2"></i>読み込み中...</p>';
 
       try {
+        // マスターデータを取得
+        const { data: machines } = await client.from("machines").select("id, name");
+        const { data: operators } = await client.from("operators").select("id, name");
+        const { data: workTypes } = await client.from("work_types").select("id, work_name, category");
+
+        const machineMap = {};
+        const operatorMap = {};
+        const workTypeMap = {};
+        
+        (machines || []).forEach(m => machineMap[m.id] = m.name);
+        (operators || []).forEach(o => operatorMap[o.id] = o.name);
+        (workTypes || []).forEach(w => workTypeMap[w.id] = w);
+
         let query;
         let tableName;
         let dateField;
@@ -5169,45 +5623,24 @@
         // データタイプに応じてクエリを構築
         if (dataType === 'tractor') {
           tableName = 'hour_logs';
-          dateField = 'work_date';
-          query = client.from(tableName).select(`
-            *,
-            machines(name),
-            operators(name),
-            work_types(work_name, category)
-          `);
+          dateField = 'date';
+          query = client.from(tableName).select('*');
         } else if (dataType === 'planting') {
           tableName = 'planting_logs';
-          dateField = 'work_date';
-          query = client.from(tableName).select(`
-            *,
-            machines(name),
-            operators(name),
-            work_types(work_name, category)
-          `);
+          dateField = 'date';
+          query = client.from(tableName).select('*');
         } else if (dataType === 'combine') {
           tableName = 'combine_logs';
-          dateField = 'work_date';
-          query = client.from(tableName).select(`
-            *,
-            machines(name),
-            operators(name),
-            work_types(work_name, category)
-          `);
+          dateField = 'date';
+          query = client.from(tableName).select('*');
         } else if (dataType === 'maintenance') {
           tableName = 'maintenance_records';
           dateField = 'maintenance_date';
-          query = client.from(tableName).select(`
-            *,
-            machines(name)
-          `);
+          query = client.from(tableName).select('*');
         } else if (dataType === 'repair') {
           tableName = 'repair_logs';
           dateField = 'repair_date';
-          query = client.from(tableName).select(`
-            *,
-            machines(name)
-          `);
+          query = client.from(tableName).select('*');
         }
 
         // 期間フィルター
@@ -5234,7 +5667,25 @@
 
         if (error) throw error;
 
-        currentExportData = data || [];
+        // データにマスターデータを結合
+        currentExportData = (data || []).map(row => {
+          const enrichedRow = { ...row };
+          enrichedRow.machine_name = machineMap[row.machine_id] || '';
+          enrichedRow.operator_name = operatorMap[row.operator_id] || '';
+          
+          if (dataType === 'tractor' && row.work_type_id) {
+            const workType = workTypeMap[row.work_type_id];
+            enrichedRow.work_type_category = workType?.category || '';
+            enrichedRow.work_type_name = workType?.work_name || '';
+          }
+          
+          // 稼働時間を計算
+          if (row.start_hour !== undefined && row.end_hour !== undefined) {
+            enrichedRow.diff_hour = (row.end_hour - row.start_hour).toFixed(1);
+          }
+          
+          return enrichedRow;
+        });
 
         // プレビュー表示
         if (currentExportData.length === 0) {
@@ -5288,12 +5739,23 @@
             tableHTML += '<tr>';
             
             if (['tractor', 'planting', 'combine'].includes(dataType)) {
+              let category = '';
+              let workName = '';
+              
+              if (dataType === 'tractor') {
+                category = row.work_type_category || row.category || '';
+                workName = row.work_type_name || row.task || '';
+              } else if (dataType === 'planting' || dataType === 'combine') {
+                category = row.task || '';
+                workName = '';
+              }
+              
               tableHTML += `
-                <td class="border p-2">${row.work_date || ''}</td>
-                <td class="border p-2">${row.machines?.name || ''}</td>
-                <td class="border p-2">${row.operators?.name || ''}</td>
-                <td class="border p-2">${row.work_types?.category || ''}</td>
-                <td class="border p-2">${row.work_types?.work_name || ''}</td>
+                <td class="border p-2">${row.date || ''}</td>
+                <td class="border p-2">${row.machine_name}</td>
+                <td class="border p-2">${row.operator_name}</td>
+                <td class="border p-2">${category}</td>
+                <td class="border p-2">${workName}</td>
                 <td class="border p-2">${row.start_hour || ''}</td>
                 <td class="border p-2">${row.end_hour || ''}</td>
                 <td class="border p-2">${row.diff_hour || ''}</td>
@@ -5302,7 +5764,7 @@
             } else if (dataType === 'maintenance') {
               tableHTML += `
                 <td class="border p-2">${row.maintenance_date || ''}</td>
-                <td class="border p-2">${row.machines?.name || ''}</td>
+                <td class="border p-2">${row.machine_name}</td>
                 <td class="border p-2">${row.maintenance_type || ''}</td>
                 <td class="border p-2">${row.details || ''}</td>
                 <td class="border p-2">${row.next_maintenance_date || ''}</td>
@@ -5311,7 +5773,7 @@
             } else if (dataType === 'repair') {
               tableHTML += `
                 <td class="border p-2">${row.repair_date || ''}</td>
-                <td class="border p-2">${row.machines?.name || ''}</td>
+                <td class="border p-2">${row.machine_name}</td>
                 <td class="border p-2">${row.issue || ''}</td>
                 <td class="border p-2">${row.repair_details || ''}</td>
                 <td class="border p-2">${row.shop || ''}</td>
@@ -5349,23 +5811,36 @@
 
       try {
         if (['tractor', 'planting', 'combine'].includes(dataType)) {
-          exportData = currentExportData.map(row => ({
-            '作業日': row.work_date || '',
-            '機械名': row.machines?.name || '',
-            'オペレーター': row.operators?.name || '',
-            '種別': row.work_types?.category || '',
-            '作業内容': row.work_types?.work_name || '',
-            '稼働前(h)': row.start_hour || '',
-            '稼働後(h)': row.end_hour || '',
-            '稼働時間(h)': row.diff_hour || '',
-            '備考': row.memo || ''
-          }));
+          exportData = currentExportData.map(row => {
+            let category = '';
+            let workName = '';
+            
+            if (dataType === 'tractor') {
+              category = row.work_type_category || row.category || '';
+              workName = row.work_type_name || row.task || '';
+            } else if (dataType === 'planting' || dataType === 'combine') {
+              category = row.task || '';
+              workName = '';
+            }
+            
+            return {
+              '作業日': row.date || '',
+              '機械名': row.machine_name,
+              'オペレーター': row.operator_name,
+              '種別': category,
+              '作業内容': workName,
+              '稼働前(h)': row.start_hour || '',
+              '稼働後(h)': row.end_hour || '',
+              '稼働時間(h)': row.diff_hour || '',
+              '備考': row.memo || ''
+            };
+          });
           sheetName = dataType === 'tractor' ? 'トラクター稼働ログ' : 
                       dataType === 'planting' ? '田植え機稼働ログ' : 'コンバイン稼働ログ';
         } else if (dataType === 'maintenance') {
           exportData = currentExportData.map(row => ({
             'メンテナンス日': row.maintenance_date || '',
-            '機械名': row.machines?.name || '',
+            '機械名': row.machine_name,
             'メンテナンス内容': row.maintenance_type || '',
             '詳細': row.details || '',
             '次回予定日': row.next_maintenance_date || '',
@@ -5376,7 +5851,7 @@
         } else if (dataType === 'repair') {
           exportData = currentExportData.map(row => ({
             '修理日': row.repair_date || '',
-            '機械名': row.machines?.name || '',
+            '機械名': row.machine_name,
             '故障内容': row.issue || '',
             '修理内容': row.repair_details || '',
             '修理先': row.shop || '',
