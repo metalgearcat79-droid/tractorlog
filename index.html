@@ -56,6 +56,12 @@
       --maintenance-hover: #4a8385;
       --maintenance-light: #e0f2f2;
       --maintenance-bg: #f0f9f9;
+      
+      /* その他の機械セクションのテーマカラー */
+      --other-color: #006888;
+      --other-hover: #005270;
+      --other-light: #e0f2f7;
+      --other-bg: #f0f8fa;
     }
     
     /* --- 基本スタイル --- */
@@ -95,7 +101,7 @@
       }
     }
 
-    .sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu {
+    .sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu, #otherMachinerySideMenu {
       position: fixed;
       top: 0;
       left: -280px;
@@ -115,7 +121,8 @@
       body.show-sidebar #sideMenu.active-menu,
       body.show-sidebar #tractorSideMenu.active-menu,
       body.show-sidebar #plantingSideMenu.active-menu,
-      body.show-sidebar #combineSideMenu.active-menu {
+      body.show-sidebar #combineSideMenu.active-menu,
+      body.show-sidebar #otherMachinerySideMenu.active-menu {
         left: 0;
       }
 
@@ -188,6 +195,10 @@
 
     #versionSideMenu .menu-item {
       color: var(--version-color);
+    }
+
+    #otherMachinerySideMenu .menu-item {
+      color: var(--other-color);
     }
 
     select,
@@ -361,6 +372,23 @@
 
     #versionView .btn-sub:hover {
       background-color: var(--version-hover);
+    }
+
+    /* その他の機械セクション用のボタンスタイル */
+    #other-machinery-section .btn-main {
+      background-color: var(--other-color);
+    }
+
+    #other-machinery-section .btn-main:hover {
+      background-color: var(--other-hover);
+    }
+
+    #other-machinery-section .btn-sub {
+      background-color: var(--other-color);
+    }
+
+    #other-machinery-section .btn-sub:hover {
+      background-color: var(--other-hover);
     }
 
     /* dashboardPlanting専用のスタイル（ブルーグリーン系） */
@@ -1089,6 +1117,7 @@
       #tractorSideMenu,
       #plantingSideMenu,
       #combineSideMenu,
+      #otherMachinerySideMenu,
       #overlay {
         display: none !important;
       }
@@ -1256,6 +1285,24 @@
     </nav>
   </div>
 
+  <!-- Other Machinery Side Menu -->
+  <div id="otherMachinerySideMenu" class="sideMenu">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-bold text-lg" style="color: var(--other-color);">Other Machinery Menu</h2>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
+    </div>
+    <nav class="space-y-1">
+      <button onclick="switchView('portalView')" class="menu-item"><i
+          class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
+      <button onclick="switchView('otherMachineryView')" class="menu-item"><i
+          class="fas fa-tachometer-alt w-8 text-lg"></i>ログ入力</button>
+      <button onclick="switchView('todayViewOther')" class="menu-item"><i
+          class="fa-solid fa-calendar-day w-8 text-lg"></i>本日の稼働状況</button>
+      <button onclick="switchView('historyViewOther')" class="menu-item"><i
+          class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
+    </nav>
+  </div>
+
   <!-- Portal/Global Side Menu -->
   <div id="sideMenu">
     <div class="flex justify-between items-center mb-6">
@@ -1343,8 +1390,9 @@
             <div class="card-title">コンバイン</div>
           </div>
 
-          <div class="portal-card" onclick="showModal('その他の機械', 'その他の機械の管理ページは準備中です')" style="cursor:pointer;">
-            <i class="fa-solid fa-gears text-4xl"></i>
+          <div class="portal-card" onclick="switchView('otherMachineryView')" style="cursor:pointer;">
+            <i class="fas fa-tachometer-alt text-5xl"></i>
+            <div class="card-title">その他の機械</div>
           </div>
 
           <div class="portal-card" onclick="switchView('exportView')" style="cursor:pointer;">
@@ -2350,6 +2398,160 @@
       </button>
     </div>
 
+    <!-- Other Machinery Section -->
+    <div id="other-machinery-section">
+    <div id="otherMachineryView" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
+      <!-- その他の機械専用ヘッダー -->
+      <header id="pageHeader" class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--other-color)"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fas fa-tachometer-alt text-5xl" style="color: var(--other-color)"></i>
+        <h1 class="text-xl font-bold" style="color: var(--other-color)">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-1 mt-4">
+        <i class="fa-solid fa-pen-to-square text-lg" style="color: var(--other-color)"></i>
+        <span class="text-lg font-bold" style="color: var(--other-color)">ログ入力</span>
+      </div>
+      <div class="border-t-2 mb-6 opacity-50" style="border-color: var(--other-color)"></div>
+
+      <div class="card">
+        <label class="block text-xs font-bold text-gray-400 mb-1">機械を選択</label>
+        <select id="machineSelectOther" class="w-full p-3 rounded-lg" onchange="autoFillHourOther()"></select>
+      </div>
+
+      <div class="card">
+        <label class="block text-xs font-bold text-gray-400 mb-1">作業日</label>
+        <input type="date" id="workDateOther" class="w-full p-3 rounded-lg" />
+      </div>
+
+      <div class="card">
+        <label class="block text-xs font-bold text-gray-400 mb-1">オペレーター</label>
+        <select id="operatorOther" class="w-full p-3 rounded-lg">
+          <option value="">読込中...</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <label class="block text-xs font-bold text-gray-400 mb-1">種別</label>
+        <select id="categoryOther" class="w-full p-3 rounded-lg">
+          <option value="">読込中...</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <label class="block text-xs font-bold text-gray-400 mb-1">作業内容</label>
+        <select id="work_nameOther" class="w-full p-3 rounded-lg">
+          <option value="">先に種別を選択</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <div class="flex space-x-4">
+          <div class="flex-1">
+            <label class="block text-xs font-bold text-gray-400 mb-1">稼働前</label>
+            <input type="number" id="hourBeforeOther" class="w-full p-3 rounded-lg font-bold" step="0.1"
+              oninput="calcDiffOther()" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <label class="block text-xs font-bold text-gray-400 mb-1">稼働後</label>
+            <div class="flex items-center gap-2 min-w-0">
+              <input type="number" id="hourAfterOther" class="flex-1 min-w-0 p-3 rounded-lg font-bold" step="0.1" oninput="calcDiffOther()" />
+              <input type="file" id="hourAfterImageOther" accept="image/*" capture="environment" class="hidden" onchange="handleHourAfterImageOther(this)">
+              <button type="button" onclick="document.getElementById('hourAfterImageOther').click()"
+                class="flex-none p-2 bg-white border rounded-lg shadow-sm hover:bg-gray-50" style="color: var(--other-color)"><i class="fa-solid fa-camera"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="hourDiffDisplayOther" class="text-right font-black mb-6 text-xl" style="color: var(--other-color)">稼働時間: 0.0 h</div>
+
+      <div class="card">
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block text-xs font-bold text-gray-400 mb-1">油種</label>
+            <select id="fuelTypeOther" class="w-full p-3 rounded-lg">
+              <option value="">読込中...</option>
+            </select>
+          </div>
+          <div class="flex-[2]">
+            <label class="block text-xs font-bold text-gray-400 mb-1">給油量 (L)</label>
+            <input type="number" id="fuelAmountOther" class="w-full p-3 rounded-lg" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
+        <textarea id="memoInputOther" class="w-full p-3 rounded-lg" rows="2"></textarea>
+      </div>
+
+      <button id="saveBtnOther" class="btn-main" onclick="saveLogOther()">ログを保存する</button>
+    </div>
+
+    <!-- 本日の稼働状況 (その他の機械) -->
+    <div id="todayViewOther" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0 hidden">
+      <header class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--other-color)"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fas fa-tachometer-alt text-5xl" style="color: var(--other-color)"></i>
+        <h1 class="text-xl font-bold" style="color: var(--other-color)">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--other-color); border-bottom: 2px solid var(--other-color)">
+        <i class="fa-solid fa-calendar-day"></i> 本日の稼働状況
+      </div>
+
+      <div id="todayLogsOther"></div>
+
+      <button onclick="switchView('otherMachineryView')" class="btn-sub mt-6 w-full">
+        <i class="fa-solid fa-arrow-left mr-2"></i>ログ入力に戻る
+      </button>
+    </div>
+
+    <!-- 稼働履歴・検索 (その他の機械) -->
+    <div id="historyViewOther" class="view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0 hidden">
+      <header class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--other-color)"><i
+            class="fa-solid fa-bars"></i></button>
+        <i class="fas fa-tachometer-alt text-5xl" style="color: var(--other-color)"></i>
+        <h1 class="text-xl font-bold" style="color: var(--other-color)">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--other-color); border-bottom: 2px solid var(--other-color)">
+        <i class="fa-solid fa-magnifying-glass"></i> 稼働履歴・検索
+      </div>
+
+      <div class="card">
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1">機械</label>
+            <select id="historyMachineSelectOther" class="w-full p-3 rounded-lg" onchange="loadHistoryOther()">
+              <option value="all">すべての機械</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-400 mb-1">開始日</label>
+              <input type="date" id="historyStartDateOther" class="w-full p-3 rounded-lg" onchange="loadHistoryOther()">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-400 mb-1">終了日</label>
+              <input type="date" id="historyEndDateOther" class="w-full p-3 rounded-lg" onchange="loadHistoryOther()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="historyResultsOther"></div>
+
+      <button onclick="switchView('otherMachineryView')" class="btn-sub mt-6 w-full">
+        <i class="fa-solid fa-arrow-left mr-2"></i>ログ入力に戻る
+      </button>
+    </div>
+    </div>
+
     <!-- Repair Section -->
     <div id="repair-section">
     <div id="repairView" class="view px-4 max-w-5xl mx-auto pb-0 hidden" style="background-color: var(--repair-bg);">
@@ -2900,6 +3102,7 @@
       document.getElementById("tractorSideMenu").style.left = "-280px";
       document.getElementById("plantingSideMenu").style.left = "-280px";
       document.getElementById("combineSideMenu").style.left = "-280px";
+      document.getElementById("otherMachinerySideMenu").style.left = "-280px";
       document.getElementById("overlay").style.display = "none";
     }
 
@@ -2936,7 +3139,7 @@
           document.body.classList.remove('show-sidebar');
           document.body.classList.add('fullscreen-mode');
           // 全てのサイドメニューを閉じる
-          document.querySelectorAll('.sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu, #exportSideMenu, #maintenanceSideMenu, #versionSideMenu').forEach(menu => {
+          document.querySelectorAll('.sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu, #exportSideMenu, #maintenanceSideMenu, #versionSideMenu, #otherMachinerySideMenu').forEach(menu => {
             menu.style.left = '-280px';
           });
         } else {
@@ -2952,6 +3155,7 @@
         const maintenanceViews = ['maintenanceMachineListView', 'maintenanceDetailView'];
         const versionViews = ['versionView'];
         const repairViews = ['repairView', 'invoiceOCRView'];
+        const otherMachineryViews = ['otherMachineryView', 'todayViewOther', 'historyViewOther'];
         const dashboardViews = ['dashboard', 'dashboardPlanting', 'dashboardCombine'];
         
         // body背景色を変更
@@ -2969,6 +3173,8 @@
           document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--export-bg');
         } else if (versionViews.includes(id)) {
           document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--version-bg');
+        } else if (otherMachineryViews.includes(id)) {
+          document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--other-bg');
         } else if (id === 'portalView') {
           document.body.style.backgroundColor = '#faf9f6';
         }
@@ -2981,6 +3187,7 @@
         document.getElementById("exportSideMenu").classList.remove('active-menu');
         document.getElementById("maintenanceSideMenu").classList.remove('active-menu');
         document.getElementById("versionSideMenu").classList.remove('active-menu');
+        document.getElementById("otherMachinerySideMenu").classList.remove('active-menu');
         
         // 適切なメニューにactive-menuクラスを追加
         let activeMenuId = 'sideMenu';
@@ -3002,6 +3209,9 @@
         } else if (versionViews.includes(id)) {
           activeMenuId = 'versionSideMenu';
           document.getElementById("versionSideMenu").classList.add('active-menu');
+        } else if (otherMachineryViews.includes(id)) {
+          activeMenuId = 'otherMachinerySideMenu';
+          document.getElementById("otherMachinerySideMenu").classList.add('active-menu');
         } else {
           document.getElementById("sideMenu").classList.add('active-menu');
         }
@@ -4030,6 +4240,9 @@
       if (typeof loadOperators === 'function') await loadOperators();
       if (typeof loadCategories === 'function') await loadCategories();
       if (typeof loadLogs === 'function') loadLogs('historyLogList', false);
+
+      // 各ページの初期化
+      if (typeof initOtherMachineryPage === 'function') await initOtherMachineryPage();
 
       // 日付セット
       const dateInput = document.getElementById('workDate');
@@ -6114,6 +6327,290 @@
         console.error('エクスポートエラー:', error);
         showModal('エラー', 'データのエクスポートに失敗しました');
       }
+    }
+
+    // ========================================
+    // その他の機械セクション用の関数
+    // ========================================
+    
+    async function initOtherMachineryPage() {
+      await populateSelectsOther();
+      setDefaultDateOther();
+    }
+
+    async function populateSelectsOther() {
+      const { data: machines } = await client.from('machines').select('*').eq('machine_type', 'other machinery').order('name');
+      const { data: operators } = await client.from('operators').select('*').order('name');
+      const { data: categories } = await client.from('categories').select('*').eq('machine_type', 'other machinery').order('name');
+      const { data: fuelTypes } = await client.from('fuel_types').select('*').order('name');
+
+      const machineSelect = document.getElementById('machineSelectOther');
+      const historyMachineSelect = document.getElementById('historyMachineSelectOther');
+      machineSelect.innerHTML = '<option value="">機械を選択してください</option>';
+      historyMachineSelect.innerHTML = '<option value="all">すべての機械</option>';
+      if (machines) {
+        machines.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.id;
+          opt.textContent = m.name;
+          machineSelect.appendChild(opt);
+          historyMachineSelect.appendChild(opt.cloneNode(true));
+        });
+      }
+
+      const operatorSelect = document.getElementById('operatorOther');
+      operatorSelect.innerHTML = '<option value="">選択してください</option>';
+      if (operators) operators.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o.id;
+        opt.textContent = o.name;
+        operatorSelect.appendChild(opt);
+      });
+
+      const categorySelect = document.getElementById('categoryOther');
+      categorySelect.innerHTML = '<option value="">選択してください</option>';
+      if (categories) categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        categorySelect.appendChild(opt);
+      });
+
+      const fuelTypeSelect = document.getElementById('fuelTypeOther');
+      fuelTypeSelect.innerHTML = '<option value="">選択してください</option>';
+      if (fuelTypes) fuelTypes.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.id;
+        opt.textContent = f.name;
+        fuelTypeSelect.appendChild(opt);
+      });
+
+      document.getElementById('categoryOther').addEventListener('change', async (e) => {
+        const categoryId = e.target.value;
+        const workNameSelect = document.getElementById('work_nameOther');
+        workNameSelect.innerHTML = '<option value="">読込中...</option>';
+        if (!categoryId) {
+          workNameSelect.innerHTML = '<option value="">先に種別を選択</option>';
+          return;
+        }
+        const { data: works } = await client.from('work_types').select('*').eq('category_id', categoryId).order('name');
+        workNameSelect.innerHTML = '<option value="">選択してください</option>';
+        if (works) works.forEach(w => {
+          const opt = document.createElement('option');
+          opt.value = w.id;
+          opt.textContent = w.name;
+          workNameSelect.appendChild(opt);
+        });
+      });
+    }
+
+    function setDefaultDateOther() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('workDateOther').value = today;
+      document.getElementById('historyStartDateOther').value = new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0];
+      document.getElementById('historyEndDateOther').value = today;
+    }
+
+    async function autoFillHourOther() {
+      const machineId = document.getElementById('machineSelectOther').value;
+      if (!machineId) return;
+      const { data } = await client.from('hour_logs').select('hour_after').eq('machine_id', machineId).order('work_date', { ascending: false }).limit(1);
+      if (data && data.length > 0) {
+        document.getElementById('hourBeforeOther').value = data[0].hour_after;
+        calcDiffOther();
+      }
+    }
+
+    function calcDiffOther() {
+      const before = parseFloat(document.getElementById('hourBeforeOther').value) || 0;
+      const after = parseFloat(document.getElementById('hourAfterOther').value) || 0;
+      const diff = Math.max(0, after - before);
+      document.getElementById('hourDiffDisplayOther').textContent = `稼働時間: ${diff.toFixed(1)} h`;
+    }
+
+    async function handleHourAfterImageOther(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      showModal('画像認識', '画像を解析しています...');
+      try {
+        const base64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result.split(',')[1]);
+          reader.readAsDataURL(file);
+        });
+        const res = await fetch(`https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            requests: [{ image: { content: base64 }, features: [{ type: 'TEXT_DETECTION' }] }]
+          })
+        });
+        const json = await res.json();
+        if (json.responses && json.responses[0].textAnnotations) {
+          const text = json.responses[0].textAnnotations[0].description;
+          const numbers = text.match(/\d+\.?\d*/g);
+          if (numbers && numbers.length > 0) {
+            const lastNumber = numbers[numbers.length - 1];
+            document.getElementById('hourAfterOther').value = lastNumber;
+            calcDiffOther();
+            closeModal();
+            showModal('認識成功', `数値「${lastNumber}」を検出しました`);
+          } else {
+            closeModal();
+            showModal('認識失敗', '数値が検出できませんでした。手動で入力してください。');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        closeModal();
+        showModal('エラー', '画像の解析に失敗しました');
+      }
+    }
+
+    async function saveLogOther() {
+      const machineId = document.getElementById('machineSelectOther').value;
+      const workDate = document.getElementById('workDateOther').value;
+      const operatorId = document.getElementById('operatorOther').value;
+      const workNameId = document.getElementById('work_nameOther').value;
+      const hourBefore = parseFloat(document.getElementById('hourBeforeOther').value);
+      const hourAfter = parseFloat(document.getElementById('hourAfterOther').value);
+      const fuelTypeId = document.getElementById('fuelTypeOther').value;
+      const fuelAmount = parseFloat(document.getElementById('fuelAmountOther').value) || null;
+      const memo = document.getElementById('memoInputOther').value;
+
+      if (!machineId || !workDate || !operatorId || !workNameId || isNaN(hourBefore) || isNaN(hourAfter)) {
+        showModal('入力エラー', '必須項目をすべて入力してください');
+        return;
+      }
+      if (hourAfter < hourBefore) {
+        showModal('入力エラー', '稼働後の値が稼働前より小さいです');
+        return;
+      }
+
+      const logData = {
+        machine_id: machineId,
+        work_date: workDate,
+        operator_id: operatorId,
+        work_name_id: workNameId,
+        hour_before: hourBefore,
+        hour_after: hourAfter,
+        fuel_amount: fuelAmount,
+        fuel_type_id: fuelTypeId || null,
+        memo: memo
+      };
+
+      const { error } = await client.from('hour_logs').insert([logData]);
+      if (error) {
+        console.error(error);
+        showModal('保存失敗', 'ログの保存に失敗しました');
+      } else {
+        showModal('保存完了', 'ログを保存しました', () => {
+          document.getElementById('hourBeforeOther').value = hourAfter;
+          document.getElementById('hourAfterOther').value = '';
+          document.getElementById('fuelAmountOther').value = '';
+          document.getElementById('memoInputOther').value = '';
+          calcDiffOther();
+          loadTodayLogsOther();
+        });
+      }
+    }
+
+    async function loadTodayLogsOther() {
+      const today = new Date().toISOString().split('T')[0];
+      const { data } = await client
+        .from('hour_logs')
+        .select(`
+          *,
+          machines(name, machine_type),
+          operators(name),
+          work_types(name),
+          fuel_types(name)
+        `)
+        .gte('work_date', today)
+        .lte('work_date', today)
+        .order('created_at', { ascending: false });
+
+      const otherLogs = data?.filter(log => log.machines?.name && log.machines?.machine_type === 'other machinery') || [];
+      const container = document.getElementById('todayLogsOther');
+      container.innerHTML = '';
+
+      if (otherLogs.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-center py-8">本日の稼働ログはまだありません</p>';
+        return;
+      }
+
+      otherLogs.forEach(log => {
+        const diff = (log.hour_after - log.hour_before).toFixed(1);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-2">
+            <span class="font-bold text-lg" style="color: var(--other-color)">${log.machines?.name || '不明'}</span>
+            <span class="text-sm text-gray-400">${log.work_date}</span>
+          </div>
+          <div class="text-sm text-gray-600 space-y-1">
+            <p><strong>オペレーター:</strong> ${log.operators?.name || '不明'}</p>
+            <p><strong>作業:</strong> ${log.work_types?.name || '不明'}</p>
+            <p><strong>稼働:</strong> ${log.hour_before} → ${log.hour_after} <span class="font-bold" style="color: var(--other-color)">(${diff}h)</span></p>
+            ${log.fuel_amount ? `<p><strong>給油:</strong> ${log.fuel_amount}L (${log.fuel_types?.name || '不明'})</p>` : ''}
+            ${log.memo ? `<p><strong>メモ:</strong> ${log.memo}</p>` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function loadHistoryOther() {
+      const machineId = document.getElementById('historyMachineSelectOther').value;
+      const startDate = document.getElementById('historyStartDateOther').value;
+      const endDate = document.getElementById('historyEndDateOther').value;
+
+      let query = client
+        .from('hour_logs')
+        .select(`
+          *,
+          machines(name, machine_type),
+          operators(name),
+          work_types(name),
+          fuel_types(name)
+        `)
+        .gte('work_date', startDate)
+        .lte('work_date', endDate)
+        .order('work_date', { ascending: false });
+
+      if (machineId !== 'all') {
+        query = query.eq('machine_id', machineId);
+      }
+
+      const { data } = await query;
+      const otherLogs = data?.filter(log => log.machines?.machine_type === 'other machinery') || [];
+      const container = document.getElementById('historyResultsOther');
+      container.innerHTML = '';
+
+      if (otherLogs.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-center py-8">該当するログがありません</p>';
+        return;
+      }
+
+      otherLogs.forEach(log => {
+        const diff = (log.hour_after - log.hour_before).toFixed(1);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-2">
+            <span class="font-bold text-lg" style="color: var(--other-color)">${log.machines?.name || '不明'}</span>
+            <span class="text-sm text-gray-400">${log.work_date}</span>
+          </div>
+          <div class="text-sm text-gray-600 space-y-1">
+            <p><strong>オペレーター:</strong> ${log.operators?.name || '不明'}</p>
+            <p><strong>作業:</strong> ${log.work_types?.name || '不明'}</p>
+            <p><strong>稼働:</strong> ${log.hour_before} → ${log.hour_after} <span class="font-bold" style="color: var(--other-color)">(${diff}h)</span></p>
+            ${log.fuel_amount ? `<p><strong>給油:</strong> ${log.fuel_amount}L (${log.fuel_types?.name || '不明'})</p>` : ''}
+            ${log.memo ? `<p><strong>メモ:</strong> ${log.memo}</p>` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
   </script>
