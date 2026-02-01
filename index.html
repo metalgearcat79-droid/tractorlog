@@ -479,6 +479,13 @@
       min-height: 100vh;
     }
     
+    /* 動力散布機メンテナンスページの背景 */
+    #maintenanceMachineListViewSpreader,
+    #maintenanceDetailViewSpreader {
+      background-color: #fdf5f8 !important;
+      min-height: 100vh;
+    }
+    
     /* トラクターメンテナンスページの全体背景 */
     body:has(#maintenanceDetailView.active) {
       background-color: #f0f7f1 !important;
@@ -492,6 +499,14 @@
     body:has(#maintenanceDetailViewSpiderMower.active),
     body:has(#maintenanceDetailViewWingMower.active) {
       background-color: #f5f5e8 !important;
+    }
+
+    /* 動力散布機メンテナンスページの全体背景 */
+    html:has(#maintenanceMachineListViewSpreader.active),
+    html:has(#maintenanceDetailViewSpreader.active),
+    body:has(#maintenanceMachineListViewSpreader.active),
+    body:has(#maintenanceDetailViewSpreader.active) {
+      background-color: #fdf5f8 !important;
     }
 
     /* その他の機械メンテナンスページの背景 */
@@ -1242,6 +1257,28 @@
       #exportView .card:has(#exportButton) {
         display: none !important;
       }
+
+      /* プレビュー用テーブルを非表示、印刷用テーブルを表示 */
+      .preview-only {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      
+      /* 印刷用テーブルのスタイル調整 */
+      .print-only table {
+        font-size: 9px !important;
+        line-height: 1.2 !important;
+      }
+      
+      .print-only td,
+      .print-only th {
+        padding: 2px 4px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
     }
 
   </style>
@@ -1818,10 +1855,21 @@
         </div>
 
         <div class="card space-y-3 text-sm mb-6">
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-3 gap-3">
             <div class="flex flex-col gap-1">
+              <label class="text-[10px] text-gray-400 font-bold ml-1">期間選択</label>
+              <select id="filterPeriodTypePlanting" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm" onchange="togglePeriodInputPlanting()">
+                <option value="month">月単位</option>
+                <option value="year">年単位</option>
+              </select>
+            </div>
+            <div class="flex flex-col gap-1" id="filterMonthContainerPlanting">
               <label class="text-[10px] text-gray-400 font-bold ml-1">対象月</label>
               <input type="month" id="filterMonthPlanting" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+            </div>
+            <div class="flex flex-col gap-1" id="filterYearContainerPlanting" style="display: none;">
+              <label class="text-[10px] text-gray-400 font-bold ml-1">対象年</label>
+              <input type="number" id="filterYearPlanting" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm" min="2000" max="2100" placeholder="例: 2026">
             </div>
             <div class="flex flex-col gap-1">
               <label class="text-[10px] text-gray-400 font-bold ml-1">機械</label>
@@ -2087,10 +2135,21 @@
         </div>
 
         <div class="card space-y-3 text-sm mb-6">
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-3 gap-3">
             <div class="flex flex-col gap-1">
+              <label class="text-[10px] text-gray-400 font-bold ml-1">期間選択</label>
+              <select id="filterPeriodTypeCombine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm" onchange="togglePeriodInputCombine()">
+                <option value="month">月単位</option>
+                <option value="year">年単位</option>
+              </select>
+            </div>
+            <div class="flex flex-col gap-1" id="filterMonthContainerCombine">
               <label class="text-[10px] text-gray-400 font-bold ml-1">対象月</label>
               <input type="month" id="filterMonthCombine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+            </div>
+            <div class="flex flex-col gap-1" id="filterYearContainerCombine" style="display: none;">
+              <label class="text-[10px] text-gray-400 font-bold ml-1">対象年</label>
+              <input type="number" id="filterYearCombine" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm" min="2000" max="2100" placeholder="例: 2026">
             </div>
             <div class="flex flex-col gap-1">
               <label class="text-[10px] text-gray-400 font-bold ml-1">機械</label>
@@ -2144,14 +2203,14 @@
           <h1 class="text-xl font-bold" style="color: var(--combine-color)">和農日向 機械管理アプリ</h1>
         </header>
 
-        <div class="flex items-center gap-2 mb-4 font-bold text-[#c9a961] border-b-2 border-[#c9a961] pb-2 text-lg">
+        <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: var(--combine-color); border-bottom: 2px solid var(--combine-color);">
           <i class="fa-solid fa-wrench"></i> コンバイン メンテナンス記録
         </div>
 
         <div id="maintenanceMachineGridCombine" class="space-y-6">
         </div>
 
-        <button onclick="switchView('maintenanceView')" class="btn-sub mt-6 w-full">
+        <button onclick="switchView('maintenanceListView')" class="btn-sub mt-6 w-full">
           <i class="fa-solid fa-arrow-left mr-2"></i>メンテナンス管理に戻る
         </button>
       </div>
@@ -2506,10 +2565,21 @@
       </div>
 
       <div class="card space-y-3 text-sm mb-6">
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-3 gap-3">
           <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-gray-400 font-bold ml-1">期間選択</label>
+            <select id="filterPeriodType" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm" onchange="togglePeriodInput()">
+              <option value="month">月単位</option>
+              <option value="year">年単位</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-1" id="filterMonthContainer">
             <label class="text-[10px] text-gray-400 font-bold ml-1">対象月</label>
             <input type="month" id="filterMonth" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+          </div>
+          <div class="flex flex-col gap-1" id="filterYearContainer" style="display: none;">
+            <label class="text-[10px] text-gray-400 font-bold ml-1">対象年</label>
+            <input type="number" id="filterYear" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm" min="2000" max="2100" placeholder="例: 2026">
           </div>
           <div class="flex flex-col gap-1">
             <label class="text-[10px] text-gray-400 font-bold ml-1">機械</label>
@@ -2574,127 +2644,119 @@
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- トラクター -->
             <div onclick="switchView('maintenanceMachineListView'); loadMachineList();" 
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
                  style="border-top: 4px solid var(--tractor-color);">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
                      style="background: linear-gradient(135deg, var(--tractor-color) 0%, var(--tractor-hover) 100%);">
-                  <i class="fa-solid fa-tractor text-3xl text-white"></i>
+                  <i class="fa-solid fa-tractor text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: var(--tractor-color);">トラクター</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: var(--tractor-color);">トラクター</h3>
               </div>
             </div>
 
             <!-- 田植え機 -->
             <div onclick="switchView('maintenanceMachineListViewPlanting');" 
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
                  style="border-top: 4px solid var(--planting-color);">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
                      style="background: linear-gradient(135deg, var(--planting-color) 0%, var(--planting-hover) 100%);">
-                  <i class="fa-solid fa-seedling text-3xl text-white"></i>
+                  <i class="fa-solid fa-seedling text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: var(--planting-color);">田植え機</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: var(--planting-color);">田植え機</h3>
               </div>
             </div>
 
             <!-- コンバイン -->
             <div onclick="switchView('maintenanceMachineListViewCombine');" 
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
                  style="border-top: 4px solid var(--combine-color);">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
                      style="background: linear-gradient(135deg, var(--combine-color) 0%, var(--combine-hover) 100%);">
-                  <i class="fa-solid fa-wheat-awn text-3xl text-white"></i>
+                  <i class="fa-solid fa-wheat-awn text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: var(--combine-color);">コンバイン</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: var(--combine-color);">コンバイン</h3>
               </div>
             </div>
 
             <!-- その他の機械 -->
             <div onclick="switchView('maintenanceMachineListViewOtherMachinery'); loadMachineListOtherMachinery();"
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
                  style="border-top: 4px solid var(--other-color);">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
                      style="background: linear-gradient(135deg, var(--other-color) 0%, var(--other-hover) 100%);">
-                  <i class="fas fa-tachometer-alt text-3xl text-white"></i>
+                  <i class="fas fa-tachometer-alt text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: var(--other-color);">その他の機械</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: var(--other-color);">その他の機械</h3>
               </div>
             </div>
 
             <!-- 刈払い機 -->
             <div onclick="switchView('maintenanceMachineListViewBrushCutter'); loadMachineListBrushCutter();"
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
                  style="border-top: 4px solid #418b89;">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
                      style="background: linear-gradient(135deg, #418b89 0%, #357268 100%);">
-                  <i class="fa-solid fa-scissors text-3xl text-white"></i>
+                  <i class="fa-solid fa-scissors text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: #418b89;">刈払い機</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: #418b89;">刈払い機</h3>
               </div>
             </div>
 
             <!-- スパイダーモア -->
             <div onclick="switchView('maintenanceMachineListViewMower'); loadMachineListMower();"
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
                  style="border-top: 4px solid #666633;">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
                      style="background: linear-gradient(135deg, #666633 0%, #555522 100%);">
-                  <i class="fa-solid fa-spider text-3xl text-white"></i>
+                  <i class="fa-solid fa-spider text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: #666633;">mower</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: #666633;">mower</h3>
               </div>
             </div>
 
             <!-- インプルメント -->
             <div onclick="switchView('maintenanceMachineListViewImplement'); loadMachineListImplement();"
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
-                 style="border-top: 4px solid #6366f1;">
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 style="border-top: 4px solid #483D8B;">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-                     style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
-                  <i class="fa-solid fa-gears text-3xl text-white"></i>
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
+                     style="background: linear-gradient(135deg, #483D8B 0%, #372B6B 100%);">
+                  <i class="fa-solid fa-gears text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: #6366f1;">インプルメント</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: #483D8B;">インプルメント</h3>
               </div>
             </div>
 
             <!-- 動力散布機 -->
             <div onclick="switchView('maintenanceMachineListViewSpreader'); loadMachineListSpreader();"
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
-                 style="border-top: 4px solid #ec4899;">
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 style="border-top: 4px solid #DB7093;">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-                     style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">
-                  <i class="fa-solid fa-seedling text-3xl text-white"></i>
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
+                     style="background: linear-gradient(135deg, #DB7093 0%, #C6608A 100%);">
+                  <i class="fa-solid fa-seedling text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: #ec4899;">動力散布機</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: #DB7093;">動力散布機</h3>
               </div>
             </div>
 
-            <!-- 動力噴霧器 -->
+            <!-- 動力噴霧機 -->
             <div onclick="switchView('maintenanceMachineListViewSprayer'); loadMachineListSprayer();"
-                 class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
                  style="border-top: 4px solid #06b6d4;">
               <div class="flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
                      style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
-                  <i class="fa-solid fa-droplet text-3xl text-white"></i>
+                  <i class="fa-solid fa-droplet text-2xl text-white"></i>
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: #06b6d4;">動力噴霧器</h3>
-                <p class="text-gray-500 text-sm">メンテナンス記録</p>
+                <h3 class="text-lg font-bold" style="color: #06b6d4;">動力噴霧機</h3>
+                <p class="text-xs text-gray-400 mt-1">準備中…</p>
               </div>
             </div>
           </div>
@@ -2703,8 +2765,8 @@
           <div class="text-center">
             <button onclick="switchView('portalView')" 
                     class="inline-flex items-center px-8 py-3 bg-white text-gray-700 rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-              <i class="fa-solid fa-arrow-left mr-2"></i>
-              ポータルに戻る
+              <i class="fa-solid fa-house mr-2"></i>
+              portalに戻る
             </button>
           </div>
         </div>
@@ -2890,12 +2952,12 @@
     <!-- インプルメントメンテナンス -->
     <div id="maintenanceMachineListViewImplement" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
       <header class="flex flex-col items-center justify-center py-4 relative">
-        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #6366f1;"><i class="fa-solid fa-bars"></i></button>
-        <i class="fa-solid fa-gears text-5xl" style="color: #6366f1;"></i>
-        <h1 class="text-xl font-bold" style="color: #6366f1;">和農日向 機械管理アプリ</h1>
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #483D8B;"><i class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-gears text-5xl" style="color: #483D8B;"></i>
+        <h1 class="text-xl font-bold" style="color: #483D8B;">和農日向 機械管理アプリ</h1>
       </header>
 
-      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #6366f1; border-bottom: 2px solid #6366f1;">
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #483D8B; border-bottom: 2px solid #483D8B;">
         <i class="fa-solid fa-wrench"></i> インプルメントメンテナンス記録
       </div>
 
@@ -2910,21 +2972,96 @@
     <!-- 動力散布機メンテナンス -->
     <div id="maintenanceMachineListViewSpreader" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
       <header class="flex flex-col items-center justify-center py-4 relative">
-        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #ec4899;"><i class="fa-solid fa-bars"></i></button>
-        <i class="fa-solid fa-seedling text-5xl" style="color: #ec4899;"></i>
-        <h1 class="text-xl font-bold" style="color: #ec4899;">和農日向 機械管理アプリ</h1>
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #DB7093;"><i class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-seedling text-5xl" style="color: #DB7093;"></i>
+        <h1 class="text-xl font-bold" style="color: #DB7093;">和農日向 機械管理アプリ</h1>
       </header>
 
-      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #ec4899; border-bottom: 2px solid #ec4899;">
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #DB7093; border-bottom: 2px solid #DB7093;">
         <i class="fa-solid fa-wrench"></i> 動力散布機メンテナンス記録
       </div>
 
       <div id="maintenanceMachineGridSpreader" class="space-y-6">
       </div>
 
-      <button onclick="switchView('maintenanceListView')" class="btn-sub mt-6 w-full" style="background: #ec4899; color: white; border: 2px solid #ec4899;">
+      <button onclick="switchView('maintenanceListView')" class="btn-sub mt-6 w-full" style="background: #DB7093; color: white; border: 2px solid #DB7093;">
         <i class="fa-solid fa-arrow-left mr-2"></i>メンテナンス管理に戻る
       </button>
+    </div>
+
+    <!-- 動力散布機メンテナンス詳細 -->
+    <div id="maintenanceDetailViewSpreader" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
+      <header class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #DB7093;"><i class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-seedling text-5xl" style="color: #DB7093;"></i>
+        <h1 class="text-xl font-bold" style="color: #DB7093;">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #DB7093; border-bottom: 2px solid #DB7093;">
+        <i class="fa-solid fa-seedling"></i>
+        <span id="maintenanceMachineNameSpreader">機械名</span>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">メンテナンス進捗</p>
+        <div id="maintenanceSummarySpreader" class="text-xs mt-1">
+          未着手
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">点検項目</p>
+        <div id="maintenanceChecklistSpreader" class="space-y-2">
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">作業履歴</p>
+        <div id="maintenanceHistoryLogSpreader" class="space-y-3 text-sm">
+          <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
+        </div>
+      </div>
+
+      <div class="card mb-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <p class="font-bold text-sm mb-4 flex items-center" style="color: #DB7093;">
+          <i class="fas fa-tools mr-2"></i>部品交換を記録
+        </p>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
+        <input id="newMaintenanceItemSpreader" type="text"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#DB7093] outline-none"
+          placeholder="例：オイルエレメント">
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
+        <select id="newMaintenanceOperatorSpreader"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#DB7093] outline-none">
+          <option value="">担当者を選択</option>
+        </select>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">状態</label>
+        <select id="newMaintenanceStatusSpreader"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#DB7093] outline-none">
+          <option value="done">完了</option>
+          <option value="progress">作業中</option>
+        </select>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
+        <textarea id="newMaintenanceMemoSpreader" class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-4" rows="2"
+          placeholder="備考"></textarea>
+
+        <button onclick="saveMaintenanceRecordSpreader()"
+          class="btn-main w-full py-3 text-white rounded-lg font-bold transition-all shadow-md" style="background: #DB7093;" onmouseover="this.style.backgroundColor='#C6608A'" onmouseout="this.style.backgroundColor='#DB7093'">
+          部品交換を保存する
+        </button>
+      </div>
+
+      <div class="flex justify-center w-full mt-6 mb-8">
+        <button onclick="switchView('maintenanceMachineListViewSpreader')"
+          class="px-6 py-3 rounded-lg font-medium transition-all shadow-md text-white flex items-center justify-center" style="background: #DB7093;" onmouseover="this.style.backgroundColor='#C6608A'" onmouseout="this.style.backgroundColor='#DB7093'">
+          <i class="fa-solid fa-arrow-left mr-2"></i>
+          <span>メンテナンス一覧に戻る</span>
+        </button>
+      </div>
     </div>
 
     <!-- 動力噴霧器メンテナンス -->
@@ -3311,10 +3448,21 @@
       </div>
 
       <div class="card space-y-3 text-sm mb-6">
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-3 gap-3">
           <div class="flex flex-col gap-1">
+            <label class="text-[10px] text-gray-400 font-bold ml-1">期間選択</label>
+            <select id="filterPeriodTypeOther" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm" onchange="togglePeriodInputOther()">
+              <option value="month">月単位</option>
+              <option value="year">年単位</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-1" id="filterMonthContainerOther">
             <label class="text-[10px] text-gray-400 font-bold ml-1">対象月</label>
             <input type="month" id="filterMonthOther" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm">
+          </div>
+          <div class="flex flex-col gap-1" id="filterYearContainerOther" style="display: none;">
+            <label class="text-[10px] text-gray-400 font-bold ml-1">対象年</label>
+            <input type="number" id="filterYearOther" class="p-3 rounded-lg w-full border border-gray-100 shadow-sm" min="2000" max="2100" placeholder="例: 2026">
           </div>
           <div class="flex flex-col gap-1">
             <label class="text-[10px] text-gray-400 font-bold ml-1">機械</label>
@@ -3768,8 +3916,10 @@
         </div>
         
         <div class="overflow-x-auto">
-          <div id="exportPreviewTable" class="text-sm">
+          <div id="exportPreviewTable" class="text-sm preview-only">
             <p class="text-center text-gray-500 py-8">条件を選択してください</p>
+          </div>
+          <div id="exportPrintTable" class="text-sm print-only" style="display: none;">
           </div>
         </div>
       </div>
@@ -3781,7 +3931,7 @@
         </button>
       </div>
 
-      <div class="card mb-4" style="background-color: #e8f0f2;">
+      <div class="card mb-4" style="background: white; border: 2px solid var(--export-color); border-left-width: 6px;">
         <div class="flex items-center gap-2 mb-2">
           <i class="fa-solid fa-print text-xl" style="color: var(--export-color);"></i>
           <h3 class="font-bold" style="color: var(--export-color);">印刷機能</h3>
@@ -3834,7 +3984,9 @@
         </div>
       </div>
 
-      <button onclick="switchView('portalView')" class="btn-sub mt-6">portalに戻る</button>
+      <button onclick="switchView('portalView')" class="btn-sub mt-6">
+        <i class="fa-solid fa-house mr-2"></i>portalに戻る
+      </button>
 
     </div>
   </div>
@@ -4086,7 +4238,7 @@
         const plantingViews = ['plantingView', 'todayViewPlanting', 'historyViewPlanting', 'maintenanceMachineListViewPlanting', 'maintenanceDetailViewPlanting'];
         const combineViews = ['combineView', 'todayViewCombine', 'historyViewCombine', 'maintenanceMachineListViewCombine', 'maintenanceDetailViewCombine'];
         const exportViews = ['exportView'];
-        const maintenanceViews = ['maintenanceListView', 'maintenanceMachineListView', 'maintenanceDetailView', 'maintenanceMachineListViewBrushCutter', 'maintenanceDetailViewBrushCutter', 'maintenanceMachineListViewMower', 'maintenanceDetailViewSpiderMower', 'maintenanceDetailViewWingMower', 'maintenanceMachineListViewImplement', 'maintenanceMachineListViewSpreader', 'maintenanceMachineListViewSprayer', 'maintenanceMachineListViewOtherMachinery', 'maintenanceDetailViewOtherMachinery'];
+        const maintenanceViews = ['maintenanceListView', 'maintenanceMachineListView', 'maintenanceDetailView', 'maintenanceMachineListViewBrushCutter', 'maintenanceDetailViewBrushCutter', 'maintenanceMachineListViewMower', 'maintenanceDetailViewSpiderMower', 'maintenanceDetailViewWingMower', 'maintenanceMachineListViewImplement', 'maintenanceMachineListViewSpreader', 'maintenanceDetailViewSpreader', 'maintenanceMachineListViewSprayer', 'maintenanceMachineListViewOtherMachinery', 'maintenanceDetailViewOtherMachinery'];
         const versionViews = ['versionView'];
         const repairViews = ['repairView', 'invoiceOCRView'];
         const otherMachineryViews = ['otherMachineryView', 'todayViewOther', 'historyViewOther'];
@@ -4799,6 +4951,34 @@
       switchView('invoiceOCRView'); // 画面を切り替え
     }
 
+    // 期間選択の切り替え関数（トラクター）
+    function togglePeriodInput() {
+      const type = document.getElementById('filterPeriodType').value;
+      document.getElementById('filterMonthContainer').style.display = type === 'month' ? 'block' : 'none';
+      document.getElementById('filterYearContainer').style.display = type === 'year' ? 'block' : 'none';
+    }
+
+    // 期間選択の切り替え関数（田植え機）
+    function togglePeriodInputPlanting() {
+      const type = document.getElementById('filterPeriodTypePlanting').value;
+      document.getElementById('filterMonthContainerPlanting').style.display = type === 'month' ? 'block' : 'none';
+      document.getElementById('filterYearContainerPlanting').style.display = type === 'year' ? 'block' : 'none';
+    }
+
+    // 期間選択の切り替え関数（コンバイン）
+    function togglePeriodInputCombine() {
+      const type = document.getElementById('filterPeriodTypeCombine').value;
+      document.getElementById('filterMonthContainerCombine').style.display = type === 'month' ? 'block' : 'none';
+      document.getElementById('filterYearContainerCombine').style.display = type === 'year' ? 'block' : 'none';
+    }
+
+    // 期間選択の切り替え関数（その他の機械）
+    function togglePeriodInputOther() {
+      const type = document.getElementById('filterPeriodTypeOther').value;
+      document.getElementById('filterMonthContainerOther').style.display = type === 'month' ? 'block' : 'none';
+      document.getElementById('filterYearContainerOther').style.display = type === 'year' ? 'block' : 'none';
+    }
+
     async function loadLogs(elId, todayOnly) {
       const list = document.getElementById(elId);
       list.innerHTML = "<p class='text-center py-10 opacity-50 text-xs'>読込中...</p>";
@@ -4813,16 +4993,22 @@
       } else {
 
         // 【稼働履歴】画面の入力値を取得してフィルターをかける
+        const periodType = document.getElementById("filterPeriodType")?.value || 'month';
         const month = document.getElementById("filterMonth").value; // YYYY-MM
+        const year = document.getElementById("filterYear").value; // YYYY
         const machine = document.getElementById("filterMachine").value;
         const operator = document.getElementById("filterOperator").value;
         const category = document.getElementById("filterCategory").value;
 
-        // 月で絞り込み (月の最終日を動的に計算)
-        if (month) {
-          const [year, monthNum] = month.split('-');
-          const lastDay = new Date(year, monthNum, 0).getDate();
+        // 期間で絞り込み
+        if (periodType === 'month' && month) {
+          // 月で絞り込み (月の最終日を動的に計算)
+          const [yearNum, monthNum] = month.split('-');
+          const lastDay = new Date(yearNum, monthNum, 0).getDate();
           query = query.gte("date", `${month}-01`).lte("date", `${month}-${lastDay}`);
+        } else if (periodType === 'year' && year) {
+          // 年で絞り込み
+          query = query.gte("date", `${year}-01-01`).lte("date", `${year}-12-31`);
         }
         // 機械で絞り込み
         if (machine) query = query.eq("machine_id", machine);
@@ -5304,6 +5490,7 @@
           updated_at: new Date().toISOString()
         }, { onConflict: 'item_id' });
         updateMaintenanceProgressBrushCutter();
+        loadMachineListBrushCutter();
       } catch (e) {
         console.error(e);
       }
@@ -5593,7 +5780,7 @@
         const { data: machines, error } = await client
           .from("machines")
           .select("*")
-          .eq("machine_type", "spreader")
+          .eq("machine_type", "power_duster")
           .order("id");
 
         if (error) throw error;
@@ -5604,20 +5791,269 @@
           ? "<p class='text-gray-400 text-center py-8'>動力散布機が登録されていません</p>" 
           : "";
 
+        // メーカー別にグループ化
+        const grouped = {};
         machines.forEach(m => {
-          const card = document.createElement("div");
-          card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all";
-          card.innerHTML = `
-            <div class="flex items-center gap-3">
-              <div style="color: #ec4899;" class="text-xl">
-                <i class="fa-solid fa-seedling"></i>
-              </div>
-              <div class="font-bold text-gray-900 text-lg">${m.name}</div>
-            </div>
-          `;
-          container.appendChild(card);
+          const manufacturer = m.manufacturer || "その他";
+          if (!grouped[manufacturer]) grouped[manufacturer] = [];
+          grouped[manufacturer].push(m);
         });
+
+        for (const brand of Object.keys(grouped)) {
+          const brandHeader = document.createElement("h3");
+          brandHeader.className = "font-bold text-sm mb-2 mt-4 flex items-center gap-2";
+          brandHeader.style.color = "#DB7093";
+          brandHeader.innerHTML = `<i class="fa-solid fa-tag opacity-50"></i> ${brand}`;
+          container.appendChild(brandHeader);
+
+          const grid = document.createElement("div");
+          grid.className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4";
+
+          for (const m of grouped[brand]) {
+            const card = document.createElement("div");
+            card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95";
+            card.onclick = () => openMaintenanceDetailSpreader(m.id);
+
+            card.innerHTML = `
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-3">
+                  <div style="color: #DB7093;" class="text-xl flex-shrink-0">
+                    <i class="fa-solid fa-seedling"></i>
+                  </div>
+                  <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
+                </div>
+                <div class="border-t border-gray-50 pt-2" id="card-progress-spreader-${m.id}">
+                  <div class="text-[11px] text-gray-400 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> 確認中...
+                  </div>
+                </div>
+              </div>
+            `;
+            grid.appendChild(card);
+
+            // 進捗状況を非同期で取得して反映
+            (async () => {
+              try {
+                const { data: checks } = await client
+                  .from('maintenance_status')
+                  .select('item_id, status')
+                  .filter('item_id', 'ilike', `${m.id}_%`);
+
+                const { data: items } = await client.from("maintenance_items_power_duster").select("id");
+                const totalItems = items ? items.length : 20;
+                
+                const uniqueChecks = {};
+                if (checks) {
+                  checks.forEach(c => { uniqueChecks[c.item_id] = c.status; });
+                }
+
+                const completedCount = Object.values(uniqueChecks).filter(status => status === true || status === "true").length;
+                let percent = Math.round((completedCount / totalItems) * 100);
+                percent = Math.min(100, percent);
+
+                const progressDiv = document.getElementById(`card-progress-spreader-${m.id}`);
+                if (progressDiv) {
+                  let statusHTML = percent === 0
+                    ? `<span class="text-red-600 font-black"><i class="fa-solid fa-circle-exclamation text-[9px]"></i> 未着手</span>`
+                    : percent === 100
+                      ? `<span class="text-[#DB7093] font-black"><i class="fa-solid fa-circle-check text-[9px]"></i> 完了</span>`
+                      : `<span class="text-orange-500 font-black"><i class="fa-solid fa-spinner text-[9px]"></i> ${percent}% 完了</span>`;
+
+                  progressDiv.innerHTML = `
+                    <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
+                    <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
+                      <div class="h-1 rounded-full transition-all duration-500" style="width: ${percent}%; background: #DB7093;"></div>
+                    </div>
+                  `;
+                }
+              } catch (err) { console.error("動力散布機カード進捗更新エラー:", err); }
+            })();
+          }
+          container.appendChild(grid);
+        }
       } catch (e) { console.error("動力散布機一覧読み込みエラー:", e); }
+    }
+
+    // 動力散布機メンテナンス詳細を開く
+    async function openMaintenanceDetailSpreader(machineId) {
+      console.log('動力散布機詳細ページを開きます。機械ID:', machineId);
+      window.currentMachineIdSpreader = machineId;
+      switchView('maintenanceDetailViewSpreader');
+
+      try {
+        const { data: machine, error: machineError } = await client.from("machines").select("*").eq("id", machineId).single();
+        if (machineError) throw new Error('機械情報の取得エラー: ' + machineError.message);
+        document.getElementById("maintenanceMachineNameSpreader").textContent = machine.name;
+
+        const { data: operators } = await client.from('operators').select('name').order('id');
+        const opSelect = document.getElementById('newMaintenanceOperatorSpreader');
+        if (opSelect && operators) {
+          opSelect.innerHTML = '<option value="">担当者を選択</option>';
+          operators.forEach(op => {
+            const opt = document.createElement('option');
+            opt.value = op.name; opt.textContent = op.name;
+            opSelect.appendChild(opt);
+          });
+        }
+
+        loadMaintenanceHistorySpreader(machineId);
+        const { data: items, error: itemsError } = await client.from("maintenance_items_power_duster").select("*").order("id");
+        if (itemsError) {
+          console.error('メンテナンス項目の取得エラー:', itemsError);
+          alert('メンテナンス項目の読み込みに失敗しました。maintenance_items_power_dusterテーブルが存在するか確認してください。');
+        }
+        const checklistContainer = document.getElementById("maintenanceChecklistSpreader");
+        if (checklistContainer && items) {
+          checklistContainer.innerHTML = "";
+          items.forEach(item => {
+            const uniqueId = `${machineId}_${item.id}`;
+            const div = document.createElement("div");
+            div.className = "flex items-center justify-between p-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors";
+            div.innerHTML = `
+              <div class="flex flex-col flex-1 text-left">
+                  <span class="text-sm font-bold text-gray-700">${item.item_name}</span>
+                  <span class="text-[10px] text-gray-400">${item.description || ''}</span>
+              </div>
+              <input type="checkbox" id="${uniqueId}" class="maintenance-check w-6 h-6 rounded border-gray-300"
+                     style="accent-color: #DB7093;"
+                     onchange="saveSingleCheckSpreader('${machineId}', '${item.id}', this.checked)">
+            `;
+            checklistContainer.appendChild(div);
+          });
+        } else if (checklistContainer) {
+          checklistContainer.innerHTML = '<p class="text-gray-400 text-center py-4">メンテナンス項目が登録されていません</p>';
+        }
+        await restoreMaintenanceChecksSpreader();
+      } catch (e) { 
+        console.error('動力散布機詳細ページエラー:', e); 
+        alert('エラーが発生しました: ' + e.message);
+      }
+    }
+
+    // 動力散布機進捗表示の更新
+    function updateMaintenanceProgressSpreader() {
+      const checkboxes = document.querySelectorAll('#maintenanceChecklistSpreader input[type="checkbox"]');
+      const total = checkboxes.length;
+      if (total === 0) return;
+      const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const percentage = Math.round((checkedCount / total) * 100);
+      const summaryDiv = document.getElementById('maintenanceSummarySpreader');
+      if (summaryDiv) {
+        summaryDiv.innerHTML = `
+          <div class="flex justify-between items-center mb-1">
+            <span class="font-bold" style="color: #DB7093;">${percentage}% 完了</span>
+            <span class="text-xs text-gray-400">${checkedCount} / ${total} 項目</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="h-2 rounded-full transition-all duration-500" style="width: ${percentage}%; background: #DB7093;"></div>
+          </div>
+        `;
+      }
+    }
+
+    // 動力散布機チェック保存
+    async function saveSingleCheckSpreader(machineId, itemId, isChecked) {
+      const itemIdStr = `${machineId}_${itemId}`;
+      try {
+        await client.from('maintenance_status').upsert({
+          item_id: itemIdStr,
+          status: Boolean(isChecked),
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'item_id' });
+        updateMaintenanceProgressSpreader();
+        loadMachineListSpreader();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // 動力散布機チェック復元
+    async function restoreMaintenanceChecksSpreader() {
+      if (!window.currentMachineIdSpreader) return;
+      try {
+        const { data: checks } = await client
+          .from('maintenance_status')
+          .select('item_id, status')
+          .filter('item_id', 'ilike', `${window.currentMachineIdSpreader}_%`);
+
+        if (checks) {
+          checks.forEach(c => {
+            const cb = document.getElementById(c.item_id);
+            if (cb) cb.checked = Boolean(c.status);
+          });
+        }
+        updateMaintenanceProgressSpreader();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // 動力散布機履歴読み込み
+    async function loadMaintenanceHistorySpreader(machineId) {
+      try {
+        const { data: records } = await client
+          .from('maintenance_records')
+          .select('*')
+          .eq('machine_id', machineId)
+          .order('recorded_at', { ascending: false })
+          .limit(10);
+
+        const historyContainer = document.getElementById('maintenanceHistoryLogSpreader');
+        if (!historyContainer) return;
+
+        if (!records || records.length === 0) {
+          historyContainer.innerHTML = '<p class="italic text-gray-400 text-center py-4">履歴はありません</p>';
+          return;
+        }
+
+        historyContainer.innerHTML = records.map(r => `
+          <div class="border-l-2 border-[#DB7093] pl-3 py-2">
+            <div class="flex justify-between items-start mb-1">
+              <span class="font-bold text-sm">${r.item_name || '記録'}</span>
+              <span class="text-[10px] text-gray-400">${new Date(r.recorded_at).toLocaleDateString('ja-JP')}</span>
+            </div>
+            ${r.operator ? `<div class="text-xs text-gray-500">担当: ${r.operator}</div>` : ''}
+            ${r.memo ? `<div class="text-xs text-gray-600 mt-1">${r.memo}</div>` : ''}
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // 動力散布機部品交換記録保存
+    async function saveMaintenanceRecordSpreader() {
+      const itemName = document.getElementById('newMaintenanceItemSpreader').value;
+      const operator = document.getElementById('newMaintenanceOperatorSpreader').value;
+      const status = document.getElementById('newMaintenanceStatusSpreader').value;
+      const memo = document.getElementById('newMaintenanceMemoSpreader').value;
+
+      if (!itemName) {
+        alert('交換部品・項目名を入力してください');
+        return;
+      }
+
+      try {
+        await client.from('maintenance_records').insert({
+          machine_id: window.currentMachineIdSpreader,
+          item_name: itemName,
+          operator: operator || null,
+          status: status,
+          memo: memo || null,
+          recorded_at: new Date().toISOString()
+        });
+
+        document.getElementById('newMaintenanceItemSpreader').value = '';
+        document.getElementById('newMaintenanceOperatorSpreader').value = '';
+        document.getElementById('newMaintenanceStatusSpreader').value = 'done';
+        document.getElementById('newMaintenanceMemoSpreader').value = '';
+
+        loadMaintenanceHistorySpreader(window.currentMachineIdSpreader);
+        alert('保存しました');
+      } catch (e) {
+        console.error(e);
+        alert('保存に失敗しました');
+      }
     }
 
     // 動力噴霧器メンテナンスリスト読み込み
@@ -6899,15 +7335,19 @@
         const jstToday = new Date().toLocaleDateString('sv-SE');
         query = query.eq("date", jstToday);
       } else {
+        const periodType = document.getElementById("filterPeriodTypePlanting")?.value || 'month';
         const month = document.getElementById("filterMonthPlanting").value;
+        const year = document.getElementById("filterYearPlanting").value;
         const machine = document.getElementById("filterMachinePlanting").value;
         const operator = document.getElementById("filterOperatorPlanting").value;
         const category = document.getElementById("filterCategoryPlanting").value;
 
-        if (month) {
-          const [year, monthNum] = month.split('-');
-          const lastDay = new Date(year, monthNum, 0).getDate();
+        if (periodType === 'month' && month) {
+          const [yearNum, monthNum] = month.split('-');
+          const lastDay = new Date(yearNum, monthNum, 0).getDate();
           query = query.gte("date", `${month}-01`).lte("date", `${month}-${lastDay}`);
+        } else if (periodType === 'year' && year) {
+          query = query.gte("date", `${year}-01-01`).lte("date", `${year}-12-31`);
         }
         if (machine) query = query.eq("machine_id", machine);
         if (operator) query = query.eq("operator_id", operator);
@@ -6981,15 +7421,19 @@
           const jstToday = new Date().toLocaleDateString('sv-SE');
           query = query.eq("date", jstToday);
         } else {
+          const periodType = document.getElementById("filterPeriodTypeCombine")?.value || 'month';
           const month = document.getElementById("filterMonthCombine").value;
+          const year = document.getElementById("filterYearCombine").value;
           const machine = document.getElementById("filterMachineCombine").value;
           const operator = document.getElementById("filterOperatorCombine").value;
           const category = document.getElementById("filterCategoryCombine").value;
 
-          if (month) {
-            const [year, monthNum] = month.split('-');
-            const lastDay = new Date(year, monthNum, 0).getDate();
+          if (periodType === 'month' && month) {
+            const [yearNum, monthNum] = month.split('-');
+            const lastDay = new Date(yearNum, monthNum, 0).getDate();
             query = query.gte("date", `${month}-01`).lte("date", `${month}-${lastDay}`);
+          } else if (periodType === 'year' && year) {
+            query = query.gte("date", `${year}-01-01`).lte("date", `${year}-12-31`);
           }
           if (machine) query = query.eq("machine_id", machine);
           if (operator) query = query.eq("operator_id", operator);
@@ -7590,7 +8034,8 @@
 
         for (const brand of Object.keys(grouped)) {
           const brandHeader = document.createElement("h3");
-          brandHeader.className = "text-[#6b8f71] font-bold text-sm mb-2 mt-4 flex items-center gap-2";
+          brandHeader.className = "font-bold text-sm mb-2 mt-4 flex items-center gap-2";
+          brandHeader.style.color = "var(--combine-color)";
           brandHeader.innerHTML = `<i class="fa-solid fa-tag opacity-50"></i> ${brand}`;
           container.appendChild(brandHeader);
 
@@ -7605,7 +8050,7 @@
             card.innerHTML = `
               <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-3">
-                  <div style="color: #c97c73;" class="text-xl flex-shrink-0">
+                  <div style="color: var(--combine-color);" class="text-xl flex-shrink-0">
                     <i class="fa-solid fa-wheat-awn"></i>
                   </div>
                   <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
@@ -7976,7 +8421,8 @@
         currentExportData = (data || []).map(row => {
           const enrichedRow = { ...row };
           enrichedRow.machine_name = machineMap[row.machine_id] || '';
-          enrichedRow.operator_name = operatorMap[row.operator_id] || '';
+          // オペレーターはIDではなく名前の文字列で保存されている
+          enrichedRow.operator_name = row.operator || operatorMap[row.operator_id] || '';
           
           if (dataType === 'tractor' && row.work_type_id) {
             const workType = workTypeMap[row.work_type_id];
@@ -8095,6 +8541,97 @@
 
           tableHTML += '</tbody></table>';
           previewDiv.innerHTML = tableHTML;
+          
+          // 印刷用テーブル(全件表示)
+          let printTableHTML = '<table class="w-full text-xs border-collapse"><thead><tr class="bg-gray-100">';
+          
+          // ヘッダー(プレビューと同じ)
+          if (['tractor', 'planting', 'combine'].includes(dataType)) {
+            printTableHTML += `
+              <th class="border p-2">作業日</th>
+              <th class="border p-2">機械名</th>
+              <th class="border p-2">オペレーター</th>
+              <th class="border p-2">種別</th>
+              <th class="border p-2">作業内容</th>
+              <th class="border p-2">稼働前(h)</th>
+              <th class="border p-2">稼働後(h)</th>
+              <th class="border p-2">稼働時間(h)</th>
+              <th class="border p-2">備考</th>
+            `;
+          } else if (dataType === 'maintenance') {
+            printTableHTML += `
+              <th class="border p-2">メンテナンス日</th>
+              <th class="border p-2">機械名</th>
+              <th class="border p-2">内容</th>
+              <th class="border p-2">詳細</th>
+              <th class="border p-2">次回予定</th>
+              <th class="border p-2">費用</th>
+            `;
+          } else if (dataType === 'repair') {
+            printTableHTML += `
+              <th class="border p-2">修理日</th>
+              <th class="border p-2">機械名</th>
+              <th class="border p-2">故障内容</th>
+              <th class="border p-2">修理内容</th>
+              <th class="border p-2">修理先</th>
+              <th class="border p-2">費用</th>
+            `;
+          }
+          
+          printTableHTML += '</tr></thead><tbody>';
+          
+          // 全件のデータ行を追加
+          currentExportData.forEach(row => {
+            printTableHTML += '<tr>';
+            
+            if (['tractor', 'planting', 'combine'].includes(dataType)) {
+              let category = '';
+              let workName = '';
+              
+              if (dataType === 'tractor') {
+                category = row.work_type_category || row.category || '';
+                workName = row.work_type_name || row.task || '';
+              } else if (dataType === 'planting' || dataType === 'combine') {
+                category = row.task || '';
+                workName = '';
+              }
+              
+              printTableHTML += `
+                <td class="border p-2">${row.date || ''}</td>
+                <td class="border p-2">${row.machine_name}</td>
+                <td class="border p-2">${row.operator_name}</td>
+                <td class="border p-2">${category}</td>
+                <td class="border p-2">${workName}</td>
+                <td class="border p-2">${row.start_hour || ''}</td>
+                <td class="border p-2">${row.end_hour || ''}</td>
+                <td class="border p-2">${row.diff_hour || ''}</td>
+                <td class="border p-2">${row.memo || ''}</td>
+              `;
+            } else if (dataType === 'maintenance') {
+              printTableHTML += `
+                <td class="border p-2">${row.maintenance_date || ''}</td>
+                <td class="border p-2">${row.machine_name}</td>
+                <td class="border p-2">${row.maintenance_type || ''}</td>
+                <td class="border p-2">${row.details || ''}</td>
+                <td class="border p-2">${row.next_maintenance_date || ''}</td>
+                <td class="border p-2">${row.cost || ''}</td>
+              `;
+            } else if (dataType === 'repair') {
+              printTableHTML += `
+                <td class="border p-2">${row.repair_date || ''}</td>
+                <td class="border p-2">${row.machine_name}</td>
+                <td class="border p-2">${row.issue || ''}</td>
+                <td class="border p-2">${row.repair_details || ''}</td>
+                <td class="border p-2">${row.shop || ''}</td>
+                <td class="border p-2">${row.cost || ''}</td>
+              `;
+            }
+            
+            printTableHTML += '</tr>';
+          });
+          
+          printTableHTML += '</tbody></table>';
+          document.getElementById('exportPrintTable').innerHTML = printTableHTML;
         }
 
       } catch (error) {
@@ -8655,7 +9192,9 @@
     }
 
     async function loadHistoryOther() {
+      const periodType = document.getElementById('filterPeriodTypeOther')?.value || 'month';
       const month = document.getElementById('filterMonthOther').value;
+      const year = document.getElementById('filterYearOther').value;
       const machine = document.getElementById('filterMachineOther').value;
       const operator = document.getElementById('filterOperatorOther').value;
       const task = document.getElementById('filterTaskOther').value;
@@ -8669,10 +9208,12 @@
         `)
         .order('date', { ascending: false });
 
-      if (month) {
-        const [year, monthNum] = month.split('-');
-        const lastDay = new Date(year, monthNum, 0).getDate();
+      if (periodType === 'month' && month) {
+        const [yearNum, monthNum] = month.split('-');
+        const lastDay = new Date(yearNum, monthNum, 0).getDate();
         query = query.gte('date', `${month}-01`).lte('date', `${month}-${lastDay}`);
+      } else if (periodType === 'year' && year) {
+        query = query.gte('date', `${year}-01-01`).lte('date', `${year}-12-31`);
       }
       if (machine) query = query.eq('machine_id', machine);
       if (operator) query = query.eq('operator', operator);
