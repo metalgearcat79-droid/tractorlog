@@ -52,8 +52,8 @@
       --version-bg: #f8fafc;
       
       /* メンテナンスセクションのテーマカラー */
-      --maintenance-color: #5f9ea0;
-      --maintenance-hover: #4a8385;
+      --maintenance-color: #483D8B;
+      --maintenance-hover: #3a2f6f;
       --maintenance-light: #e0f2f2;
       --maintenance-bg: #f0f9f9;
       
@@ -116,7 +116,7 @@
       }
     }
 
-    .sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu, #otherMachinerySideMenu {
+    .sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu, #otherMachinerySideMenu, #repairSideMenu {
       position: fixed;
       top: 0;
       left: -280px;
@@ -137,7 +137,8 @@
       body.show-sidebar #tractorSideMenu.active-menu,
       body.show-sidebar #plantingSideMenu.active-menu,
       body.show-sidebar #combineSideMenu.active-menu,
-      body.show-sidebar #otherMachinerySideMenu.active-menu {
+      body.show-sidebar #otherMachinerySideMenu.active-menu,
+      body.show-sidebar #repairSideMenu.active-menu {
         left: 0;
       }
 
@@ -201,7 +202,7 @@
     }
 
     #maintenanceSideMenu .menu-item {
-      color: #6b8f71;
+      color: var(--maintenance-color);
     }
 
     #exportSideMenu .menu-item {
@@ -214,6 +215,10 @@
 
     #otherMachinerySideMenu .menu-item {
       color: var(--other-color);
+    }
+
+    #repairSideMenu .menu-item {
+      color: var(--repair-color);
     }
 
     select,
@@ -451,6 +456,133 @@
       border-left-color: var(--planting-color) !important;
     }
 
+    /* 田植え機データ分析 - 2カラムレイアウト */
+    #dashboardPlanting .bi-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    #dashboardPlanting .bi-left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    #dashboardPlanting .bi-left-col > .card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dashboardPlanting .bi-main-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #dashboardPlanting .bi-right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    #dashboardPlanting .bi-right-col > .card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dashboardPlanting .card .chart-container {
+      width: 100%;
+      height: 150px;
+      padding: 0;
+    }
+
+    #dashboardPlanting .card .chart-wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    /* オペレーター別比率カード専用の高さ調整 */
+    #dashboardPlanting .operator-card {
+      padding: 8px 12px;
+      max-height: 220px;
+      overflow: hidden;
+    }
+
+    #dashboardPlanting .operator-card .chart-container {
+      height: 160px;
+    }
+
+    #dashboardPlanting .operator-card .chart-title {
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+
+    #dashboardPlanting .bi-right-col>.yoy-card {
+      flex: 1 1 0% !important;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dashboardPlanting .bi-right-col>.maint-card {
+      flex: 1;
+      min-height: 200px;
+      max-height: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dashboardPlanting #maintenanceLogPlanting {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* トラクターダッシュボード - グラフ高さ調整 */
+    #dashboard .bi-container .card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dashboard .bi-container .card > div.relative.h-40 {
+      height: 150px !important;
+    }
+
+    #dashboard .bi-container .card > div.relative.h-\[480px\] {
+      height: 450px !important;
+    }
+
+    #dashboard .bi-right-col .card {
+      flex: 1;
+      min-height: 0;
+    }
+
+    #dashboard .bi-right-col .yoy-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 285px;
+    }
+
+    #dashboard .bi-right-col .maint-card {
+      min-height: 330px;
+      max-height: 440px;
+      overflow-y: auto;
+    }
+
+    #dashboard .bi-left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #dashboard .bi-left-col .card {
+      flex: 1;
+      min-height: 0;
+      max-height: calc((100% - 24px) / 3 * 0.99);
+    }
+
     /* combineView専用の背景色 */
     #tractor-section {
       background-color: #e2e8e3;
@@ -615,6 +747,35 @@
 
     #dashboardCombine .nav-item.active {
       border-left-color: var(--combine-color) !important;
+    }
+
+    /* コンバインデータ分析の右カラムの高さ調整 */
+    #dashboardCombine .bi-right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-self: stretch;
+    }
+
+    #dashboardCombine .bi-right-col>.yoy-card {
+      flex: 1 1 0% !important;
+      min-height: 0;
+      max-height: 33%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dashboardCombine .bi-right-col>.maint-card {
+      flex: 2 2 0% !important;
+      min-height: 0;
+      max-height: 67%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dashboardCombine #maintenanceLogCombine {
+      flex: 1;
+      overflow-y: auto;
     }
 
     .log-badge {
@@ -1203,6 +1364,7 @@
       #plantingSideMenu,
       #combineSideMenu,
       #otherMachinerySideMenu,
+      #repairSideMenu,
       #overlay {
         display: none !important;
       }
@@ -1351,44 +1513,60 @@
   <!-- Export Side Menu -->
   <div id="exportSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg" style="color: var(--export-color);">Data Export Menu</h2>
+      <h2 class="font-bold text-lg" style="color: var(--export-color);">Menu</h2>
       <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
           class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
-      <button onclick="switchView('exportView')" class="menu-item"><i
-          class="fa-solid fa-file-export w-8 text-lg"></i>エクスポート/印刷</button>
-      <button onclick="switchView('versionView')" class="menu-item"><i
-          class="fa-solid fa-code-branch w-8 text-lg"></i>バージョン情報</button>
+      <button onclick="switchView('tractorView')" class="menu-item"><i
+          class="fa-solid fa-tractor w-8 text-lg"></i>トラクター</button>
+      <button onclick="switchView('plantingView')" class="menu-item"><i
+          class="fa-solid fa-seedling w-8 text-lg"></i>田植え機</button>
+      <button onclick="switchView('combineView')" class="menu-item"><i
+          class="fa-solid fa-wheat-awn w-8 text-lg"></i>コンバイン</button>
+      <button onclick="switchView('maintenanceListView');" class="menu-item"><i
+          class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス一覧</button>
     </nav>
   </div>
 
   <!-- Maintenance Side Menu -->
   <div id="maintenanceSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg" style="color: #6b8f71;">Maintenance Menu</h2>
+      <h2 class="font-bold text-lg" style="color: var(--maintenance-color);">Menu</h2>
       <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
           class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
-      <button onclick="switchView('maintenanceMachineListView')" class="menu-item"><i
-          class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス記録</button>
+      <button onclick="switchView('tractorView')" class="menu-item"><i
+          class="fa-solid fa-tractor w-8 text-lg"></i>トラクター</button>
+      <button onclick="switchView('plantingView')" class="menu-item"><i
+          class="fa-solid fa-seedling w-8 text-lg"></i>田植え機</button>
+      <button onclick="switchView('combineView')" class="menu-item"><i
+          class="fa-solid fa-wheat-awn w-8 text-lg"></i>コンバイン</button>
+      <button onclick="switchView('maintenanceListView');" class="menu-item"><i
+          class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス一覧</button>
     </nav>
   </div>
 
   <!-- Version Side Menu -->
   <div id="versionSideMenu" class="sideMenu">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-lg" style="color: var(--version-color);">Version情報</h2>
+      <h2 class="font-bold text-lg" style="color: var(--version-color);">Menu</h2>
       <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
     </div>
     <nav class="space-y-1">
       <button onclick="switchView('portalView')" class="menu-item"><i
           class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
-      <button onclick="switchView('versionView')" class="menu-item"><i
-          class="fa-solid fa-code-branch w-8 text-lg"></i>バージョン情報</button>
+      <button onclick="switchView('tractorView')" class="menu-item"><i
+          class="fa-solid fa-tractor w-8 text-lg"></i>トラクター</button>
+      <button onclick="switchView('plantingView')" class="menu-item"><i
+          class="fa-solid fa-seedling w-8 text-lg"></i>田植え機</button>
+      <button onclick="switchView('combineView')" class="menu-item"><i
+          class="fa-solid fa-wheat-awn w-8 text-lg"></i>コンバイン</button>
+      <button onclick="switchView('maintenanceListView');" class="menu-item"><i
+          class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス一覧</button>
     </nav>
   </div>
 
@@ -1409,6 +1587,26 @@
           class="fa-solid fa-magnifying-glass w-8 text-lg"></i>稼働履歴・検索</button>
       <button onclick="switchView('dashboardOther')" class="menu-item"><i
           class="fa-solid fa-chart-line w-8 text-lg"></i>データ分析</button>
+    </nav>
+  </div>
+
+  <!-- Repair Side Menu -->
+  <div id="repairSideMenu" class="sideMenu">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-bold text-lg" style="color: var(--repair-color);">Menu</h2>
+      <button onclick="closeMenu()" class="close-menu-btn text-2xl text-gray-400">&times;</button>
+    </div>
+    <nav class="space-y-1">
+      <button onclick="switchView('portalView')" class="menu-item"><i
+          class="fa-solid fa-home w-8 text-lg"></i>Portal</button>
+      <button onclick="switchView('tractorView')" class="menu-item"><i
+          class="fa-solid fa-tractor w-8 text-lg"></i>トラクター</button>
+      <button onclick="switchView('plantingView')" class="menu-item"><i
+          class="fa-solid fa-seedling w-8 text-lg"></i>田植え機</button>
+      <button onclick="switchView('combineView')" class="menu-item"><i
+          class="fa-solid fa-wheat-awn w-8 text-lg"></i>コンバイン</button>
+      <button onclick="switchView('maintenanceListView');" class="menu-item"><i
+          class="fa-solid fa-toolbox w-8 text-lg"></i>メンテナンス一覧</button>
     </nav>
   </div>
 
@@ -1657,74 +1855,80 @@
         </div>
 
         <div class="bi-container">
+          <!-- 左カラム：メイングラフエリア -->
           <div class="bi-left-col">
+            <!-- 月別稼働推移 -->
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-seedling" style="margin-right: 8px; color: var(--planting-color);"></i>
-                作物別比率
+                <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: var(--planting-color);"></i>
+                月別稼働推移
               </p>
-              <div class="chart-wrapper relative">
-                <canvas id="categoryShareChartPlanting"></canvas>
+              <div class="chart-container" style="flex: 1; min-height: 0;">
+                <div class="chart-wrapper" style="position: relative; height: 100%; width: 100%;">
+                  <canvas id="monthlyTrendChartPlanting"></canvas>
+                </div>
               </div>
             </div>
 
+            <!-- 作業内容別稼働時間 -->
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
                 <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--planting-color);"></i>
-                作業内容比率
+                作業内容別稼働時間
               </p>
-              <div class="chart-wrapper relative">
-                <canvas id="taskShareChartPlanting"></canvas>
+              <div class="chart-container" style="flex: 1; min-height: 0;">
+                <div class="chart-wrapper" style="position: relative; height: 100%; width: 100%;">
+                  <canvas id="taskHoursChartPlanting"></canvas>
+                </div>
               </div>
             </div>
 
+            <!-- 機械別稼働ランキング -->
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-user-check" style="margin-right: 8px; color: var(--planting-color);"></i>
-                オペレーター比率
+                <i class="fa-solid fa-ranking-star" style="margin-right: 8px; color: var(--planting-color);"></i>
+                機械別稼働ランキング
               </p>
-
-              <div class="chart-wrapper relative">
-                <canvas id="operatorShareChartPlanting"></canvas>
-              </div>
-            </div>
-          </div>
-          <div class="bi-main-col">
-            <div class="lg:col-span-2 space-y-4">
-              <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                <p class="chart-title" style="display: flex; align-items: center;">
-                  <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: var(--planting-color);"></i>
-                  月別稼働推移
-                </p>
-                <div class="relative h-40"> <canvas id="detailChartPlanting"></canvas>
-                </div>
-              </div>
-              <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                <p class="chart-title" style="display: flex; align-items: center;">
-                  <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--planting-color);"></i>
-                  作業内容分析
-                </p>
-                <div class="relative h-[480px]">
-                  <canvas id="gradientBarChartPlanting"></canvas>
+              <div class="chart-container" style="flex: 1; min-height: 0;">
+                <div class="chart-wrapper" style="position: relative; height: 100%; width: 100%;">
+                  <canvas id="machineRankingChartPlanting"></canvas>
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- 右カラム：サマリーエリア -->
           <div class="bi-right-col">
-            <div class="card yoy-card text-center relative">
-              <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
-                <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: var(--planting-color);"></i>
-                前年実績比 (YoY)
+            <!-- オペレーター別比率 -->
+            <div class="card operator-card">
+              <p class="chart-title" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-user-check" style="margin-right: 8px; color: var(--planting-color);"></i>
+                オペレーター別比率
               </p>
-              <div class="chart-wrapper relative">
-                <canvas id="yearComparisonGaugePlanting"></canvas>
-                <div class="absolute inset-0 flex items-center justify-center pt-14">
-                  <p id="detailCompareValuePlanting" class="text-2xl font-black" style="color: var(--planting-color)">--%</p>
+              <div class="chart-container" style="flex: 1; min-height: 0;">
+                <div class="chart-wrapper" style="position: relative; height: 100%; width: 100%;">
+                  <canvas id="operatorShareChartPlanting"></canvas>
                 </div>
               </div>
             </div>
 
+            <!-- 燃費効率 -->
+            <div class="card text-center">
+              <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-gas-pump" style="margin-right: 8px; color: var(--planting-color);"></i>
+                燃費効率
+              </p>
+              <div class="py-4">
+                <div class="text-4xl font-bold mb-1" style="color: var(--planting-color);" id="fuelEfficiencyValuePlanting">-</div>
+                <div class="text-xs text-gray-500">L/h (平均)</div>
+                <div class="mt-2 text-[10px] text-gray-400">
+                  <div>総燃料: <span id="totalFuelPlanting">-</span> L</div>
+                  <div>総稼働: <span id="totalHoursPlanting">-</span> h</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- メンテナンス情報 -->
             <div class="card maint-card overflow-hidden">
               <p class="chart-title border-b pb-1" style="display: flex; align-items: center;">
                 <i class="fa-solid fa-clipboard-list" style="margin-right: 8px; color: var(--planting-color);"></i>
@@ -1980,8 +2184,7 @@
 
         <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
         <input id="newMaintenanceItemPlanting" type="text"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 outline-none focus:ring-2 focus:border-[#c9a961]"
-          placeholder="例：オイルエレメント">
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 outline-none focus:ring-2 focus:border-[#c9a961]">
 
         <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
         <select id="newMaintenanceOperatorPlanting"
@@ -2259,8 +2462,7 @@
 
           <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
           <input id="newMaintenanceItemCombine" type="text"
-            class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#c9a961] outline-none"
-            placeholder="例：オイルエレメント">
+            class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#c9a961] outline-none">
 
           <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
           <select id="newMaintenanceOperatorCombine"
@@ -2492,7 +2694,7 @@
                 <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: #6b8f71;"></i>
                 月別稼働推移
               </p>
-              <div class="relative h-40"> <canvas id="detailChart"></canvas>
+              <div class="relative" style="height: 150px;"> <canvas id="detailChart"></canvas>
               </div>
             </div>
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -2500,7 +2702,7 @@
                 <i class="fa-solid fa-list-check" style="margin-right: 8px; color: #6b8f71;"></i>
                 作業内容分析
               </p>
-              <div class="relative h-[480px]">
+              <div class="relative" style="height: 450px;">
                 <canvas id="gradientBarChart"></canvas>
               </div>
             </div>
@@ -2637,7 +2839,6 @@
               <i class="fa-solid fa-toolbox text-4xl text-white"></i>
             </div>
             <h1 class="text-4xl font-bold mb-3" style="color: var(--maintenance-color);">メンテナンス管理</h1>
-            <p class="text-gray-600 text-lg">各機械のメンテナンス記録を管理します</p>
           </div>
 
           <!-- カードグリッド -->
@@ -2681,6 +2882,19 @@
               </div>
             </div>
 
+            <!-- ラップマシーン -->
+            <div onclick="switchView('maintenanceMachineListViewWrapper'); loadMachineListWrapper();"
+                 class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+                 style="border-top: 4px solid #6b395f;">
+              <div class="flex flex-col items-center text-center">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3"
+                     style="background: linear-gradient(135deg, #6b395f 0%, #552e4c 100%);">
+                  <i class="fa-solid fa-tape text-2xl text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold" style="color: #6b395f;">ラップマシーン</h3>
+              </div>
+            </div>
+
             <!-- その他の機械 -->
             <div onclick="switchView('maintenanceMachineListViewOtherMachinery'); loadMachineListOtherMachinery();"
                  class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
@@ -2716,7 +2930,7 @@
                      style="background: linear-gradient(135deg, #666633 0%, #555522 100%);">
                   <i class="fa-solid fa-spider text-2xl text-white"></i>
                 </div>
-                <h3 class="text-lg font-bold" style="color: #666633;">mower</h3>
+                <h3 class="text-lg font-bold" style="color: #666633;">モア</h3>
               </div>
             </div>
 
@@ -2764,7 +2978,10 @@
           <!-- ポータルに戻るボタン -->
           <div class="text-center">
             <button onclick="switchView('portalView')" 
-                    class="inline-flex items-center px-8 py-3 bg-white text-gray-700 rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    class="inline-flex items-center px-8 py-3 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                    style="background: linear-gradient(135deg, var(--maintenance-color) 0%, var(--maintenance-hover) 100%);"
+                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 28px rgba(95, 158, 160, 0.4)';"
+                    onmouseout="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';">
               <i class="fa-solid fa-house mr-2"></i>
               portalに戻る
             </button>
@@ -2803,7 +3020,7 @@
       </header>
 
       <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #666633; border-bottom: 2px solid #666633;">
-        <i class="fa-solid fa-wrench"></i> mowerメンテナンス記録
+        <i class="fa-solid fa-wrench"></i> モア メンテナンス記録
       </div>
 
       <div id="maintenanceMachineGridMower" class="space-y-6">
@@ -2874,8 +3091,7 @@
 
         <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
         <input id="newMaintenanceItemBrushCutter" type="text"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#418b89] outline-none"
-          placeholder="例：オイルエレメント">
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#418b89] outline-none">
 
         <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
         <select id="newMaintenanceOperatorBrushCutter"
@@ -2969,6 +3185,80 @@
       </button>
     </div>
 
+    <!-- インプルメントメンテナンス詳細 -->
+    <div id="maintenanceDetailViewImplement" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
+      <header class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #483D8B;"><i class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-gears text-5xl" style="color: #483D8B;"></i>
+        <h1 class="text-xl font-bold" style="color: #483D8B;">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #483D8B; border-bottom: 2px solid #483D8B;">
+        <i class="fa-solid fa-gears"></i>
+        <span id="maintenanceMachineNameImplement">機械名</span>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">メンテナンス進捗</p>
+        <div id="maintenanceSummaryImplement" class="text-xs mt-1">
+          未着手
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">点検項目</p>
+        <div id="maintenanceChecklistImplement" class="space-y-2">
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">作業履歴</p>
+        <div id="maintenanceHistoryLogImplement" class="space-y-3 text-sm">
+          <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
+        </div>
+      </div>
+
+      <div class="card mb-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <p class="font-bold text-sm mb-4 flex items-center" style="color: #483D8B;">
+          <i class="fas fa-tools mr-2"></i>部品交換を記録
+        </p>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
+        <input id="newMaintenanceItemImplement" type="text"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#483D8B] outline-none">
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
+        <select id="newMaintenanceOperatorImplement"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#483D8B] outline-none">
+          <option value="">担当者を選択</option>
+        </select>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">状態</label>
+        <select id="newMaintenanceStatusImplement"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#483D8B] outline-none">
+          <option value="done">完了</option>
+          <option value="progress">作業中</option>
+        </select>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
+        <textarea id="newMaintenanceMemoImplement" class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-4" rows="2"
+          placeholder="備考"></textarea>
+
+        <button onclick="saveMaintenanceRecordImplement()"
+          class="btn-main w-full py-3 text-white rounded-lg font-bold transition-all shadow-md" style="background: #483D8B;" onmouseover="this.style.backgroundColor='#3a2f6f'" onmouseout="this.style.backgroundColor='#483D8B'">
+          部品交換を保存する
+        </button>
+      </div>
+
+      <div class="flex justify-center w-full mt-6 mb-8">
+        <button onclick="switchView('maintenanceMachineListViewImplement')"
+          class="px-6 py-3 rounded-lg font-medium transition-all shadow-md text-white flex items-center justify-center" style="background: #483D8B;" onmouseover="this.style.backgroundColor='#3a2f6f'" onmouseout="this.style.backgroundColor='#483D8B'">
+          <i class="fa-solid fa-list mr-2"></i>
+          <span>メンテナンス一覧に戻る</span>
+        </button>
+      </div>
+    </div>
+
     <!-- 動力散布機メンテナンス -->
     <div id="maintenanceMachineListViewSpreader" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
       <header class="flex flex-col items-center justify-center py-4 relative">
@@ -3029,8 +3319,7 @@
 
         <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
         <input id="newMaintenanceItemSpreader" type="text"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#DB7093] outline-none"
-          placeholder="例：オイルエレメント">
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#DB7093] outline-none">
 
         <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
         <select id="newMaintenanceOperatorSpreader"
@@ -3084,6 +3373,100 @@
       </button>
     </div>
 
+    <!-- ラップマシーンメンテナンス -->
+    <div id="maintenanceMachineListViewWrapper" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
+      <header class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #6b395f;"><i class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-tape text-5xl" style="color: #6b395f;"></i>
+        <h1 class="text-xl font-bold" style="color: #6b395f;">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #6b395f; border-bottom: 2px solid #6b395f;">
+        <i class="fa-solid fa-wrench"></i> ラップマシーンメンテナンス記録
+      </div>
+
+      <div id="maintenanceMachineGridWrapper" class="space-y-6">
+      </div>
+
+      <button onclick="switchView('maintenanceListView')" class="btn-sub mt-6 w-full" style="background: #6b395f; color: white; border: 2px solid #6b395f;">
+        <i class="fa-solid fa-arrow-left mr-2"></i>メンテナンス管理に戻る
+      </button>
+    </div>
+
+    <!-- ラップマシーンメンテナンス詳細 -->
+    <div id="maintenanceDetailViewWrapper" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
+      <header class="flex flex-col items-center justify-center py-4 relative">
+        <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: #6b395f;"><i class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-tape text-5xl" style="color: #6b395f;"></i>
+        <h1 class="text-xl font-bold" style="color: #6b395f;">和農日向 機械管理アプリ</h1>
+      </header>
+
+      <div class="flex items-center gap-2 mb-4 font-bold pb-2 text-lg" style="color: #6b395f; border-bottom: 2px solid #6b395f;">
+        <i class="fa-solid fa-tape"></i>
+        <span id="maintenanceMachineNameWrapper">機械名</span>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">メンテナンス進捗</p>
+        <div id="maintenanceSummaryWrapper" class="text-xs mt-1">
+          未着手
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">点検項目</p>
+        <div id="maintenanceChecklistWrapper" class="space-y-2">
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-bold text-sm text-gray-500 mb-2">作業履歴</p>
+        <div id="maintenanceHistoryLogWrapper" class="space-y-3 text-sm">
+          <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
+        </div>
+      </div>
+
+      <div class="card mb-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <p class="font-bold text-sm mb-4 flex items-center" style="color: #6b395f;">
+          <i class="fas fa-tools mr-2"></i>部品交換を記録
+        </p>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
+        <input id="newMaintenanceItemWrapper" type="text"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b395f] outline-none">
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
+        <select id="newMaintenanceOperatorWrapper"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b395f] outline-none">
+          <option value="">担当者を選択</option>
+        </select>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">状態</label>
+        <select id="newMaintenanceStatusWrapper"
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b395f] outline-none">
+          <option value="done">完了</option>
+          <option value="progress">作業中</option>
+        </select>
+
+        <label class="block text-xs font-bold text-gray-400 mb-1">メモ</label>
+        <textarea id="newMaintenanceMemoWrapper" class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-4" rows="2"
+          placeholder="備考"></textarea>
+
+        <button onclick="saveMaintenanceRecordWrapper()"
+          class="btn-main w-full py-3 text-white rounded-lg font-bold transition-all shadow-md" style="background: #6b395f;" onmouseover="this.style.backgroundColor='#552e4c'" onmouseout="this.style.backgroundColor='#6b395f'">
+          部品交換を保存する
+        </button>
+      </div>
+
+      <div class="flex justify-center w-full mt-6 mb-8">
+        <button onclick="switchView('maintenanceMachineListViewWrapper')"
+          class="px-6 py-3 rounded-lg font-medium transition-all shadow-md text-white flex items-center justify-center" style="background: #6b395f;" onmouseover="this.style.backgroundColor='#552e4c'" onmouseout="this.style.backgroundColor='#6b395f'">
+          <i class="fa-solid fa-arrow-left mr-2"></i>
+          <span>メンテナンス一覧に戻る</span>
+        </button>
+      </div>
+    </div>
+
     <!-- スパイダーモアメンテナンス詳細 -->
     <div id="maintenanceDetailViewSpiderMower" class="view fullscreen-view px-4 max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto pb-0">
       <header class="flex flex-col items-center justify-center py-4 relative">
@@ -3124,8 +3507,7 @@
 
         <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
         <input id="newMaintenanceItemSpiderMower" type="text"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#666633] outline-none"
-          placeholder="例：オイルエレメント">
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#666633] outline-none">
 
         <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
         <select id="newMaintenanceOperatorSpiderMower"
@@ -3199,8 +3581,7 @@
 
         <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
         <input id="newMaintenanceItemWingMower" type="text"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#666633] outline-none"
-          placeholder="例：オイルエレメント">
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#666633] outline-none">
 
         <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
         <select id="newMaintenanceOperatorWingMower"
@@ -3686,8 +4067,8 @@
       </div>
 
       <div class="flex justify-center w-full mt-6 mb-8">
-        <button onclick="switchView('tractorView')" class="btn-sub w-full">
-          <i class="fa-solid fa-house mr-2"></i>TOPに戻る
+        <button onclick="switchView('portalView')" class="btn-sub w-full">
+          <i class="fa-solid fa-house mr-2"></i>portalに戻る
         </button>
       </div>
     </div>
@@ -3808,8 +4189,7 @@
 
         <label class="block text-xs font-bold text-gray-400 mb-1">交換部品・項目名</label>
         <input id="newMaintenanceItem" type="text"
-          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b8f71] outline-none"
-          placeholder="例：オイルエレメント">
+          class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg mb-3 focus:ring-2 focus:ring-[#6b8f71] outline-none">
 
         <label class="block text-xs font-bold text-gray-400 mb-1">担当者</label>
         <select id="newMaintenanceOperator"
@@ -4218,14 +4598,14 @@
         targetView.style.display = 'block';
         
         // サイドバーを表示しないページのリスト
-        const noSidebarPages = ['portalView', 'maintenanceListView', 'dashboard', 'dashboardPlanting', 'dashboardCombine', 'dashboardOther'];
+        const noSidebarPages = ['portalView', 'dashboard', 'dashboardPlanting', 'dashboardCombine', 'dashboardOther'];
         
         // サイドバー表示の制御
         if (noSidebarPages.includes(id)) {
           document.body.classList.remove('show-sidebar');
           document.body.classList.add('fullscreen-mode');
           // 全てのサイドメニューを閉じる
-          document.querySelectorAll('.sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu, #exportSideMenu, #maintenanceSideMenu, #versionSideMenu, #otherMachinerySideMenu').forEach(menu => {
+          document.querySelectorAll('.sideMenu, #sideMenu, #tractorSideMenu, #plantingSideMenu, #combineSideMenu, #exportSideMenu, #maintenanceSideMenu, #versionSideMenu, #otherMachinerySideMenu, #repairSideMenu').forEach(menu => {
             menu.style.left = '-280px';
           });
         } else {
@@ -4238,7 +4618,7 @@
         const plantingViews = ['plantingView', 'todayViewPlanting', 'historyViewPlanting', 'maintenanceMachineListViewPlanting', 'maintenanceDetailViewPlanting'];
         const combineViews = ['combineView', 'todayViewCombine', 'historyViewCombine', 'maintenanceMachineListViewCombine', 'maintenanceDetailViewCombine'];
         const exportViews = ['exportView'];
-        const maintenanceViews = ['maintenanceListView', 'maintenanceMachineListView', 'maintenanceDetailView', 'maintenanceMachineListViewBrushCutter', 'maintenanceDetailViewBrushCutter', 'maintenanceMachineListViewMower', 'maintenanceDetailViewSpiderMower', 'maintenanceDetailViewWingMower', 'maintenanceMachineListViewImplement', 'maintenanceMachineListViewSpreader', 'maintenanceDetailViewSpreader', 'maintenanceMachineListViewSprayer', 'maintenanceMachineListViewOtherMachinery', 'maintenanceDetailViewOtherMachinery'];
+        const maintenanceViews = ['maintenanceListView', 'maintenanceMachineListView', 'maintenanceDetailView', 'maintenanceMachineListViewBrushCutter', 'maintenanceDetailViewBrushCutter', 'maintenanceMachineListViewMower', 'maintenanceDetailViewSpiderMower', 'maintenanceDetailViewWingMower', 'maintenanceMachineListViewImplement', 'maintenanceDetailViewImplement', 'maintenanceMachineListViewSpreader', 'maintenanceDetailViewSpreader', 'maintenanceMachineListViewSprayer', 'maintenanceMachineListViewWrapper', 'maintenanceDetailViewWrapper', 'maintenanceMachineListViewOtherMachinery', 'maintenanceDetailViewOtherMachinery'];
         const versionViews = ['versionView'];
         const repairViews = ['repairView', 'invoiceOCRView'];
         const otherMachineryViews = ['otherMachineryView', 'todayViewOther', 'historyViewOther'];
@@ -4274,6 +4654,7 @@
         document.getElementById("maintenanceSideMenu").classList.remove('active-menu');
         document.getElementById("versionSideMenu").classList.remove('active-menu');
         document.getElementById("otherMachinerySideMenu").classList.remove('active-menu');
+        document.getElementById("repairSideMenu").classList.remove('active-menu');
         
         // 適切なメニューにactive-menuクラスを追加
         let activeMenuId = 'sideMenu';
@@ -4298,6 +4679,9 @@
         } else if (otherMachineryViews.includes(id)) {
           activeMenuId = 'otherMachinerySideMenu';
           document.getElementById("otherMachinerySideMenu").classList.add('active-menu');
+        } else if (repairViews.includes(id)) {
+          activeMenuId = 'repairSideMenu';
+          document.getElementById("repairSideMenu").classList.add('active-menu');
         } else {
           document.getElementById("sideMenu").classList.add('active-menu');
         }
@@ -5168,7 +5552,7 @@
                   <div style="color: #666633;" class="text-xl flex-shrink-0">
                     ${icon}
                   </div>
-                  <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
                 </div>
                 <div class="border-t border-gray-50 pt-2" id="card-progress-mower-${m.id}">
                   <div class="text-[11px] text-gray-400 flex items-center gap-1">
@@ -5524,8 +5908,7 @@
           .from('maintenance_records')
           .select('*')
           .eq('machine_id', machineId)
-          .order('recorded_at', { ascending: false })
-          .limit(10);
+          .order('created_at', { ascending: false });
 
         const historyContainer = document.getElementById('maintenanceHistoryLogBrushCutter');
         if (!historyContainer) return;
@@ -5535,14 +5918,11 @@
           return;
         }
 
-        historyContainer.innerHTML = records.map(r => `
-          <div class="border-l-2 border-[#418b89] pl-3 py-2">
-            <div class="flex justify-between items-start mb-1">
-              <span class="font-bold text-sm">${r.item_name || '記録'}</span>
-              <span class="text-[10px] text-gray-400">${new Date(r.recorded_at).toLocaleDateString('ja-JP')}</span>
-            </div>
-            ${r.operator ? `<div class="text-xs text-gray-500">担当: ${r.operator}</div>` : ''}
-            ${r.memo ? `<div class="text-xs text-gray-600 mt-1">${r.memo}</div>` : ''}
+        historyContainer.innerHTML = records.map(rec => `
+          <div class="border-b border-gray-100 pb-2 mb-2 last:border-0 text-left">
+            <div class="flex justify-between font-bold text-gray-700"><span>${rec.item_name}</span><span class="text-gray-400 text-[9px]">${rec.date}</span></div>
+            <div class="text-gray-500">担当: ${rec.operator}</div>
+            ${rec.memo ? `<div class="text-gray-400 italic">"${rec.memo}"</div>` : ''}
           </div>
         `).join('');
       } catch (e) {
@@ -5758,19 +6138,172 @@
           ? "<p class='text-gray-400 text-center py-8'>インプルメントが登録されていません</p>" 
           : "";
 
+        // sub_type別にグループ化
+        const grouped = {};
         machines.forEach(m => {
-          const card = document.createElement("div");
-          card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all";
-          card.innerHTML = `
-            <div class="flex items-center gap-3">
-              <div style="color: #6366f1;" class="text-xl">
-                <i class="fa-solid fa-gears"></i>
-              </div>
-              <div class="font-bold text-gray-900 text-lg">${m.name}</div>
-            </div>
-          `;
-          container.appendChild(card);
+          // machinesテーブルのsub_typeカラムを参照
+          const subType = m.sub_type || 'other';
+          
+          if (!grouped[subType]) grouped[subType] = [];
+          grouped[subType].push(m);
         });
+
+        // sub_type順に表示（データベースに存在するすべてのsub_typeを表示）
+        const subTypeOrder = ['plow', 'rotary', 'ridge_maker', 'ridge_mower', 'harrow', 'fertilizer_applicator', 'other'];
+        
+        // 定義済みのsub_typeを優先順に表示
+        const displayedSubTypes = new Set();
+        for (const subType of subTypeOrder) {
+          if (!grouped[subType] || grouped[subType].length === 0) continue;
+          displayedSubTypes.add(subType);
+
+          const subTypeHeader = document.createElement("h3");
+          subTypeHeader.className = "font-bold text-sm mb-2 mt-4 flex items-center gap-2";
+          subTypeHeader.style.color = "#483D8B";
+          subTypeHeader.innerHTML = `<i class="fa-solid fa-layer-group opacity-50"></i> ${subType}`;
+          container.appendChild(subTypeHeader);
+
+          const grid = document.createElement("div");
+          grid.className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4";
+
+          for (const m of grouped[subType]) {
+            const card = document.createElement("div");
+            card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95";
+            card.onclick = () => openMaintenanceDetailImplement(m.id);
+
+            card.innerHTML = `
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-3">
+                  <div style="color: #483D8B;" class="text-xl flex-shrink-0">
+                    <i class="fa-solid fa-gears"></i>
+                  </div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
+                </div>
+                <div class="border-t border-gray-50 pt-2" id="card-progress-implement-${m.id}">
+                  <div class="text-[11px] text-gray-400 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> 確認中...
+                  </div>
+                </div>
+              </div>
+            `;
+            grid.appendChild(card);
+
+            // 進捗状況を非同期で取得して反映
+            (async () => {
+              try {
+                const { data: checks } = await client
+                  .from('maintenance_status')
+                  .select('item_id, status')
+                  .filter('item_id', 'ilike', `${m.id}_%`);
+
+                const { data: items } = await client.from("maintenance_items_implements").select("id");
+                const totalItems = items ? items.length : 20;
+                
+                const uniqueChecks = {};
+                if (checks) {
+                  checks.forEach(c => { uniqueChecks[c.item_id] = c.status; });
+                }
+
+                const completedCount = Object.values(uniqueChecks).filter(status => status === true || status === "true").length;
+                let percent = Math.round((completedCount / totalItems) * 100);
+                percent = Math.min(100, percent);
+
+                const progressDiv = document.getElementById(`card-progress-implement-${m.id}`);
+                if (progressDiv) {
+                  let statusHTML = percent === 0
+                    ? `<span class="text-red-600 font-black"><i class="fa-solid fa-circle-exclamation text-[9px]"></i> 未着手</span>`
+                    : percent === 100
+                      ? `<span style="color: #483D8B;" class="font-black"><i class="fa-solid fa-circle-check text-[9px]"></i> 完了</span>`
+                      : `<span class="text-orange-500 font-black"><i class="fa-solid fa-spinner text-[9px]"></i> ${percent}% 完了</span>`;
+
+                  progressDiv.innerHTML = `
+                    <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
+                    <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
+                      <div style="background-color: #483D8B;" class="h-1 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                    </div>
+                  `;
+                }
+              } catch (err) { console.error("カード進捗更新エラー:", err); }
+            })();
+          }
+          container.appendChild(grid);
+        }
+
+        // 定義されていないsub_typeも表示
+        for (const subType of Object.keys(grouped)) {
+          if (displayedSubTypes.has(subType)) continue;
+
+          const subTypeHeader = document.createElement("h3");
+          subTypeHeader.className = "font-bold text-sm mb-2 mt-4 flex items-center gap-2";
+          subTypeHeader.style.color = "#483D8B";
+          subTypeHeader.innerHTML = `<i class="fa-solid fa-layer-group opacity-50"></i> ${subType}`;
+          container.appendChild(subTypeHeader);
+
+          const grid = document.createElement("div");
+          grid.className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4";
+
+          for (const m of grouped[subType]) {
+            const card = document.createElement("div");
+            card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95";
+            card.onclick = () => openMaintenanceDetailImplement(m.id);
+
+            card.innerHTML = `
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-3">
+                  <div style="color: #483D8B;" class="text-xl flex-shrink-0">
+                    <i class="fa-solid fa-gears"></i>
+                  </div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
+                </div>
+                <div class="border-t border-gray-50 pt-2" id="card-progress-implement-${m.id}">
+                  <div class="text-[11px] text-gray-400 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> 確認中...
+                  </div>
+                </div>
+              </div>
+            `;
+            grid.appendChild(card);
+
+            // 進捗状況を非同期で取得して反映
+            (async () => {
+              try {
+                const { data: checks } = await client
+                  .from('maintenance_status')
+                  .select('item_id, status')
+                  .filter('item_id', 'ilike', `${m.id}_%`);
+
+                const { data: items } = await client.from("maintenance_items_implements").select("id");
+                const totalItems = items ? items.length : 20;
+                
+                const uniqueChecks = {};
+                if (checks) {
+                  checks.forEach(c => { uniqueChecks[c.item_id] = c.status; });
+                }
+
+                const completedCount = Object.values(uniqueChecks).filter(status => status === true || status === "true").length;
+                let percent = Math.round((completedCount / totalItems) * 100);
+                percent = Math.min(100, percent);
+
+                const progressDiv = document.getElementById(`card-progress-implement-${m.id}`);
+                if (progressDiv) {
+                  let statusHTML = percent === 0
+                    ? `<span class="text-red-600 font-black"><i class="fa-solid fa-circle-exclamation text-[9px]"></i> 未着手</span>`
+                    : percent === 100
+                      ? `<span style="color: #483D8B;" class="font-black"><i class="fa-solid fa-circle-check text-[9px]"></i> 完了</span>`
+                      : `<span class="text-orange-500 font-black"><i class="fa-solid fa-spinner text-[9px]"></i> ${percent}% 完了</span>`;
+
+                  progressDiv.innerHTML = `
+                    <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
+                    <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
+                      <div style="background-color: #483D8B;" class="h-1 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                    </div>
+                  `;
+                }
+              } catch (err) { console.error("カード進捗更新エラー:", err); }
+            })();
+          }
+          container.appendChild(grid);
+        }
       } catch (e) { console.error("インプルメント一覧読み込みエラー:", e); }
     }
 
@@ -5820,7 +6353,7 @@
                   <div style="color: #DB7093;" class="text-xl flex-shrink-0">
                     <i class="fa-solid fa-seedling"></i>
                   </div>
-                  <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
                 </div>
                 <div class="border-t border-gray-50 pt-2" id="card-progress-spreader-${m.id}">
                   <div class="text-[11px] text-gray-400 flex items-center gap-1">
@@ -5995,8 +6528,7 @@
           .from('maintenance_records')
           .select('*')
           .eq('machine_id', machineId)
-          .order('recorded_at', { ascending: false })
-          .limit(10);
+          .order('created_at', { ascending: false });
 
         const historyContainer = document.getElementById('maintenanceHistoryLogSpreader');
         if (!historyContainer) return;
@@ -6006,14 +6538,11 @@
           return;
         }
 
-        historyContainer.innerHTML = records.map(r => `
-          <div class="border-l-2 border-[#DB7093] pl-3 py-2">
-            <div class="flex justify-between items-start mb-1">
-              <span class="font-bold text-sm">${r.item_name || '記録'}</span>
-              <span class="text-[10px] text-gray-400">${new Date(r.recorded_at).toLocaleDateString('ja-JP')}</span>
-            </div>
-            ${r.operator ? `<div class="text-xs text-gray-500">担当: ${r.operator}</div>` : ''}
-            ${r.memo ? `<div class="text-xs text-gray-600 mt-1">${r.memo}</div>` : ''}
+        historyContainer.innerHTML = records.map(rec => `
+          <div class="border-b border-gray-100 pb-2 mb-2 last:border-0 text-left">
+            <div class="flex justify-between font-bold text-gray-700"><span>${rec.item_name}</span><span class="text-gray-400 text-[9px]">${rec.date}</span></div>
+            <div class="text-gray-500">担当: ${rec.operator}</div>
+            ${rec.memo ? `<div class="text-gray-400 italic">"${rec.memo}"</div>` : ''}
           </div>
         `).join('');
       } catch (e) {
@@ -6056,6 +6585,209 @@
       }
     }
 
+    // インプルメントメンテナンス詳細を開く
+    async function openMaintenanceDetailImplement(machineId) {
+      console.log('インプルメント詳細ページを開きます。機械ID:', machineId);
+      window.currentMachineIdImplement = machineId;
+      switchView('maintenanceDetailViewImplement');
+
+      try {
+        const { data: machine, error: machineError } = await client.from("machines").select("*").eq("id", machineId).single();
+        if (machineError) throw new Error('機械情報の取得エラー: ' + machineError.message);
+        document.getElementById("maintenanceMachineNameImplement").textContent = machine.name;
+
+        // サブタイプを判定（機械名から）
+        let subType = null;
+        if (machine.name.includes('プラウ') || machine.name.includes('耕起')) {
+          subType = 'plow';
+        } else if (machine.name.includes('ロータリー')) {
+          subType = 'rotary';
+        } else if (machine.name.includes('あぜ塗り')) {
+          subType = 'ridge_maker';
+        } else if (machine.name.includes('畦草刈機') || machine.name.includes('あぜ草刈機')) {
+          subType = 'ridge_mower';
+        } else if (machine.name.includes('代かき')) {
+          subType = 'harrow';
+        } else if (machine.name.includes('施肥')) {
+          subType = 'fertilizer_applicator';
+        }
+
+        const { data: operators } = await client.from('operators').select('name').order('id');
+        const opSelect = document.getElementById('newMaintenanceOperatorImplement');
+        if (opSelect && operators) {
+          opSelect.innerHTML = '<option value="">担当者を選択</option>';
+          operators.forEach(op => {
+            const opt = document.createElement('option');
+            opt.value = op.name; opt.textContent = op.name;
+            opSelect.appendChild(opt);
+          });
+        }
+
+        loadMaintenanceHistoryImplement(machineId);
+        
+        // メンテナンス項目を取得（sub_typeでフィルタ）
+        let itemsQuery = client.from("maintenance_items_implements").select("*").order("id");
+        
+        if (subType) {
+          itemsQuery = itemsQuery.eq('sub_type', subType);
+        }
+        
+        const { data: items, error: itemsError } = await itemsQuery;
+        
+        if (itemsError) {
+          console.error('メンテナンス項目の取得エラー:', itemsError);
+          alert('メンテナンス項目の読み込みに失敗しました。maintenance_items_implementsテーブルが存在するか確認してください。');
+        }
+        
+        const checklistContainer = document.getElementById("maintenanceChecklistImplement");
+        if (checklistContainer && items && items.length > 0) {
+          checklistContainer.innerHTML = "";
+          items.forEach(item => {
+            const uniqueId = `${machineId}_${item.id}`;
+            const div = document.createElement("div");
+            div.className = "flex items-center justify-between p-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors";
+            div.innerHTML = `
+              <div class="flex flex-col flex-1 text-left">
+                  <span class="text-sm font-bold text-gray-700">${item.item_name}</span>
+                  <span class="text-[10px] text-gray-400">${item.description || ''}</span>
+              </div>
+              <input type="checkbox" id="${uniqueId}" class="maintenance-check w-6 h-6 rounded border-gray-300"
+                     style="accent-color: #483D8B;"
+                     onchange="saveSingleCheckImplement('${machineId}', '${item.id}', this.checked)">
+            `;
+            checklistContainer.appendChild(div);
+          });
+        } else if (checklistContainer) {
+          checklistContainer.innerHTML = '<p class="text-gray-400 text-center py-4">この機械のメンテナンス項目が登録されていません</p>';
+        }
+        await restoreMaintenanceChecksImplement();
+      } catch (e) { 
+        console.error('インプルメント詳細ページエラー:', e); 
+        alert('エラーが発生しました: ' + e.message);
+      }
+    }
+
+    // インプルメント進捗表示の更新
+    function updateMaintenanceProgressImplement() {
+      const checkboxes = document.querySelectorAll('#maintenanceChecklistImplement input[type="checkbox"]');
+      const total = checkboxes.length;
+      if (total === 0) return;
+      const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const percentage = Math.round((checkedCount / total) * 100);
+      const summaryDiv = document.getElementById('maintenanceSummaryImplement');
+      if (summaryDiv) {
+        summaryDiv.innerHTML = `
+          <div class="flex justify-between items-center mb-1">
+            <span class="font-bold" style="color: #483D8B;">${percentage}% 完了</span>
+            <span class="text-xs text-gray-400">${checkedCount} / ${total} 項目</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="h-2 rounded-full transition-all duration-500" style="width: ${percentage}%; background: #483D8B;"></div>
+          </div>
+        `;
+      }
+    }
+
+    // インプルメントチェック保存
+    async function saveSingleCheckImplement(machineId, itemId, isChecked) {
+      const itemIdStr = `${machineId}_${itemId}`;
+      try {
+        await client.from('maintenance_status').upsert({
+          item_id: itemIdStr,
+          status: Boolean(isChecked),
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'item_id' });
+        updateMaintenanceProgressImplement();
+        loadMachineListImplement();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // インプルメントチェック復元
+    async function restoreMaintenanceChecksImplement() {
+      if (!window.currentMachineIdImplement) return;
+      try {
+        const { data: checks } = await client
+          .from('maintenance_status')
+          .select('item_id, status')
+          .filter('item_id', 'ilike', `${window.currentMachineIdImplement}_%`);
+
+        if (checks) {
+          checks.forEach(c => {
+            const cb = document.getElementById(c.item_id);
+            if (cb) cb.checked = Boolean(c.status);
+          });
+        }
+        updateMaintenanceProgressImplement();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // インプルメント履歴読み込み
+    async function loadMaintenanceHistoryImplement(machineId) {
+      try {
+        const { data: records } = await client
+          .from('maintenance_records')
+          .select('*')
+          .eq('machine_id', machineId)
+          .order('created_at', { ascending: false });
+
+        const historyContainer = document.getElementById('maintenanceHistoryLogImplement');
+        if (!historyContainer) return;
+
+        if (!records || records.length === 0) {
+          historyContainer.innerHTML = '<p class="italic text-gray-400 text-center py-4">履歴はありません</p>';
+          return;
+        }
+
+        historyContainer.innerHTML = records.map(rec => `
+          <div class="border-b border-gray-100 pb-2 mb-2 last:border-0 text-left">
+            <div class="flex justify-between font-bold text-gray-700"><span>${rec.item_name}</span><span class="text-gray-400 text-[9px]">${rec.date}</span></div>
+            <div class="text-gray-500">担当: ${rec.operator}</div>
+            ${rec.memo ? `<div class="text-gray-400 italic">"${rec.memo}"</div>` : ''}
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error('履歴読み込みエラー:', e);
+      }
+    }
+
+    // インプルメント記録保存
+    async function saveMaintenanceRecordImplement() {
+      const itemName = document.getElementById('newMaintenanceItemImplement').value;
+      const operator = document.getElementById('newMaintenanceOperatorImplement').value;
+      const status = document.getElementById('newMaintenanceStatusImplement').value;
+      const memo = document.getElementById('newMaintenanceMemoImplement').value;
+
+      if (!itemName) {
+        alert('交換部品・項目名を入力してください');
+        return;
+      }
+
+      try {
+        await client.from('maintenance_records').insert({
+          machine_id: window.currentMachineIdImplement,
+          item_name: itemName,
+          operator: operator || null,
+          status: status,
+          memo: memo || null
+        });
+
+        document.getElementById('newMaintenanceItemImplement').value = '';
+        document.getElementById('newMaintenanceOperatorImplement').value = '';
+        document.getElementById('newMaintenanceStatusImplement').value = 'done';
+        document.getElementById('newMaintenanceMemoImplement').value = '';
+
+        loadMaintenanceHistoryImplement(window.currentMachineIdImplement);
+        alert('保存しました');
+      } catch (e) {
+        console.error(e);
+        alert('保存に失敗しました');
+      }
+    }
+
     // 動力噴霧器メンテナンスリスト読み込み
     async function loadMachineListSprayer() {
       try {
@@ -6078,15 +6810,400 @@
           card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all";
           card.innerHTML = `
             <div class="flex items-center gap-3">
-              <div style="color: #06b6d4;" class="text-xl">
+              <div style="color: #06b6d4;" class="text-xl flex-shrink-0">
                 <i class="fa-solid fa-droplet"></i>
               </div>
-              <div class="font-bold text-gray-900 text-lg">${m.name}</div>
+              <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
             </div>
           `;
           container.appendChild(card);
         });
       } catch (e) { console.error("動力噴霧器一覧読み込みエラー:", e); }
+    }
+
+    // ラップマシーン一覧読み込み
+    async function loadMachineListWrapper() {
+      try {
+        const { data: machines, error } = await client
+          .from("machines")
+          .select("*")
+          .eq("machine_type", "bale_wrapper")
+          .order("id");
+
+        if (error) throw error;
+
+        const container = document.getElementById("maintenanceMachineGridWrapper");
+        if (!container) return;
+        container.innerHTML = machines.length === 0 
+          ? "<p class='text-gray-400 text-center py-8'>ラップマシーンが登録されていません</p>" 
+          : "";
+
+        // sub_type別にグループ化
+        const subTypeNames = {
+          'self_propelled': '自走式',
+          'trailed': '牽引式',
+          'other': 'その他'
+        };
+
+        const grouped = {};
+        machines.forEach(m => {
+          const subType = m.sub_type || 'other';
+          if (!grouped[subType]) grouped[subType] = [];
+          grouped[subType].push(m);
+        });
+
+        // sub_type順に表示
+        const subTypeOrder = ['self_propelled', 'trailed', 'other'];
+        
+        // 定義済みのsub_typeを優先順に表示
+        const displayedSubTypes = new Set();
+        for (const subType of subTypeOrder) {
+          if (!grouped[subType] || grouped[subType].length === 0) continue;
+          displayedSubTypes.add(subType);
+
+          const subTypeHeader = document.createElement("h3");
+          subTypeHeader.className = "font-bold text-sm mb-2 mt-4 flex items-center gap-2";
+          subTypeHeader.style.color = "#6b395f";
+          subTypeHeader.innerHTML = `<i class="fa-solid fa-layer-group opacity-50"></i> ${subTypeNames[subType]}`;
+          container.appendChild(subTypeHeader);
+
+          const grid = document.createElement("div");
+          grid.className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4";
+
+          for (const m of grouped[subType]) {
+            const card = document.createElement("div");
+            card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95";
+            card.onclick = () => openMaintenanceDetailWrapper(m.id);
+
+            card.innerHTML = `
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-3">
+                  <div style="color: #6b395f;" class="text-xl flex-shrink-0">
+                    <i class="fa-solid fa-tape"></i>
+                  </div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
+                </div>
+                <div class="border-t border-gray-50 pt-2" id="card-progress-wrapper-${m.id}">
+                  <div class="text-[11px] text-gray-400 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> 確認中...
+                  </div>
+                </div>
+              </div>
+            `;
+            grid.appendChild(card);
+
+            // 進捗状況を非同期で取得して反映
+            (async () => {
+              try {
+                const { data: checks } = await client
+                  .from('maintenance_status')
+                  .select('item_id, status')
+                  .filter('item_id', 'ilike', `${m.id}_%`);
+
+                // sub_typeに応じた項目数を取得
+                let itemsQuery = client.from("maintenance_items_bale_wrapper").select("id");
+                if (m.sub_type) {
+                  itemsQuery = itemsQuery.eq('sub_type', m.sub_type);
+                }
+                const { data: items } = await itemsQuery;
+                const totalItems = items ? items.length : 20;
+                
+                const uniqueChecks = {};
+                if (checks) {
+                  checks.forEach(c => { uniqueChecks[c.item_id] = c.status; });
+                }
+
+                const completedCount = Object.values(uniqueChecks).filter(status => status === true || status === "true").length;
+                let percent = Math.round((completedCount / totalItems) * 100);
+                percent = Math.min(100, percent);
+
+                const progressDiv = document.getElementById(`card-progress-wrapper-${m.id}`);
+                if (progressDiv) {
+                  let statusHTML = percent === 0
+                    ? `<span class="text-red-600 font-black"><i class="fa-solid fa-circle-exclamation text-[9px]"></i> 未着手</span>`
+                    : percent === 100
+                      ? `<span style="color: #6b395f;" class="font-black"><i class="fa-solid fa-circle-check text-[9px]"></i> 完了</span>`
+                      : `<span class="text-orange-500 font-black"><i class="fa-solid fa-spinner text-[9px]"></i> ${percent}% 完了</span>`;
+
+                  progressDiv.innerHTML = `
+                    <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
+                    <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
+                      <div style="background-color: #6b395f; width: ${percent}%;" class="h-1 rounded-full transition-all duration-500"></div>
+                    </div>
+                  `;
+                }
+              } catch (err) { console.error("カード進捗更新エラー:", err); }
+            })();
+          }
+          container.appendChild(grid);
+        }
+        
+        // 定義されていないsub_typeも表示
+        for (const subType of Object.keys(grouped)) {
+          if (displayedSubTypes.has(subType)) continue;
+
+          const subTypeHeader = document.createElement("h3");
+          subTypeHeader.className = "font-bold text-sm mb-2 mt-4 flex items-center gap-2";
+          subTypeHeader.style.color = "#6b395f";
+          subTypeHeader.innerHTML = `<i class="fa-solid fa-layer-group opacity-50"></i> ${subTypeNames[subType] || subType}`;
+          container.appendChild(subTypeHeader);
+
+          const grid = document.createElement("div");
+          grid.className = "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4";
+
+          for (const m of grouped[subType]) {
+            const card = document.createElement("div");
+            card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95";
+            card.onclick = () => openMaintenanceDetailWrapper(m.id);
+
+            card.innerHTML = `
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-3">
+                  <div style="color: #6b395f;" class="text-xl flex-shrink-0">
+                    <i class="fa-solid fa-tape"></i>
+                  </div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
+                </div>
+                <div class="border-t border-gray-50 pt-2" id="card-progress-wrapper-${m.id}">
+                  <div class="text-[11px] text-gray-400 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> 確認中...
+                  </div>
+                </div>
+              </div>
+            `;
+            grid.appendChild(card);
+
+            // 進捗状況を非同期で取得して反映
+            (async () => {
+              try {
+                const { data: checks } = await client
+                  .from('maintenance_status')
+                  .select('item_id, status')
+                  .filter('item_id', 'ilike', `${m.id}_%`);
+
+                // sub_typeに応じた項目数を取得
+                let itemsQuery = client.from("maintenance_items_bale_wrapper").select("id");
+                if (m.sub_type) {
+                  itemsQuery = itemsQuery.eq('sub_type', m.sub_type);
+                }
+                const { data: items } = await itemsQuery;
+                const totalItems = items ? items.length : 20;
+                
+                const uniqueChecks = {};
+                if (checks) {
+                  checks.forEach(c => { uniqueChecks[c.item_id] = c.status; });
+                }
+
+                const completedCount = Object.values(uniqueChecks).filter(status => status === true || status === "true").length;
+                let percent = Math.round((completedCount / totalItems) * 100);
+                percent = Math.min(100, percent);
+
+                const progressDiv = document.getElementById(`card-progress-wrapper-${m.id}`);
+                if (progressDiv) {
+                  let statusHTML = percent === 0
+                    ? `<span class="text-red-600 font-black"><i class="fa-solid fa-circle-exclamation text-[9px]"></i> 未着手</span>`
+                    : percent === 100
+                      ? `<span style="color: #6b395f;" class="font-black"><i class="fa-solid fa-circle-check text-[9px]"></i> 完了</span>`
+                      : `<span class="text-orange-500 font-black"><i class="fa-solid fa-spinner text-[9px]"></i> ${percent}% 完了</span>`;
+
+                  progressDiv.innerHTML = `
+                    <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
+                    <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
+                      <div style="background-color: #6b395f; width: ${percent}%;" class="h-1 rounded-full transition-all duration-500"></div>
+                    </div>
+                  `;
+                }
+              } catch (err) { console.error("カード進捗更新エラー:", err); }
+            })();
+          }
+          container.appendChild(grid);
+        }
+      } catch (e) { console.error("ラップマシーン一覧読み込みエラー:", e); }
+    }
+
+    // ラップマシーンメンテナンス詳細を開く
+    async function openMaintenanceDetailWrapper(machineId) {
+      window.currentMachineIdWrapper = machineId;
+      switchView('maintenanceDetailViewWrapper');
+
+      try {
+        const { data: machine } = await client.from("machines").select("*").eq("id", machineId).single();
+        document.getElementById("maintenanceMachineNameWrapper").textContent = machine.name;
+
+        const { data: operators } = await client.from('operators').select('name').order('id');
+        const opSelect = document.getElementById('newMaintenanceOperatorWrapper');
+        if (opSelect && operators) {
+          opSelect.innerHTML = '<option value="">担当者を選択</option>';
+          operators.forEach(op => {
+            const opt = document.createElement('option');
+            opt.value = op.name; opt.textContent = op.name;
+            opSelect.appendChild(opt);
+          });
+        }
+
+        loadMaintenanceHistoryWrapper(machineId);
+        
+        // sub_typeを取得してフィルタリング
+        const subType = machine.sub_type;
+        let itemsQuery = client.from("maintenance_items_bale_wrapper").select("*").order("id");
+        
+        if (subType) {
+          itemsQuery = itemsQuery.eq('sub_type', subType);
+        }
+        
+        const { data: items, error: itemsError } = await itemsQuery;
+        
+        if (itemsError) {
+          console.error('メンテナンス項目の取得エラー:', itemsError);
+          alert('メンテナンス項目の読み込みに失敗しました。maintenance_items_bale_wrapperテーブルが存在するか確認してください。');
+        }
+        
+        const checklistContainer = document.getElementById("maintenanceChecklistWrapper");
+        if (checklistContainer && items && items.length > 0) {
+          checklistContainer.innerHTML = "";
+          items.forEach(item => {
+            const uniqueId = `${machineId}_${item.id}`;
+            const div = document.createElement("div");
+            div.className = "flex items-center justify-between p-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors";
+            div.innerHTML = `
+              <div class="flex flex-col flex-1 text-left">
+                  <span class="text-sm font-bold text-gray-700">${item.item_name}</span>
+                  <span class="text-[10px] text-gray-400">${item.description || ''}</span>
+              </div>
+              <input type="checkbox" id="${uniqueId}" class="maintenance-check w-6 h-6 rounded border-gray-300"
+                     style="accent-color: #6b395f;"
+                     onchange="saveSingleCheckWrapper('${machineId}', '${item.id}', this.checked)">
+            `;
+            checklistContainer.appendChild(div);
+          });
+        } else if (checklistContainer) {
+          checklistContainer.innerHTML = '<p class="text-gray-400 text-center py-4">メンテナンス項目がありません</p>';
+        }
+        await restoreMaintenanceChecksWrapper();
+      } catch (e) { console.error(e); }
+    }
+
+    // ラップマシーン進捗表示の更新
+    function updateMaintenanceProgressWrapper() {
+      const checkboxes = document.querySelectorAll('#maintenanceChecklistWrapper input[type="checkbox"]');
+      const total = checkboxes.length;
+      if (total === 0) return;
+      const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const percentage = Math.round((checkedCount / total) * 100);
+      const summaryDiv = document.getElementById('maintenanceSummaryWrapper');
+      if (summaryDiv) {
+        summaryDiv.innerHTML = `
+          <div class="flex justify-between items-center mb-1">
+            <span class="font-bold" style="color: #6b395f;">${percentage}% 完了</span>
+            <span class="text-xs text-gray-400">${checkedCount} / ${total} 項目</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="h-2 rounded-full transition-all duration-500" style="width: ${percentage}%; background: #6b395f;"></div>
+          </div>
+        `;
+      }
+    }
+
+    // ラップマシーンチェック保存
+    async function saveSingleCheckWrapper(machineId, itemId, isChecked) {
+      try {
+        const itemKey = `${machineId}_${itemId}`;
+        const { data: existing } = await client.from('maintenance_status').select('*').eq('item_id', itemKey).maybeSingle();
+
+        if (existing) {
+          await client.from('maintenance_status').update({ status: isChecked }).eq('item_id', itemKey);
+        } else {
+          await client.from('maintenance_status').insert({ item_id: itemKey, status: isChecked });
+        }
+        updateMaintenanceProgressWrapper();
+      } catch (e) { console.error("保存エラー:", e); }
+    }
+
+    // ラップマシーンチェック復元
+    async function restoreMaintenanceChecksWrapper() {
+      try {
+        const machineId = window.currentMachineIdWrapper;
+        const { data: checks } = await client.from('maintenance_status')
+          .select('item_id, status')
+          .filter('item_id', 'ilike', `${machineId}_%`);
+
+        if (checks) {
+          checks.forEach(check => {
+            const checkbox = document.getElementById(check.item_id);
+            if (checkbox) {
+              checkbox.checked = (check.status === true || check.status === "true");
+            }
+          });
+        }
+        updateMaintenanceProgressWrapper();
+      } catch (e) { console.error("チェック復元エラー:", e); }
+    }
+
+    // ラップマシーン履歴読み込み
+    async function loadMaintenanceHistoryWrapper(machineId) {
+      try {
+        const { data: records } = await client
+          .from('maintenance_logs_bale_wrapper')
+          .select('*')
+          .eq('machine_id', machineId)
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        const logContainer = document.getElementById('maintenanceHistoryLogWrapper');
+        if (!logContainer) return;
+
+        if (!records || records.length === 0) {
+          logContainer.innerHTML = '<p class="italic text-gray-400 text-center py-4">履歴はありません</p>';
+          return;
+        }
+
+        logContainer.innerHTML = records.map(rec => {
+          const date = new Date(rec.created_at).toLocaleDateString('ja-JP');
+          return `
+          <div class="border-b border-gray-100 pb-2 mb-2 last:border-0 text-left">
+            <div class="flex justify-between font-bold text-gray-700"><span>${rec.item_name}</span><span class="text-gray-400 text-[9px]">${date}</span></div>
+            <div class="text-gray-500">担当: ${rec.operator}</div>
+            ${rec.memo ? `<div class="text-gray-400 italic">"${rec.memo}"</div>` : ''}
+          </div>
+        `}).join('');
+      } catch (e) {
+        console.error('履歴読み込みエラー:', e);
+      }
+    }
+
+    // ラップマシーン記録保存
+    async function saveMaintenanceRecordWrapper() {
+      const itemName = document.getElementById('newMaintenanceItemWrapper').value;
+      const operator = document.getElementById('newMaintenanceOperatorWrapper').value;
+      const status = document.getElementById('newMaintenanceStatusWrapper').value;
+      const memo = document.getElementById('newMaintenanceMemoWrapper').value;
+
+      if (!itemName) {
+        alert('交換部品・項目名を入力してください');
+        return;
+      }
+
+      try {
+        await client.from('maintenance_logs_bale_wrapper').insert({
+          machine_id: window.currentMachineIdWrapper,
+          item_name: itemName,
+          operator: operator || null,
+          status: status,
+          memo: memo || null,
+          created_at: new Date().toISOString()
+        });
+
+        document.getElementById('newMaintenanceItemWrapper').value = '';
+        document.getElementById('newMaintenanceOperatorWrapper').value = '';
+        document.getElementById('newMaintenanceStatusWrapper').value = 'done';
+        document.getElementById('newMaintenanceMemoWrapper').value = '';
+
+        loadMaintenanceHistoryWrapper(window.currentMachineIdWrapper);
+        alert('保存しました');
+      } catch (e) {
+        console.error(e);
+        alert('保存に失敗しました');
+      }
     }
 
     // スパイダーモアメンテナンス詳細を開く
@@ -6420,7 +7537,7 @@
                   <div style="color: var(--tractor-color);" class="text-xl flex-shrink-0">
                     <i class="fa-solid fa-tractor"></i>
                   </div>
-                  <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
                 </div>
                 <div class="border-t border-gray-50 pt-2" id="card-progress-${m.id}">
                   <div class="text-[11px] text-gray-400 flex items-center gap-1">
@@ -7530,7 +8647,7 @@
                   <div style="color: #c9a961;" class="text-xl flex-shrink-0">
                     <i class="fa-solid fa-seedling"></i>
                   </div>
-                  <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
                 </div>
                 <div class="border-t border-gray-50 pt-2" id="card-progress-planting-${m.id}">
                   <div class="text-[11px] text-gray-400 flex items-center gap-1">
@@ -8053,7 +9170,7 @@
                   <div style="color: var(--combine-color);" class="text-xl flex-shrink-0">
                     <i class="fa-solid fa-wheat-awn"></i>
                   </div>
-                  <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
+                  <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
                 </div>
                 <div class="border-t border-gray-50 pt-2" id="card-progress-combine-${m.id}">
                   <div class="text-[11px] text-gray-400 flex items-center gap-1">
@@ -9397,7 +10514,10 @@
         if (kpiDays) kpiDays.innerText = daysSet.size;
 
         // グラフ描画
-        drawChartsPlanting(enrichedData);
+        drawChartsPlanting(enrichedData, plantingMachines);
+
+        // メンテナンスログを読み込む
+        loadMaintenanceLogsPlanting(machineId);
 
       } catch (e) {
         console.error("❌ 田植え機ダッシュボード描画エラー:", e);
@@ -9405,32 +10525,125 @@
       }
     }
 
-    function drawChartsPlanting(data) {
-      // 1. 作業種別比率（作物比率）
-      const categoryData = {};
+    // 田植え機のメンテナンスログを読み込む関数
+    async function loadMaintenanceLogsPlanting(machineId) {
+      const logContainer = document.getElementById('maintenanceLogPlanting');
+      if (!logContainer) return;
+
+      try {
+        // 田植え機のリストを取得
+        let query = client
+          .from('machines')
+          .select('id, name')
+          .eq('machine_type', 'transplanter');
+        
+        if (machineId !== 'all') {
+          query = query.eq('id', machineId);
+        }
+
+        const { data: machines } = await query;
+        if (!machines || machines.length === 0) {
+          logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">履歴はありません</p>`;
+          return;
+        }
+
+        // 各機械の最新メンテナンス完了日を取得
+        const machineCompletions = [];
+        
+        for (const machine of machines) {
+          const { data: logs } = await client
+            .from('maintenance_status')
+            .select('updated_at')
+            .ilike('item_id', `${machine.id}_%`)
+            .eq('status', true)
+            .order('updated_at', { ascending: false })
+            .limit(1);
+          
+          if (logs && logs.length > 0) {
+            machineCompletions.push({
+              name: machine.name,
+              updated_at: logs[0].updated_at
+            });
+          }
+        }
+
+        // 日付でソートして最新5件
+        machineCompletions.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+        const recentCompletions = machineCompletions.slice(0, 5);
+
+        if (recentCompletions.length > 0) {
+          logContainer.innerHTML = recentCompletions.map(completion => {
+            const date = new Date(completion.updated_at).toLocaleDateString('ja-JP', {
+              month: '2-digit',
+              day: '2-digit'
+            });
+
+            return `
+              <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-gray-700">${completion.name}</span>
+                  <span class="text-[9px] text-gray-400">${date}</span>
+                </div>
+                <div class="text-[#c9a961] flex items-center gap-1">
+                  <i class="fa-solid fa-check-circle"></i> メンテナンス完了
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">履歴はありません</p>`;
+        }
+      } catch (err) {
+        console.error('メンテナンスログ取得エラー:', err);
+        logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">履歴はありません</p>`;
+      }
+    }
+
+    function drawChartsPlanting(data, plantingMachines) {
+      console.log("🎨 田植え機グラフ描画開始:", data.length, "件のデータ");
+
+      // === 1. 月別稼働推移（折れ線グラフ） ===
+      const monthData = {};
       data.forEach(log => {
-        const cat = log.categories?.name || '不明';
+        const month = log.date?.substring(5, 7) || '不明'; // MM形式で取得
         const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
-        categoryData[cat] = (categoryData[cat] || 0) + (h > 0 ? h : 0);
+        monthData[month] = (monthData[month] || 0) + (h > 0 ? h : 0);
       });
 
-      const ctx1 = document.getElementById('categoryShareChartPlanting');
+      // 1～12月のラベルを作成
+      const monthLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+      const monthValues = monthLabels.map(m => {
+        const paddedMonth = m.padStart(2, '0');
+        return monthData[paddedMonth] || 0;
+      });
+
+      const ctx1 = document.getElementById('monthlyTrendChartPlanting');
       if (ctx1) {
-        if (window.categoryShareChartPlantingInstance) window.categoryShareChartPlantingInstance.destroy();
-        window.categoryShareChartPlantingInstance = new Chart(ctx1, {
-          type: 'doughnut',
+        if (window.monthlyTrendChartPlantingInstance) window.monthlyTrendChartPlantingInstance.destroy();
+        window.monthlyTrendChartPlantingInstance = new Chart(ctx1, {
+          type: 'line',
           data: {
-            labels: Object.keys(categoryData),
+            labels: monthLabels,
             datasets: [{
-              data: Object.values(categoryData),
-              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448']
+              label: 'h',
+              data: monthValues,
+              borderColor: '#c9a961',
+              backgroundColor: 'rgba(201, 169, 97, 0.1)',
+              tension: 0.4,
+              fill: true
             }]
           },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            }
+          }
         });
       }
 
-      // 2. 作業内容比率
+      // === 2. 作業内容別稼働時間（横棒グラフ） ===
       const taskData = {};
       data.forEach(log => {
         const task = log.work_types?.name || '不明';
@@ -9438,23 +10651,79 @@
         taskData[task] = (taskData[task] || 0) + (h > 0 ? h : 0);
       });
 
-      const ctx2 = document.getElementById('taskShareChartPlanting');
+      const sortedTasks = Object.entries(taskData).sort((a, b) => b[1] - a[1]);
+      const ctx2 = document.getElementById('taskHoursChartPlanting');
       if (ctx2) {
-        if (window.taskShareChartPlantingInstance) window.taskShareChartPlantingInstance.destroy();
-        window.taskShareChartPlantingInstance = new Chart(ctx2, {
-          type: 'doughnut',
+        if (window.taskHoursChartPlantingInstance) window.taskHoursChartPlantingInstance.destroy();
+        window.taskHoursChartPlantingInstance = new Chart(ctx2, {
+          type: 'bar',
           data: {
-            labels: Object.keys(taskData),
+            labels: sortedTasks.map(t => t[0]),
             datasets: [{
-              data: Object.values(taskData),
-              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448', '#7d6340']
+              label: '稼働時間',
+              data: sortedTasks.map(t => t[1]),
+              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448', '#7d6340'],
+              borderRadius: 6
             }]
           },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (context) => `${context.parsed.x.toFixed(1)} h`
+                }
+              }
+            },
+            scales: {
+              x: {
+                beginAtZero: true,
+                ticks: { callback: (value) => value + ' h' }
+              }
+            }
+          }
         });
       }
 
-      // 3. オペレーター比率
+      // === 3. 機械別稼働ランキング（横棒グラフ） ===
+      const machineData = {};
+      data.forEach(log => {
+        const machine = plantingMachines?.find(m => m.id === log.machine_id);
+        const name = machine?.name || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+        machineData[name] = (machineData[name] || 0) + (h > 0 ? h : 0);
+      });
+
+      const sortedMachines = Object.entries(machineData).sort((a, b) => b[1] - a[1]);
+      const ctx3 = document.getElementById('machineRankingChartPlanting');
+      if (ctx3) {
+        if (window.machineRankingChartPlantingInstance) window.machineRankingChartPlantingInstance.destroy();
+        window.machineRankingChartPlantingInstance = new Chart(ctx3, {
+          type: 'bar',
+          data: {
+            labels: sortedMachines.map(m => m[0]),
+            datasets: [{
+              label: 'h',
+              data: sortedMachines.map(m => m[1]),
+              backgroundColor: sortedMachines.map((_, i) => `rgba(201, 169, 97, ${Math.max(0.2, 1 - (i / 5))})`),
+              borderRadius: 4
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      }
+
+      // === 4. オペレーター別比率（ドーナツグラフ） ===
       const operatorData = {};
       data.forEach(log => {
         const op = log.operators?.name || '不明';
@@ -9462,67 +10731,67 @@
         operatorData[op] = (operatorData[op] || 0) + (h > 0 ? h : 0);
       });
 
-      const ctx3 = document.getElementById('operatorShareChartPlanting');
-      if (ctx3) {
+      const ctx4 = document.getElementById('operatorShareChartPlanting');
+      if (ctx4) {
         if (window.operatorShareChartPlantingInstance) window.operatorShareChartPlantingInstance.destroy();
-        window.operatorShareChartPlantingInstance = new Chart(ctx3, {
+        window.operatorShareChartPlantingInstance = new Chart(ctx4, {
           type: 'doughnut',
           data: {
             labels: Object.keys(operatorData),
             datasets: [{
               data: Object.values(operatorData),
-              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448']
+              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448', '#7d6340']
             }]
           },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+          options: {
+            cutout: '60%',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { 
+                position: 'right',
+                labels: {
+                  boxWidth: 10,
+                  font: { size: 9 },
+                  padding: 6
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const label = context.label || '';
+                    const value = context.parsed;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return `${label}: ${value.toFixed(1)} h (${percentage}%)`;
+                  }
+                }
+              }
+            }
+          }
         });
       }
 
-      // 4. 月別稼働推移
-      const monthData = {};
+      // === 5. 燃費効率の計算と表示 ===
+      let totalHours = 0;
+      let totalFuel = 0;
       data.forEach(log => {
-        const month = log.date?.substring(0, 7) || '不明';
         const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
-        monthData[month] = (monthData[month] || 0) + (h > 0 ? h : 0);
+        totalHours += (h > 0 ? h : 0);
+        totalFuel += (parseFloat(log.fuel_amount) || 0);
       });
 
-      const sortedMonths = Object.keys(monthData).sort();
-      const ctx4 = document.getElementById('detailChartPlanting');
-      if (ctx4) {
-        if (window.detailChartPlantingInstance) window.detailChartPlantingInstance.destroy();
-        window.detailChartPlantingInstance = new Chart(ctx4, {
-          type: 'line',
-          data: {
-            labels: sortedMonths,
-            datasets: [{
-              label: '稼働時間',
-              data: sortedMonths.map(m => monthData[m]),
-              borderColor: '#c9a961',
-              backgroundColor: 'rgba(201, 169, 97, 0.1)',
-              tension: 0.4
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-      }
+      const fuelEfficiency = totalHours > 0 ? (totalFuel / totalHours) : 0;
+      
+      const fuelEfficiencyEl = document.getElementById('fuelEfficiencyValuePlanting');
+      const totalFuelEl = document.getElementById('totalFuelPlanting');
+      const totalHoursEl = document.getElementById('totalHoursPlanting');
+      
+      if (fuelEfficiencyEl) fuelEfficiencyEl.textContent = fuelEfficiency.toFixed(2);
+      if (totalFuelEl) totalFuelEl.textContent = totalFuel.toFixed(1);
+      if (totalHoursEl) totalHoursEl.textContent = totalHours.toFixed(1);
 
-      // 5. 作業内容分析（棒グラフ）
-      const ctx5 = document.getElementById('gradientBarChartPlanting');
-      if (ctx5) {
-        if (window.gradientBarChartPlantingInstance) window.gradientBarChartPlantingInstance.destroy();
-        window.gradientBarChartPlantingInstance = new Chart(ctx5, {
-          type: 'bar',
-          data: {
-            labels: Object.keys(taskData),
-            datasets: [{
-              label: '稼働時間',
-              data: Object.values(taskData),
-              backgroundColor: '#c9a961'
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-      }
+      console.log("✅ 田植え機グラフ描画完了");
     }
 
     // コンバインダッシュボード描画関数
@@ -10037,7 +11306,7 @@
                 <div style="color: var(--other-color);" class="text-xl flex-shrink-0">
                   <i class="fas fa-tachometer-alt"></i>
                 </div>
-                <div class="font-bold text-gray-900 text-lg truncate">${m.name}</div>
+                <div class="font-bold text-gray-900 text-sm leading-tight break-words">${m.name}</div>
               </div>
               <div class="border-t border-gray-50 pt-2" id="card-progress-other-${m.id}">
                 <div class="text-[11px] text-gray-400 flex items-center gap-1">
@@ -10293,29 +11562,23 @@
           .from('maintenance_records')
           .select('*')
           .eq('machine_id', machineId)
-          .order('created_at', { ascending: false })
-          .limit(10);
+          .order('created_at', { ascending: false });
 
         const logDiv = document.getElementById('maintenanceHistoryLogOtherMachinery');
+        if (!logDiv) return;
         if (!records || records.length === 0) {
           logDiv.innerHTML = '<p class="italic text-gray-400 text-center py-4">履歴はありません</p>';
           return;
         }
 
-        logDiv.innerHTML = records.map(r => {
-          const date = new Date(r.created_at);
-          const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
-          return `
-            <div class="border-l-2 pl-3 py-1" style="border-color: var(--other-color);">
-              <div class="font-bold text-sm">${r.item_name}</div>
-              <div class="text-xs text-gray-500 mt-1">${r.memo || ''}</div>
-              <div class="text-xs text-gray-400 mt-1">担当: ${r.operator || '未記録'}</div>
-              <div class="text-[11px] text-gray-500 font-mono font-bold">${dateStr}</div>
-            </div>
-          `;
-        }).join('');
-      } catch (err) {
-        console.error('履歴取得エラー:', err);
+        logDiv.innerHTML = records.map(rec => `
+          <div class="border-b border-gray-100 pb-2 mb-2 last:border-0 text-left">
+            <div class="flex justify-between font-bold text-gray-700"><span>${rec.item_name}</span><span class="text-gray-400 text-[9px]">${rec.date}</span></div>
+            <div class="text-gray-500">担当: ${rec.operator}</div>
+            ${rec.memo ? `<div class="text-gray-400 italic">"${rec.memo}"</div>` : ''}
+          </div>`).join('');
+      } catch (e) {
+        console.error(e);
       }
     }
 
