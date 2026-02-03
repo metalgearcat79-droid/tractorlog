@@ -30,6 +30,7 @@
       /* コンバインセクションのテーマカラー */
       --combine-color: #c97c73;
       --combine-hover: #b86b62;
+      --combine-dark: #a85a52;
       --combine-light: #f8e8e6;
       --combine-bg: #faf5f4;
       
@@ -60,8 +61,15 @@
       /* その他の機械セクションのテーマカラー */
       --other-color: #006888;
       --other-hover: #005270;
+      --other-dark: #003d52;
       --other-light: #e0f2f7;
       --other-bg: #f0f8fa;
+      
+      /* ラップマシーンセクションのテーマカラー */
+      --wrapper-color: #6b395f;
+      --wrapper-hover: #552e4c;
+      --wrapper-light: #f3ebf1;
+      --wrapper-bg: #faf7f9;
     }
     
     /* --- 基本スタイル --- */
@@ -83,6 +91,14 @@
     body:has(#maintenanceDetailView.active),
     body:has(#maintenanceMachineListView.active) {
       background-color: #f0f7f1 !important;
+    }
+
+    /* ラップマシーンメンテナンス画面表示時の背景色 */
+    html:has(#maintenanceMachineListViewWrapper.active),
+    html:has(#maintenanceDetailViewWrapper.active),
+    body:has(#maintenanceMachineListViewWrapper.active),
+    body:has(#maintenanceDetailViewWrapper.active) {
+      background-color: var(--wrapper-bg) !important;
     }
 
     .view {
@@ -449,6 +465,7 @@
     }
 
     #dashboardPlanting .tab-btn.inactive {
+      background: rgba(255, 255, 255, 0.5) !important;
       color: var(--planting-color) !important;
     }
 
@@ -504,9 +521,15 @@
       position: relative;
     }
 
+    /* 機械別稼働ランキングカード専用の高さ調整 */
+    #dashboardPlanting .bi-left-col > .card:nth-child(3) .chart-container {
+      height: 200px !important;
+    }
+
     /* オペレーター別比率カード専用の高さ調整 */
     #dashboardPlanting .operator-card {
       padding: 8px 12px;
+      height: 220px !important;
       max-height: 220px;
       overflow: hidden;
     }
@@ -528,11 +551,17 @@
     }
 
     #dashboardPlanting .bi-right-col>.maint-card {
-      flex: 1;
-      min-height: 200px;
-      max-height: 300px;
+      height: 360px !important;
+      min-height: 360px;
+      max-height: 360px;
       display: flex;
       flex-direction: column;
+    }
+
+    #dashboardPlanting .fuel-efficiency-card {
+      height: 100px !important;
+      min-height: 100px !important;
+      max-height: 100px !important;
     }
 
     #dashboardPlanting #maintenanceLogPlanting {
@@ -722,7 +751,7 @@
 
     /* dashboardCombine専用のスタイル（ゴールド系） */
     #dashboardCombine .bi-header {
-      background: #8b7344 !important;
+      background: var(--combine-dark) !important;
     }
 
     #dashboardCombine .kpi-card {
@@ -738,10 +767,11 @@
     }
 
     #dashboardCombine .tab-btn.active {
-      background: #8b7344 !important;
+      background: var(--combine-dark) !important;
     }
 
     #dashboardCombine .tab-btn.inactive {
+      background: rgba(255, 255, 255, 0.5) !important;
       color: var(--combine-color) !important;
     }
 
@@ -750,22 +780,110 @@
     }
 
     /* コンバインデータ分析の右カラムの高さ調整 */
-    #dashboardCombine .bi-right-col {
+    #dashboardCombine .bi-right-col .card {
+      flex: 1;
+      min-height: 0;
+    }
+
+    #dashboardCombine .bi-right-col .yoy-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 285px;
+    }
+
+    #dashboardCombine .bi-right-col .maint-card {
+      min-height: 330px;
+      max-height: 440px;
+      overflow-y: auto;
+    }
+
+    #dashboardCombine .bi-left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #dashboardCombine .bi-left-col .card {
+      height: 230px !important;
+      min-height: 230px;
+      max-height: 230px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dashboardCombine .bi-left-col .card .chart-container {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    #dashboardCombine .bi-left-col .card .chart-wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    #dashboardCombine #maintenanceLogCombine {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* その他の機械ダッシュボード専用のスタイル */
+    #dashboardOther .bi-header {
+      background: var(--other-dark) !important;
+    }
+
+    #dashboardOther .kpi-card {
+      background: var(--other-color) !important;
+    }
+
+    #dashboardOther .chart-title {
+      color: var(--other-color) !important;
+    }
+
+    #dashboardOther .donut-icon {
+      color: var(--other-color) !important;
+    }
+
+    #dashboardOther .tab-btn.active {
+      background: var(--other-dark) !important;
+    }
+
+    #dashboardOther .tab-btn.inactive {
+      background: rgba(255, 255, 255, 0.5) !important;
+      color: var(--other-color) !important;
+    }
+
+    #dashboardOther .nav-item.active {
+      border-left-color: var(--other-color) !important;
+    }
+
+    /* その他の機械データ分析の右カラムの高さ調整 */
+    #dashboardOther .bi-right-col {
       display: flex;
       flex-direction: column;
       gap: 16px;
       align-self: stretch;
     }
 
-    #dashboardCombine .bi-right-col>.yoy-card {
+    #dashboardOther .bi-right-col>.yoy-card {
       flex: 1 1 0% !important;
       min-height: 0;
       max-height: 33%;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
-    #dashboardCombine .bi-right-col>.maint-card {
+    #dashboardOther .yoy-card > div {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #dashboardOther .bi-right-col>.maint-card {
       flex: 2 2 0% !important;
       min-height: 0;
       max-height: 67%;
@@ -773,7 +891,7 @@
       flex-direction: column;
     }
 
-    #dashboardCombine #maintenanceLogCombine {
+    #dashboardOther #maintenanceLogOther {
       flex: 1;
       overflow-y: auto;
     }
@@ -1723,6 +1841,11 @@
         <header id="pageHeader" class="flex flex-col items-center justify-center py-4 relative">
           <button onclick="openMenu()" class="absolute left-4 top-4 text-3xl p-2" style="color: var(--tractor-color)"><i
               class="fa-solid fa-bars"></i></button>
+          <!-- オフライン同期バッジ -->
+          <button onclick="syncLocalStorageToSupabase()" class="absolute right-4 top-4 p-2 relative" style="color: var(--tractor-color)" title="未同期データを手動同期">
+            <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+            <span id="syncBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
+          </button>
           <i class="fa-solid fa-tractor text-5xl" style="color: var(--tractor-color)"></i>
           <h1 class="text-xl font-bold" style="color: var(--tractor-color)">和農日向 機械管理アプリ</h1>
         </header>
@@ -1889,7 +2012,7 @@
                 <i class="fa-solid fa-ranking-star" style="margin-right: 8px; color: var(--planting-color);"></i>
                 機械別稼働ランキング
               </p>
-              <div class="chart-container" style="flex: 1; min-height: 0;">
+              <div class="chart-container">
                 <div class="chart-wrapper" style="position: relative; height: 100%; width: 100%;">
                   <canvas id="machineRankingChartPlanting"></canvas>
                 </div>
@@ -1899,6 +2022,29 @@
 
           <!-- 右カラム：サマリーエリア -->
           <div class="bi-right-col">
+            <!-- 燃費効率 -->
+            <div class="card fuel-efficiency-card">
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 8px 12px; gap: 32px;">
+                <!-- 左：アイコン+テキスト -->
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 60px;">
+                  <i class="fa-solid fa-gas-pump" style="font-size: 20px; color: #DC143C; margin-bottom: 4px;"></i>
+                  <div style="font-size: 10px; font-weight: bold; text-align: center; white-space: nowrap; color: #DC143C;">燃費効率</div>
+                </div>
+                
+                <!-- 中央：数値 -->
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 80px;">
+                  <div class="text-3xl font-bold" style="color: #DC143C;" id="fuelEfficiencyValuePlanting">-</div>
+                  <div class="text-xs" style="color: #DC143C;">L/h</div>
+                </div>
+                
+                <!-- 右：詳細 -->
+                <div style="display: flex; flex-direction: column; justify-content: center; text-align: right; font-size: 10px; color: #DC143C; min-width: 90px;">
+                  <div>総燃料: <span id="totalFuelPlanting">-</span> L</div>
+                  <div>総稼働: <span id="totalHoursPlanting">-</span> h</div>
+                </div>
+              </div>
+            </div>
+
             <!-- オペレーター別比率 -->
             <div class="card operator-card">
               <p class="chart-title" style="display: flex; align-items: center;">
@@ -1908,22 +2054,6 @@
               <div class="chart-container" style="flex: 1; min-height: 0;">
                 <div class="chart-wrapper" style="position: relative; height: 100%; width: 100%;">
                   <canvas id="operatorShareChartPlanting"></canvas>
-                </div>
-              </div>
-            </div>
-
-            <!-- 燃費効率 -->
-            <div class="card text-center">
-              <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
-                <i class="fa-solid fa-gas-pump" style="margin-right: 8px; color: var(--planting-color);"></i>
-                燃費効率
-              </p>
-              <div class="py-4">
-                <div class="text-4xl font-bold mb-1" style="color: var(--planting-color);" id="fuelEfficiencyValuePlanting">-</div>
-                <div class="text-xs text-gray-500">L/h (平均)</div>
-                <div class="mt-2 text-[10px] text-gray-400">
-                  <div>総燃料: <span id="totalFuelPlanting">-</span> L</div>
-                  <div>総稼働: <span id="totalHoursPlanting">-</span> h</div>
                 </div>
               </div>
             </div>
@@ -2543,11 +2673,13 @@
           <div class="bi-left-col">
             <div class="card">
               <p class="chart-title" style="display: flex; align-items: center;">
-                <i class="fa-solid fa-layer-group" style="margin-right: 8px; color: var(--combine-color);"></i>
-                作業種別比率
+                <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px; color: var(--combine-color);"></i>
+                機械別修理コスト
               </p>
-              <div class="chart-wrapper relative">
-                <canvas id="categoryShareChartCombine"></canvas>
+              <div class="chart-container">
+                <div class="chart-wrapper">
+                  <canvas id="categoryShareChartCombine"></canvas>
+                </div>
               </div>
             </div>
 
@@ -2556,8 +2688,10 @@
                 <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--combine-color);"></i>
                 作業内容比率
               </p>
-              <div class="chart-wrapper relative">
-                <canvas id="taskShareChartCombine"></canvas>
+              <div class="chart-container">
+                <div class="chart-wrapper">
+                  <canvas id="taskShareChartCombine"></canvas>
+                </div>
               </div>
             </div>
 
@@ -2566,9 +2700,10 @@
                 <i class="fa-solid fa-user-check" style="margin-right: 8px; color: var(--combine-color);"></i>
                 オペレーター比率
               </p>
-
-              <div class="chart-wrapper relative">
-                <canvas id="operatorShareChartCombine"></canvas>
+              <div class="chart-container">
+                <div class="chart-wrapper">
+                  <canvas id="operatorShareChartCombine"></canvas>
+                </div>
               </div>
             </div>
           </div>
@@ -2579,7 +2714,7 @@
                   <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: var(--combine-color);"></i>
                   月別稼働推移
                 </p>
-                <div class="relative h-40"> <canvas id="detailChartCombine"></canvas>
+                <div class="relative" style="height: 140px;"> <canvas id="detailChartCombine"></canvas>
                 </div>
               </div>
               <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -2587,7 +2722,7 @@
                   <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--combine-color);"></i>
                   作業内容分析
                 </p>
-                <div class="relative h-[480px]">
+                <div class="relative" style="height: 430px;">
                   <canvas id="gradientBarChartCombine"></canvas>
                 </div>
               </div>
@@ -2605,6 +2740,16 @@
                 <div class="absolute inset-0 flex items-center justify-center pt-14">
                   <p id="detailCompareValueCombine" class="text-2xl font-black" style="color: var(--combine-color)">--%</p>
                 </div>
+              </div>
+            </div>
+
+            <div class="card maint-card overflow-hidden">
+              <p class="chart-title border-b pb-1" style="display: flex; align-items: center;">
+                <i class="fa-solid fa-clipboard-list" style="margin-right: 8px; color: var(--combine-color);"></i>
+                メンテナンス情報
+              </p>
+              <div id="maintenanceLogCombine" class="text-[10px] space-y-2 opacity-80 pt-2 flex-1 overflow-y-auto">
+                <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
               </div>
             </div>
           </div>
@@ -3180,7 +3325,7 @@
       <div id="maintenanceMachineGridImplement" class="space-y-6">
       </div>
 
-      <button onclick="switchView('maintenanceListView')" class="btn-sub mt-6 w-full" style="background: #6366f1; color: white; border: 2px solid #6366f1;">
+      <button onclick="switchView('maintenanceListView')" class="btn-sub mt-6 w-full" style="background: #483D8B; color: white; border: 2px solid #483D8B;">
         <i class="fa-solid fa-arrow-left mr-2"></i>メンテナンス一覧に戻る
       </button>
     </div>
@@ -3251,7 +3396,7 @@
       </div>
 
       <div class="flex justify-center w-full mt-6 mb-8">
-        <button onclick="switchView('maintenanceMachineListViewImplement')"
+        <button onclick="switchView('maintenanceMachineListViewImplement'); loadMachineListImplement();"
           class="px-6 py-3 rounded-lg font-medium transition-all shadow-md text-white flex items-center justify-center" style="background: #483D8B;" onmouseover="this.style.backgroundColor='#3a2f6f'" onmouseout="this.style.backgroundColor='#483D8B'">
           <i class="fa-solid fa-list mr-2"></i>
           <span>メンテナンス一覧に戻る</span>
@@ -3459,7 +3604,7 @@
       </div>
 
       <div class="flex justify-center w-full mt-6 mb-8">
-        <button onclick="switchView('maintenanceMachineListViewWrapper')"
+        <button onclick="switchView('maintenanceMachineListViewWrapper'); loadMachineListWrapper();"
           class="px-6 py-3 rounded-lg font-medium transition-all shadow-md text-white flex items-center justify-center" style="background: #6b395f;" onmouseover="this.style.backgroundColor='#552e4c'" onmouseout="this.style.backgroundColor='#6b395f'">
           <i class="fa-solid fa-arrow-left mr-2"></i>
           <span>メンテナンス一覧に戻る</span>
@@ -3533,7 +3678,7 @@
       </div>
 
       <div class="flex justify-center w-full mt-6 mb-8">
-        <button onclick="switchView('maintenanceMachineListViewMower')"
+        <button onclick="switchView('maintenanceMachineListViewMower'); loadMachineListMower();"
           class="px-6 py-3 rounded-lg font-medium transition-all shadow-md text-white hover:bg-[#555522] flex items-center justify-center" style="background: #666633;">
           <i class="fa-solid fa-list mr-2"></i>
           <span>メンテナンス一覧に戻る</span>
@@ -3607,7 +3752,7 @@
       </div>
 
       <div class="flex justify-center w-full mt-6 mb-8">
-        <button onclick="switchView('maintenanceMachineListViewMower')"
+        <button onclick="switchView('maintenanceMachineListViewMower'); loadMachineListMower();"
           class="px-6 py-3 rounded-lg font-medium transition-all shadow-md text-white hover:bg-[#555522] flex items-center justify-center" style="background: #666633;">
           <i class="fa-solid fa-list mr-2"></i>
           <span>メンテナンス一覧に戻る</span>
@@ -3701,7 +3846,7 @@
       </div>
 
       <div class="flex justify-center w-full mt-6 mb-8">
-        <button onclick="switchView('maintenanceMachineListViewOtherMachinery')"
+        <button onclick="switchView('maintenanceMachineListViewOtherMachinery'); loadMachineListOtherMachinery();"
           class="px-6 py-3 rounded-lg font-medium transition-all shadow-md text-white flex items-center justify-center" style="background: var(--other-color);" onmouseover="this.style.background='var(--other-hover)'" onmouseout="this.style.background='var(--other-color)'">
           <i class="fa-solid fa-list mr-2"></i>
           <span>メンテナンス一覧に戻る</span>
@@ -4000,6 +4145,16 @@
                 <p class="text-xs text-gray-400">前年比</p>
                 <p class="text-3xl font-black" style="color: var(--other-color);" id="yoy-change-other">--</p>
               </div>
+            </div>
+          </div>
+
+          <div class="card maint-card overflow-hidden">
+            <p class="chart-title border-b pb-1" style="display: flex; align-items: center;">
+              <i class="fa-solid fa-clipboard-list" style="margin-right: 8px; color: var(--other-color);"></i>
+              メンテナンス情報
+            </p>
+            <div id="maintenanceLogOther" class="text-[10px] space-y-2 opacity-80 pt-2 flex-1 overflow-y-auto">
+              <p class="italic text-gray-400 text-center py-4">履歴はありません</p>
             </div>
           </div>
         </div>
@@ -4381,6 +4536,194 @@
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     let allMachines = []; let currentMachineId = 'all'; window.charts = {};
 
+    // ==========================================
+    // オフライン対応：LocalStorage同期機能
+    // ==========================================
+    
+    // LocalStorageに未送信データを保存
+    function saveToLocalStorage(type, data) {
+      try {
+        const key = `unsyncedData_${type}`;
+        const existing = JSON.parse(localStorage.getItem(key) || '[]');
+        existing.push({
+          ...data,
+          _localId: Date.now() + Math.random(),
+          _timestamp: new Date().toISOString()
+        });
+        localStorage.setItem(key, JSON.stringify(existing));
+        updateSyncBadge();
+        console.log(`📦 LocalStorageに保存: ${type}`, data);
+        return true;
+      } catch (e) {
+        console.error('LocalStorage保存エラー:', e);
+        return false;
+      }
+    }
+    
+    // 未同期データ件数を表示
+    function updateSyncBadge() {
+      const types = ['hour_logs', 'repair_logs', 'maintenance_records', 'taue_logs', 'combine_logs', 'other_logs'];
+      let total = 0;
+      types.forEach(type => {
+        const data = JSON.parse(localStorage.getItem(`unsyncedData_${type}`) || '[]');
+        total += data.length;
+      });
+      
+      const badge = document.getElementById('syncBadge');
+      if (badge) {
+        if (total > 0) {
+          badge.textContent = total;
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+        }
+      }
+    }
+    
+    // LocalStorageからSupabaseに同期
+    async function syncLocalStorageToSupabase() {
+      const types = [
+        { key: 'hour_logs', table: 'hour_logs' },
+        { key: 'repair_logs', table: 'repair_logs' },
+        { key: 'maintenance_records', table: 'maintenance_records' },
+        { key: 'taue_logs', table: 'taue_logs' },
+        { key: 'combine_logs', table: 'combine_logs' },
+        { key: 'other_logs', table: 'other_logs' }
+      ];
+      
+      let successCount = 0;
+      let failCount = 0;
+      
+      for (const type of types) {
+        const key = `unsyncedData_${type.key}`;
+        const data = JSON.parse(localStorage.getItem(key) || '[]');
+        
+        if (data.length === 0) continue;
+        
+        const remaining = [];
+        
+        for (const item of data) {
+          try {
+            // _localIdと_timestampを除いてSupabaseに送信
+            const { _localId, _timestamp, ...cleanData } = item;
+            const { error } = await client.from(type.table).insert(cleanData);
+            
+            if (error) throw error;
+            successCount++;
+            console.log(`✅ 同期成功: ${type.key}`, cleanData);
+          } catch (e) {
+            console.error(`❌ 同期失敗: ${type.key}`, e);
+            remaining.push(item);
+            failCount++;
+          }
+        }
+        
+        // 同期できなかったデータのみ残す
+        localStorage.setItem(key, JSON.stringify(remaining));
+      }
+      
+      updateSyncBadge();
+      
+      if (successCount > 0) {
+        console.log(`🔄 同期完了: 成功 ${successCount}件, 失敗 ${failCount}件`);
+        if (failCount === 0) {
+          showModal('同期完了', `${successCount}件のデータをクラウドに保存しました`);
+        }
+      }
+      
+      return { successCount, failCount };
+    }
+    
+    // ネットワーク状態をチェック
+    function isOnline() {
+      return navigator.onLine;
+    }
+    
+    // データ保存のラッパー関数（オンライン時は直接保存、オフライン時はLocalStorage）
+    async function saveData(table, data, type) {
+      if (isOnline()) {
+        try {
+          const { error } = await client.from(table).insert(data);
+          if (error) throw error;
+          
+          // 成功したら念のためLocalStorageもチェックして同期
+          setTimeout(() => syncLocalStorageToSupabase(), 100);
+          return { success: true };
+        } catch (e) {
+          console.error('保存エラー、LocalStorageに保存:', e);
+          saveToLocalStorage(type, data);
+          return { success: true, offline: true };
+        }
+      } else {
+        saveToLocalStorage(type, data);
+        showModal('オフラインモード', 'ネットワークに接続されていません。\nデータはローカルに保存され、接続時に自動同期されます。');
+        return { success: true, offline: true };
+      }
+    }
+
+    // メンテナンス全項目完了チェック&保存
+    async function checkAndSaveMaintenanceCompletion(machineId, machineType) {
+      try {
+        // メンテナンス項目テーブル名を決定
+        const itemsTableMap = {
+          'tractor': 'maintenance_items_tractor',
+          'transplanter': 'maintenance_items_transplanter',
+          'combine': 'maintenance_items_combine',
+          'brush_cutter': 'maintenance_items_brush_cutter',
+          'power_duster': 'maintenance_items_power_duster',
+          'spider_mower': 'maintenance_items_spider_mower',
+          'wing_mower': 'maintenance_items_wing_mower',
+          'bale_wrapper': 'maintenance_items_bale_wrapper',
+          'implements': 'maintenance_items_implements',
+          'other_machinery': 'maintenance_items_other_machinery'
+        };
+        
+        const itemsTable = itemsTableMap[machineType];
+        if (!itemsTable) return;
+
+        // 全メンテナンス項目を取得
+        const { data: items } = await client.from(itemsTable).select('id');
+        if (!items || items.length === 0) return;
+
+        // 現在のチェック状況を取得
+        const { data: checks } = await client
+          .from('maintenance_status')
+          .select('item_id, status')
+          .filter('item_id', 'ilike', `${machineId}_%`);
+
+        if (!checks) return;
+
+        // 完了した項目をカウント
+        const uniqueChecks = {};
+        checks.forEach(c => { uniqueChecks[c.item_id] = c.status; });
+        const completedCount = Object.values(uniqueChecks).filter(status => status === true || status === "true").length;
+
+        // 全項目完了の場合、maintenance_completion_logsに保存
+        if (completedCount === items.length) {
+          // 機械情報を取得
+          const { data: machine } = await client
+            .from('machines')
+            .select('name, machine_type')
+            .eq('id', machineId)
+            .single();
+          
+          if (machine) {
+            await client.from('maintenance_completion_logs').insert({
+              machine_id: parseInt(machineId),
+              machine_name: machine.name,
+              completion_date: new Date().toISOString().split('T')[0],
+              status: 'completed',
+              created_at: new Date().toISOString(),
+              total_items: items.length
+            });
+            console.log(`✅ メンテナンス完了ログ保存: 機械ID ${machineId}, 名前: ${machine.name}`);
+          }
+        }
+      } catch (e) {
+        console.error('メンテナンス完了チェックエラー:', e);
+      }
+    }
+
     window.drawCharts = function (data) {
       console.log("📊 全カラムのグラフを最適化します");
       if (typeof Chart === 'undefined') return;
@@ -4573,17 +4916,25 @@
     }
 
     function showModal(title, message, onOk) {
+      console.log("📢 showModal呼び出し:", { title, message, hasCallback: !!onOk });
       const modal = document.getElementById("customModal");
       document.getElementById("modalTitle").innerText = title;
       document.getElementById("modalMessage").innerText = message;
       const okBtn = document.getElementById("modalOkBtn");
-      okBtn.onclick = () => { closeModal(); if (onOk) onOk(); };
+      okBtn.onclick = () => { 
+        console.log("✅ モーダルOKボタンクリック", { hasCallback: !!onOk });
+        closeModal(); 
+        if (onOk) onOk(); 
+      };
       modal.classList.add("active");
     }
     function closeModal() { document.getElementById("customModal").classList.remove("active"); }
 
     async function switchView(id) {
       console.log("Switching to:", id);
+      
+      // 現在のビューをlocalStorageに保存
+      localStorage.setItem('currentView', id);
 
       // 全てのビューからactiveを取り除く
       document.querySelectorAll('.view').forEach(v => {
@@ -4811,6 +5162,14 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
+      // リロード後、保存されたビューを復元
+      const savedView = localStorage.getItem('currentView');
+      if (savedView) {
+        // 一度だけ使用したら削除（次回のページ読み込みはportalViewから）
+        localStorage.removeItem('currentView');
+        setTimeout(() => switchView(savedView), 100);
+      }
+      
       // 1. 機械（トラクターのみ）の取得
       const { data: machines } = await client
         .from("machines")
@@ -5267,32 +5626,28 @@
       btn.innerText = "保存中...";
 
       try {
-        // 3. Supabaseへ保存
-        const { error } = await client
-          .from('repair_logs')
-          .insert([
-            {
-              date: dateValue,
-              shop: shopValue,
-              cost: parseInt(costValue),
-              memo: memoValue,
-              machine_id: machineId || null // IDが空でも保存できるようにする
-            }
-          ]);
+        const repairData = {
+          date: dateValue,
+          shop: shopValue,
+          cost: parseInt(costValue),
+          memo: memoValue,
+          machine_id: machineId || null,
+          created_at: new Date().toISOString()
+        };
 
-        if (error) throw error;
+        const result = await saveData('repair_logs', repairData, 'repair_logs');
 
-        // --- ここをオシャレに書き換え ---
         btn.innerText = "保存完了！";
-
-        // 1. 成功したらダッシュボードの数字を再計算
         loadRepairDashboard();
 
-        // 2. モーダルで通知（もしモーダルが動くなら）
+        const message = result.offline ? 
+          "修理ログをローカルに保存しました\n（オンライン時に自動同期されます）" : 
+          "保存完了しました！🚜🌾";
+
         if (typeof showCustomModal === 'function') {
-          showCustomModal("保存完了", "修理履歴を記録しました。ダッシュボードを更新します。");
+          showCustomModal("保存完了", message);
         } else {
-          showModal("保存完了", "保存完了しました！🚜🌾");
+          showModal("保存完了", message);
         }
 
         // 3. 自動的に履歴トップ画面に戻す
@@ -5451,38 +5806,98 @@
       if (!logContainer) return;
 
       try {
-        // 1. 最新のメンテナンス履歴を5件ほど取得
+        // トラクターの機械IDを取得
+        const { data: tractorMachines, error: machineError } = await client
+          .from('machines')
+          .select('id, name')
+          .eq('machine_type', 'tractor');
+        
+        if (machineError) throw machineError;
+        
+        const tractorIds = tractorMachines ? tractorMachines.map(m => m.id) : [];
+        const tractorMap = {};
+        if (tractorMachines) {
+          tractorMachines.forEach(m => tractorMap[m.id] = m.name);
+        }
+        
+        // トラクターIDが空の場合は早期リターン
+        if (tractorIds.length === 0) {
+          logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">直近の整備履歴はありません</p>`;
+          return;
+        }
+        
+        // メンテナンス完了ログを取得
+        const { data: completionLogs, error: completionError } = await client
+          .from('maintenance_completion_logs')
+          .select('machine_id, machine_name, completion_date, status, created_at')
+          .in('machine_id', tractorIds)
+          .order('created_at', { ascending: false })
+          .limit(3);
+        
+        // メンテナンス記録を取得
         const { data: logs, error } = await client
-          .from('maintenance_status') // メンテナンス状態テーブル
-          .select('item_id, updated_at, status')
-          .eq('status', true)        // 完了したものだけ
-          .order('updated_at', { ascending: false }) // 新しい順
+          .from('maintenance_records')
+          .select('machine_id, item_name, date, created_at')
+          .in('machine_id', tractorIds)
+          .order('created_at', { ascending: false })
           .limit(5);
+        
         if (error) throw error;
 
-        if (logs && logs.length > 0) {
-          logContainer.innerHTML = logs.map(log => {
-            // item_id が "tractor1_oil" のような形式だと仮定して整形
-            const [machine, item] = log.item_id.split('_');
-            const date = new Date(log.updated_at).toLocaleDateString('ja-JP', {
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit'
-            });
+        let html = '';
+        
+        // 完了ログを表示（トラクターのみ）
+        if (completionLogs && completionLogs.length > 0) {
+          html += completionLogs
+            .filter(log => tractorIds.includes(log.machine_id))
+            .map(log => {
+              const machineName = log.machine_name || tractorMap[log.machine_id] || '不明';
+              const date = new Date(log.completion_date || log.created_at).toLocaleDateString('ja-JP', {
+                month: '2-digit',
+                day: '2-digit'
+              });
 
-            return `
+              return `
           <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
             <div class="flex justify-between items-center">
-              <span class="font-bold text-gray-700">${machine.toUpperCase()}</span>
+              <span class="font-bold text-gray-700">${machineName}</span>
               <span class="text-[9px] text-gray-400">${date}</span>
             </div>
-            <div class="text-[#6b8f71] flex items-center gap-1">
-              <i class="fa-solid fa-check-circle"></i> ${item} 完了
+            <div class="text-green-600 flex items-center gap-1">
+              <i class="fa-solid fa-circle-check"></i> <strong>全項目完了</strong>
             </div>
           </div>
         `;
-          }).join('');
+            }).join('');
+        }
+        
+        // 個別記録を表示（トラクターのみ）
+        if (logs && logs.length > 0) {
+          html += logs
+            .filter(log => tractorIds.includes(log.machine_id))
+            .map(log => {
+              const machineName = tractorMap[log.machine_id] || '不明';
+              const date = new Date(log.date || log.created_at).toLocaleDateString('ja-JP', {
+                month: '2-digit',
+                day: '2-digit'
+              });
+
+              return `
+          <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-gray-700">${machineName}</span>
+              <span class="text-[9px] text-gray-400">${date}</span>
+            </div>
+            <div class="text-[#6b8f71] flex items-center gap-1">
+              <i class="fa-solid fa-check-circle"></i> ${log.item_name} 完了
+            </div>
+          </div>
+        `;
+            }).join('');
+        }
+        
+        if (html) {
+          logContainer.innerHTML = html;
         } else {
           logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">直近の整備履歴はありません</p>`;
         }
@@ -5493,6 +5908,204 @@
     }
 
     loadMaintenanceLogs();
+
+    // コンバインのメンテナンス履歴をDBから取得して表示する関数
+    async function loadMaintenanceLogsCombine() {
+      const logContainer = document.getElementById('maintenanceLogCombine');
+      if (!logContainer) return;
+
+      try {
+        // コンバインの機械IDを取得
+        const { data: combineMachines, error: machineError } = await client
+          .from('machines')
+          .select('id, name')
+          .eq('machine_type', 'combine');
+        
+        if (machineError) throw machineError;
+        
+        const combineIds = combineMachines ? combineMachines.map(m => m.id) : [];
+        const combineMap = {};
+        if (combineMachines) {
+          combineMachines.forEach(m => combineMap[m.id] = m.name);
+        }
+        
+        // メンテナンス完了ログを取得
+        const { data: completionLogs, error: completionError } = await client
+          .from('maintenance_completion_logs')
+          .select('machine_id, machine_name, completion_date, status, created_at')
+          .in('machine_id', combineIds)
+          .order('created_at', { ascending: false })
+          .limit(3);
+        
+        // メンテナンス記録を取得
+        const { data: logs, error } = await client
+          .from('maintenance_records')
+          .select('machine_id, item_name, date, created_at')
+          .in('machine_id', combineIds)
+          .order('created_at', { ascending: false })
+          .limit(5);
+        
+        if (error) throw error;
+
+        let html = '';
+        
+        // 完了ログを表示
+        if (completionLogs && completionLogs.length > 0) {
+          html += completionLogs.map(log => {
+            const machineName = log.machine_name || combineMap[log.machine_id] || '不明';
+            const date = new Date(log.completion_date || log.created_at).toLocaleDateString('ja-JP', {
+              month: '2-digit',
+              day: '2-digit'
+            });
+
+            return `
+          <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-gray-700">${machineName}</span>
+              <span class="text-[9px] text-gray-400">${date}</span>
+            </div>
+            <div class="text-green-600 flex items-center gap-1">
+              <i class="fa-solid fa-circle-check"></i> <strong>全項目完了</strong>
+            </div>
+          </div>
+        `;
+          }).join('');
+        }
+        
+        // 個別記録を表示
+        if (logs && logs.length > 0) {
+          html += logs.map(log => {
+            const machineName = combineMap[log.machine_id] || '不明';
+            const date = new Date(log.date || log.created_at).toLocaleDateString('ja-JP', {
+              month: '2-digit',
+              day: '2-digit'
+            });
+
+            return `
+          <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-gray-700">${machineName}</span>
+              <span class="text-[9px] text-gray-400">${date}</span>
+            </div>
+            <div class="flex items-center gap-1" style="color: var(--combine-color)">
+              <i class="fa-solid fa-check-circle"></i> ${log.item_name} 完了
+            </div>
+          </div>
+        `;
+          }).join('');
+        }
+        
+        if (html) {
+          logContainer.innerHTML = html;
+        } else {
+          logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">直近の整備履歴はありません</p>`;
+        }
+      } catch (err) {
+        console.error('履歴取得エラー:', err);
+        logContainer.innerHTML = `<p class="text-red-400 text-center py-4">データ取得失敗</p>`;
+      }
+    }
+
+    loadMaintenanceLogsCombine();
+
+    // その他の機械のメンテナンス履歴をDBから取得して表示する関数
+    async function loadMaintenanceLogsOther() {
+      const logContainer = document.getElementById('maintenanceLogOther');
+      if (!logContainer) return;
+
+      try {
+        // その他の機械の機械IDを取得
+        const { data: otherMachines, error: machineError } = await client
+          .from('machines')
+          .select('id, name')
+          .eq('machine_type', 'other');
+        
+        if (machineError) throw machineError;
+        
+        const otherIds = otherMachines ? otherMachines.map(m => m.id) : [];
+        const otherMap = {};
+        if (otherMachines) {
+          otherMachines.forEach(m => otherMap[m.id] = m.name);
+        }
+        
+        // メンテナンス完了ログを取得
+        const { data: completionLogs, error: completionError } = await client
+          .from('maintenance_completion_logs')
+          .select('machine_id, machine_name, completion_date, status, created_at')
+          .in('machine_id', otherIds)
+          .order('created_at', { ascending: false })
+          .limit(3);
+        
+        // メンテナンス記録を取得
+        const { data: logs, error } = await client
+          .from('maintenance_records')
+          .select('machine_id, item_name, date, created_at')
+          .in('machine_id', otherIds)
+          .order('created_at', { ascending: false })
+          .limit(5);
+        
+        if (error) throw error;
+
+        let html = '';
+        
+        // 完了ログを表示
+        if (completionLogs && completionLogs.length > 0) {
+          html += completionLogs.map(log => {
+            const machineName = log.machine_name || otherMap[log.machine_id] || '不明';
+            const date = new Date(log.completion_date || log.created_at).toLocaleDateString('ja-JP', {
+              month: '2-digit',
+              day: '2-digit'
+            });
+
+            return `
+          <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-gray-700">${machineName}</span>
+              <span class="text-[9px] text-gray-400">${date}</span>
+            </div>
+            <div class="text-green-600 flex items-center gap-1">
+              <i class="fa-solid fa-circle-check"></i> <strong>全項目完了</strong>
+            </div>
+          </div>
+        `;
+          }).join('');
+        }
+        
+        // 個別記録を表示
+        if (logs && logs.length > 0) {
+          html += logs.map(log => {
+            const machineName = otherMap[log.machine_id] || '不明';
+            const date = new Date(log.date || log.created_at).toLocaleDateString('ja-JP', {
+              month: '2-digit',
+              day: '2-digit'
+            });
+
+            return `
+          <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-gray-700">${machineName}</span>
+              <span class="text-[9px] text-gray-400">${date}</span>
+            </div>
+            <div class="flex items-center gap-1" style="color: var(--other-color)">
+              <i class="fa-solid fa-check-circle"></i> ${log.item_name} 完了
+            </div>
+          </div>
+        `;
+          }).join('');
+        }
+        
+        if (html) {
+          logContainer.innerHTML = html;
+        } else {
+          logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">直近の整備履歴はありません</p>`;
+        }
+      } catch (err) {
+        console.error('履歴取得エラー:', err);
+        logContainer.innerHTML = `<p class="text-red-400 text-center py-4">データ取得失敗</p>`;
+      }
+    }
+
+    loadMaintenanceLogsOther();
 
     // Mower (スパイダーモア・ウイングモア) メンテナンスリスト読み込み
     async function loadMachineListMower() {
@@ -6219,7 +6832,7 @@
                   progressDiv.innerHTML = `
                     <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
                     <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
-                      <div style="background-color: #483D8B;" class="h-1 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                      <div class="h-1 rounded-full transition-all duration-500" style="background-color: #483D8B; width: ${percent}%"></div>
                     </div>
                   `;
                 }
@@ -6295,7 +6908,7 @@
                   progressDiv.innerHTML = `
                     <div class="text-[11px] flex items-center gap-1">${statusHTML}</div>
                     <div class="w-full bg-gray-100 rounded-full h-1 mt-1">
-                      <div style="background-color: #483D8B;" class="h-1 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                      <div class="h-1 rounded-full transition-all duration-500" style="background-color: #483D8B; width: ${percent}%"></div>
                     </div>
                   `;
                 }
@@ -6596,21 +7209,8 @@
         if (machineError) throw new Error('機械情報の取得エラー: ' + machineError.message);
         document.getElementById("maintenanceMachineNameImplement").textContent = machine.name;
 
-        // サブタイプを判定（機械名から）
-        let subType = null;
-        if (machine.name.includes('プラウ') || machine.name.includes('耕起')) {
-          subType = 'plow';
-        } else if (machine.name.includes('ロータリー')) {
-          subType = 'rotary';
-        } else if (machine.name.includes('あぜ塗り')) {
-          subType = 'ridge_maker';
-        } else if (machine.name.includes('畦草刈機') || machine.name.includes('あぜ草刈機')) {
-          subType = 'ridge_mower';
-        } else if (machine.name.includes('代かき')) {
-          subType = 'harrow';
-        } else if (machine.name.includes('施肥')) {
-          subType = 'fertilizer_applicator';
-        }
+        // サブタイプを取得（機械テーブルの値をそのまま使用）
+        const subType = machine.sub_type || null;
 
         const { data: operators } = await client.from('operators').select('name').order('id');
         const opSelect = document.getElementById('newMaintenanceOperatorImplement');
@@ -6699,6 +7299,9 @@
         }, { onConflict: 'item_id' });
         updateMaintenanceProgressImplement();
         loadMachineListImplement();
+        
+        // 全項目完了チェック
+        await checkAndSaveMaintenanceCompletion(machineId, 'implements');
       } catch (e) {
         console.error(e);
       }
@@ -7116,6 +7719,9 @@
           await client.from('maintenance_status').insert({ item_id: itemKey, status: isChecked });
         }
         updateMaintenanceProgressWrapper();
+        
+        // 全項目完了チェック
+        await checkAndSaveMaintenanceCompletion(machineId, 'bale_wrapper');
       } catch (e) { console.error("保存エラー:", e); }
     }
 
@@ -7281,6 +7887,9 @@
         }, { onConflict: 'item_id' });
         updateMaintenanceProgressSpiderMower();
         loadMachineListSpiderMower();
+        
+        // 全項目完了チェック
+        await checkAndSaveMaintenanceCompletion(machineId, 'spider_mower');
       } catch (e) { console.error(e); }
     }
 
@@ -7424,6 +8033,9 @@
         }, { onConflict: 'item_id' });
         updateMaintenanceProgressWingMower();
         loadMachineListWingMower();
+        
+        // 全項目完了チェック
+        await checkAndSaveMaintenanceCompletion(machineId, 'wing_mower');
       } catch (e) { console.error(e); }
     }
 
@@ -7593,17 +8205,36 @@
       if (!logContainer) return;
 
       try {
-        // 1. 全てのメンテナンス状態を取得
+        // 1. トラクターの機械IDを取得
+        const { data: tractorMachines, error: tractorError } = await client
+          .from('machines')
+          .select('id, name')
+          .eq('machine_type', 'tractor');
+
+        if (tractorError) throw tractorError;
+        if (!tractorMachines || tractorMachines.length === 0) {
+          logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">トラクターが登録されていません</p>`;
+          return;
+        }
+
+        const tractorIds = tractorMachines.map(m => m.id);
+        const tractorMap = {};
+        tractorMachines.forEach(m => { tractorMap[m.id.toString()] = m.name; });
+
+        // 2. トラクターのメンテナンス状態のみを取得
         const { data: allStatus, error: statusError } = await client
           .from('maintenance_status')
           .select('item_id, status, updated_at');
 
         if (statusError) throw statusError;
 
-        // 2. 機械ごとに「全項目数」と「完了数」をカウント
+        // 3. 機械ごとに「全項目数」と「完了数」をカウント（トラクターのみ）
         const machineProgress = {};
         allStatus.forEach(item => {
-          const mId = item.item_id.split('_')[0];
+          const mId = parseInt(item.item_id.split('_')[0]);
+          // トラクターIDに含まれているもののみ処理
+          if (!tractorIds.includes(mId)) return;
+          
           if (!machineProgress[mId]) {
             machineProgress[mId] = { total: 0, completed: 0, lastUpdate: item.updated_at };
           }
@@ -7617,7 +8248,7 @@
           }
         });
 
-        // 3. 判定ロジック
+        // 4. 判定ロジック（トラクターで完了したもののみ）
         const finishedMachineIds = Object.keys(machineProgress).filter(mId => {
           const p = machineProgress[mId];
           // 1つ以上項目があり、かつ（完了数 ＝ 項目数）であること
@@ -7625,22 +8256,16 @@
           return p.total >= 3 && p.completed === p.total;
         });
 
-        // 4. 機械名を取得
-        const { data: machines, error: mError } = await client
-          .from('machines')
-          .select('id, name')
-          .in('id', finishedMachineIds);
-
-        if (mError) throw mError;
-
-        const machineMap = {};
-        machines.forEach(m => { machineMap[m.id.toString()] = m.name; });
+        if (finishedMachineIds.length === 0) {
+          logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">完了したメンテナンスはありません</p>`;
+          return;
+        }
 
         // 5. 完了した機械を最新順に並べて表示
         const displayData = finishedMachineIds
           .map(mId => ({
             id: mId,
-            name: machineMap[mId] || `機械(ID:${mId})`,
+            name: tractorMap[mId] || `トラクター(ID:${mId})`,
             date: machineProgress[mId].lastUpdate
           }))
           .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -7669,6 +8294,7 @@
 
       } catch (err) {
         console.error('履歴取得エラー:', err);
+        logContainer.innerHTML = `<p class="text-red-400 text-center py-4">データ取得失敗</p>`;
       }
     }
 
@@ -7746,6 +8372,9 @@
         }, { onConflict: 'item_id' });
         updateMaintenanceProgress();
         loadMachineList();
+        
+        // 全項目完了チェック
+        await checkAndSaveMaintenanceCompletion(machineId, 'tractor');
       } catch (e) { console.error(e); }
     }
 
@@ -7975,10 +8604,9 @@
       if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
       if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
 
-      // 以前のスタイル：showModal を使って確認してから保存
       showModal("登録確認", "ログを登録しますか？", async () => {
         try {
-          const { error } = await client.from('hour_logs').insert([{
+          const logData = {
             date: workDate,
             operator: operator,
             machine_id: parseInt(machineId),
@@ -7988,13 +8616,20 @@
             task: workName,
             fuel_type_id: fuelType ? parseInt(fuelType) : null,
             fuel_amount: fuel,
-            memo: memo
-          }]);
+            memo: memo,
+            created_at: new Date().toISOString()
+          };
 
-          if (error) throw error;
+          const result = await saveData('hour_logs', logData, 'hour_logs');
 
-          // 保存成功後、以前のようにページをリロードしてすべてリセット
-          location.reload();
+          const message = result.offline ? 
+            "稼働ログをローカルに保存しました\n（オンライン時に自動同期されます）" : 
+            "稼働ログを保存しました";
+
+          showModal("保存完了", message, () => {
+            localStorage.setItem('currentView', 'tractorView');
+            location.reload();
+          });
 
         } catch (err) {
           console.error("Log Save Error:", err);
@@ -8113,7 +8748,7 @@
       const taue_operator = document.getElementById("taue_operator");
       if (taue_operator) {
         taue_operator.innerHTML = '<option value="">選択</option>' +
-          (operators || []).map(o => `<option value="${o.name}">${o.name}</option>`).join("");
+          (operators || []).map(o => `<option value="${o.id}">${o.name}</option>`).join("");
       }
 
       // 油種選択
@@ -8197,13 +8832,25 @@
       const fuel = parseFloat(document.getElementById('taue_fuelAmount')?.value) || 0;
       const memo = document.getElementById('taue_memoInput')?.value;
 
+      console.log("🔍 田植え機ログ保存前のデータ確認:", {
+        machineId,
+        workDate,
+        operator,
+        workName,
+        hourBefore,
+        hourAfter,
+        hourBeforeElement: document.getElementById('taue_hourBefore'),
+        hourBeforeValue: document.getElementById('taue_hourBefore')?.value,
+        hourAfterValue: document.getElementById('taue_hourAfter')?.value
+      });
+
       if (!machineId) return showModal("入力エラー", "機械を選択してください");
       if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
       if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
 
       showModal("登録確認", "ログを登録しますか？", async () => {
         try {
-          const { error } = await client.from('planting_logs').insert([{
+          const logData = {
             date: workDate,
             operator_id: operator ? parseInt(operator) : null,
             machine_id: parseInt(machineId),
@@ -8212,11 +8859,21 @@
             task: workName,
             fuel_type_id: fuelType ? parseInt(fuelType) : null,
             fuel_amount: fuel,
-            memo: memo
-          }]);
+            memo: memo,
+            created_at: new Date().toISOString()
+          };
+          console.log("🚀 Supabaseに送信するデータ:", logData);
+          
+          const result = await saveData('planting_logs', logData, 'taue_logs');
 
-          if (error) throw error;
-          location.reload();
+          const message = result.offline ? 
+            "ログをローカルに保存しました\n（オンライン時に自動同期されます）" : 
+            "ログを保存しました";
+
+          showModal("保存完了", message, () => {
+            localStorage.setItem('currentView', 'plantingView');
+            location.reload();
+          });
 
         } catch (err) {
           console.error("Log Save Error:", err);
@@ -8390,7 +9047,7 @@
 
       showModal("登録確認", "ログを登録しますか？", async () => {
         try {
-          const { error } = await client.from('combine_logs').insert([{
+          const logData = {
             date: workDate,
             operator_id: operator ? parseInt(operator) : null,
             machine_id: parseInt(machineId),
@@ -8399,11 +9056,20 @@
             task: workName,
             fuel_type_id: fuelType ? parseInt(fuelType) : null,
             fuel_amount: fuel,
-            memo: memo
-          }]);
+            memo: memo,
+            created_at: new Date().toISOString()
+          };
 
-          if (error) throw error;
-          location.reload();
+          const result = await saveData('combine_logs', logData, 'combine_logs');
+
+          const message = result.offline ? 
+            "ログをローカルに保存しました\n（オンライン時に自動同期されます）" : 
+            "ログを保存しました";
+
+          showModal("保存完了", message, () => {
+            localStorage.setItem('currentView', 'combineView');
+            location.reload();
+          });
 
         } catch (err) {
           console.error("Log Save Error:", err);
@@ -8769,6 +9435,9 @@
         }, { onConflict: 'item_id' });
         updateMaintenanceProgressPlanting();
         loadMachineListPlanting();
+        
+        // 全項目完了チェック
+        await checkAndSaveMaintenanceCompletion(machineId, 'transplanter');
       } catch (e) { console.error(e); }
     }
 
@@ -9296,6 +9965,9 @@
         }, { onConflict: 'item_id' });
         updateMaintenanceProgressCombine();
         loadMachineListCombine();
+        
+        // 全項目完了チェック
+        await checkAndSaveMaintenanceCompletion(machineId, 'combine');
       } catch (e) { console.error(e); }
     }
 
@@ -9465,6 +10137,14 @@
       const previewDiv = document.getElementById('exportPreviewTable');
       const countSpan = document.getElementById('previewCount');
       const exportButton = document.getElementById('exportButton');
+      
+      // データタイプに応じてフィルタの表示/非表示を制御
+      const operatorFilter = document.getElementById('exportOperatorFilter');
+      if (['tractor', 'planting', 'combine'].includes(dataType)) {
+        operatorFilter.style.display = 'block';
+      } else {
+        operatorFilter.style.display = 'none';
+      }
 
       // ローディング表示
       previewDiv.innerHTML = '<p class="text-center text-gray-500 py-8"><i class="fa-solid fa-spinner fa-spin mr-2"></i>読み込み中...</p>';
@@ -9502,11 +10182,11 @@
           query = client.from(tableName).select('*');
         } else if (dataType === 'maintenance') {
           tableName = 'maintenance_records';
-          dateField = 'maintenance_date';
+          dateField = 'date';
           query = client.from(tableName).select('*');
         } else if (dataType === 'repair') {
           tableName = 'repair_logs';
-          dateField = 'repair_date';
+          dateField = 'date';
           query = client.from(tableName).select('*');
         }
 
@@ -9537,9 +10217,18 @@
         // データにマスターデータを結合
         currentExportData = (data || []).map(row => {
           const enrichedRow = { ...row };
-          enrichedRow.machine_name = machineMap[row.machine_id] || '';
-          // オペレーターはIDではなく名前の文字列で保存されている
-          enrichedRow.operator_name = row.operator || operatorMap[row.operator_id] || '';
+          
+          // 機械名の取得（machine_idがnullやundefinedの場合も考慮）
+          if (row.machine_id) {
+            enrichedRow.machine_name = machineMap[row.machine_id] || row.machine_name || '';
+          } else {
+            enrichedRow.machine_name = row.machine_name || '';
+          }
+          
+          // オペレーター名の取得
+          if (['tractor', 'planting', 'combine'].includes(dataType)) {
+            enrichedRow.operator_name = row.operator || operatorMap[row.operator_id] || '';
+          }
           
           if (dataType === 'tractor' && row.work_type_id) {
             const workType = workTypeMap[row.work_type_id];
@@ -9582,21 +10271,20 @@
             `;
           } else if (dataType === 'maintenance') {
             tableHTML += `
-              <th class="border p-2">メンテナンス日</th>
+              <th class="border p-2">日付</th>
               <th class="border p-2">機械名</th>
-              <th class="border p-2">内容</th>
-              <th class="border p-2">詳細</th>
-              <th class="border p-2">次回予定</th>
-              <th class="border p-2">費用</th>
+              <th class="border p-2">項目名</th>
+              <th class="border p-2">担当者</th>
+              <th class="border p-2">状態</th>
+              <th class="border p-2">メモ</th>
             `;
           } else if (dataType === 'repair') {
             tableHTML += `
               <th class="border p-2">修理日</th>
               <th class="border p-2">機械名</th>
-              <th class="border p-2">故障内容</th>
-              <th class="border p-2">修理内容</th>
               <th class="border p-2">修理先</th>
               <th class="border p-2">費用</th>
+              <th class="border p-2">メモ</th>
             `;
           }
           
@@ -9631,21 +10319,20 @@
               `;
             } else if (dataType === 'maintenance') {
               tableHTML += `
-                <td class="border p-2">${row.maintenance_date || ''}</td>
+                <td class="border p-2">${row.date || ''}</td>
                 <td class="border p-2">${row.machine_name}</td>
-                <td class="border p-2">${row.maintenance_type || ''}</td>
-                <td class="border p-2">${row.details || ''}</td>
-                <td class="border p-2">${row.next_maintenance_date || ''}</td>
-                <td class="border p-2">${row.cost || ''}</td>
+                <td class="border p-2">${row.item_name || ''}</td>
+                <td class="border p-2">${row.operator || ''}</td>
+                <td class="border p-2">${row.status || ''}</td>
+                <td class="border p-2">${row.memo || ''}</td>
               `;
             } else if (dataType === 'repair') {
               tableHTML += `
-                <td class="border p-2">${row.repair_date || ''}</td>
+                <td class="border p-2">${row.date || ''}</td>
                 <td class="border p-2">${row.machine_name}</td>
-                <td class="border p-2">${row.issue || ''}</td>
-                <td class="border p-2">${row.repair_details || ''}</td>
                 <td class="border p-2">${row.shop || ''}</td>
                 <td class="border p-2">${row.cost || ''}</td>
+                <td class="border p-2">${row.memo || ''}</td>
               `;
             }
             
@@ -9677,21 +10364,20 @@
             `;
           } else if (dataType === 'maintenance') {
             printTableHTML += `
-              <th class="border p-2">メンテナンス日</th>
+              <th class="border p-2">日付</th>
               <th class="border p-2">機械名</th>
-              <th class="border p-2">内容</th>
-              <th class="border p-2">詳細</th>
-              <th class="border p-2">次回予定</th>
-              <th class="border p-2">費用</th>
+              <th class="border p-2">項目名</th>
+              <th class="border p-2">担当者</th>
+              <th class="border p-2">状態</th>
+              <th class="border p-2">メモ</th>
             `;
           } else if (dataType === 'repair') {
             printTableHTML += `
               <th class="border p-2">修理日</th>
               <th class="border p-2">機械名</th>
-              <th class="border p-2">故障内容</th>
-              <th class="border p-2">修理内容</th>
               <th class="border p-2">修理先</th>
               <th class="border p-2">費用</th>
+              <th class="border p-2">メモ</th>
             `;
           }
           
@@ -9726,21 +10412,20 @@
               `;
             } else if (dataType === 'maintenance') {
               printTableHTML += `
-                <td class="border p-2">${row.maintenance_date || ''}</td>
+                <td class="border p-2">${row.date || ''}</td>
                 <td class="border p-2">${row.machine_name}</td>
-                <td class="border p-2">${row.maintenance_type || ''}</td>
-                <td class="border p-2">${row.details || ''}</td>
-                <td class="border p-2">${row.next_maintenance_date || ''}</td>
-                <td class="border p-2">${row.cost || ''}</td>
+                <td class="border p-2">${row.item_name || ''}</td>
+                <td class="border p-2">${row.operator || ''}</td>
+                <td class="border p-2">${row.status || ''}</td>
+                <td class="border p-2">${row.memo || ''}</td>
               `;
             } else if (dataType === 'repair') {
               printTableHTML += `
-                <td class="border p-2">${row.repair_date || ''}</td>
+                <td class="border p-2">${row.date || ''}</td>
                 <td class="border p-2">${row.machine_name}</td>
-                <td class="border p-2">${row.issue || ''}</td>
-                <td class="border p-2">${row.repair_details || ''}</td>
                 <td class="border p-2">${row.shop || ''}</td>
                 <td class="border p-2">${row.cost || ''}</td>
+                <td class="border p-2">${row.memo || ''}</td>
               `;
             }
             
@@ -9798,24 +10483,21 @@
                       dataType === 'planting' ? '田植え機稼働ログ' : 'コンバイン稼働ログ';
         } else if (dataType === 'maintenance') {
           exportData = currentExportData.map(row => ({
-            'メンテナンス日': row.maintenance_date || '',
+            '日付': row.date || '',
             '機械名': row.machine_name,
-            'メンテナンス内容': row.maintenance_type || '',
-            '詳細': row.details || '',
-            '次回予定日': row.next_maintenance_date || '',
-            '費用(円)': row.cost || '',
-            '備考': row.memo || ''
+            '項目名': row.item_name || '',
+            '担当者': row.operator || '',
+            '状態': row.status || '',
+            'メモ': row.memo || ''
           }));
           sheetName = 'メンテナンス記録';
         } else if (dataType === 'repair') {
           exportData = currentExportData.map(row => ({
-            '修理日': row.repair_date || '',
+            '修理日': row.date || '',
             '機械名': row.machine_name,
-            '故障内容': row.issue || '',
-            '修理内容': row.repair_details || '',
             '修理先': row.shop || '',
             '費用(円)': row.cost || '',
-            '備考': row.memo || ''
+            'メモ': row.memo || ''
           }));
           sheetName = '修理記録';
         }
@@ -10126,7 +10808,7 @@
       if (filterTaskOther) filterTaskOther.innerHTML = '<option value="">全作業内容</option>';
       if (workTypes) workTypes.forEach(w => {
         const opt = document.createElement('option');
-        opt.value = w.id;
+        opt.value = w.work_name;
         opt.textContent = w.work_name;
         workNameSelect.appendChild(opt);
         if (filterTaskOther) {
@@ -10159,9 +10841,15 @@
     async function autoFillHourOther() {
       const machineId = document.getElementById('machineSelectOther').value;
       if (!machineId) return;
-      const { data } = await client.from('hour_logs').select('hour_after').eq('machine_id', machineId).order('work_date', { ascending: false }).limit(1);
+      const { data } = await client
+        .from('other_machinery_logs')
+        .select('end_hour')
+        .eq('machine_id', machineId)
+        .order('date', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(1);
       if (data && data.length > 0) {
-        document.getElementById('hourBeforeOther').value = data[0].hour_after;
+        document.getElementById('hourBeforeOther').value = data[0].end_hour;
         calcDiffOther();
       }
     }
@@ -10169,8 +10857,17 @@
     function calcDiffOther() {
       const before = parseFloat(document.getElementById('hourBeforeOther').value) || 0;
       const after = parseFloat(document.getElementById('hourAfterOther').value) || 0;
-      const diff = Math.max(0, after - before);
-      document.getElementById('hourDiffDisplayOther').textContent = `稼働時間: ${diff.toFixed(1)} h`;
+      const diff = after - before;
+      const disp = document.getElementById('hourDiffDisplayOther');
+
+      // 稼働後のほうが小さい場合に文字を赤くするロジック
+      if (after > 0 && after < before) {
+        disp.style.color = '#ef4444'; // red-500
+        disp.textContent = `稼働時間: 0.0 h (入力エラー)`;
+      } else {
+        disp.style.color = 'var(--other-color)';
+        disp.textContent = `稼働時間: ${diff > 0 ? diff.toFixed(1) : '0.0'} h`;
+      }
     }
 
     async function handleHourAfterImageOther(input) {
@@ -10241,23 +10938,31 @@
         end_hour: hourAfter,
         fuel_amount: fuelAmount,
         fuel_type_id: fuelTypeId ? parseInt(fuelTypeId) : null,
-        memo: memo
+        memo: memo,
+        created_at: new Date().toISOString()
       };
 
-      const { error } = await client.from('other_machinery_logs').insert([logData]);
-      if (error) {
-        console.error(error);
-        showModal('保存失敗', 'ログの保存に失敗しました');
-      } else {
-        showModal('保存完了', 'ログを保存しました', () => {
+      showModal('保存確認', '保存しますか？', async () => {
+        try {
+          const result = await saveData('other_machinery_logs', logData, 'other_logs');
+          
+          const message = result.offline ? 
+            'ログをローカルに保存しました\n（オンライン時に自動同期されます）' : 
+            'ログを保存しました';
+          
+          showModal('保存完了', message);
+          
           document.getElementById('hourBeforeOther').value = hourAfter;
           document.getElementById('hourAfterOther').value = '';
           document.getElementById('fuelAmountOther').value = '';
           document.getElementById('memoInputOther').value = '';
           calcDiffOther();
           loadTodayLogsOther();
-        });
-      }
+        } catch (error) {
+          console.error(error);
+          showModal('保存失敗', 'ログの保存に失敗しました');
+        }
+      });
     }
 
     async function loadTodayLogsOther() {
@@ -10290,17 +10995,24 @@
         const card = document.createElement('div');
         card.className = 'card border-l-4 !mb-3 !py-3 flex justify-between items-center';
         card.style.borderColor = 'var(--other-color)';
+        
+        const machineName = (log.machines?.name || '不明').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const operatorName = (log.operator || '不明').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const taskName = (log.task || '不明').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const fuelTypeName = (log.fuel_types?.name || '不明').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const memoText = log.memo ? (log.memo.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;')) : '';
+        
         card.innerHTML = `
           <div>
-            <b class="text-sm">${log.date} - ${log.machines?.name || '不明'}</b>
-            <p class="text-xs opacity-70 mt-1">${log.operator || '不明'} | ${log.task || '不明'}</p>
+            <b class="text-sm">${log.date} - ${machineName}</b>
+            <p class="text-xs opacity-70 mt-1">${operatorName} | ${taskName}</p>
             <div class="flex gap-4 mt-2">
               <span class="text-[11px] font-bold log-badge px-2 py-1 rounded"><i class="fa-solid fa-clock mr-1" style="color: var(--other-color)"></i>${diff} h</span>
-              ${log.fuel_amount ? `<span class="text-[11px] font-bold log-badge px-2 py-1 rounded"><i class="fa-solid fa-gas-pump mr-1" style="color: var(--other-color)"></i>${log.fuel_amount} L (${log.fuel_types?.name || '不明'})</span>` : ''}
+              ${log.fuel_amount ? `<span class="text-[11px] font-bold log-badge px-2 py-1 rounded"><i class="fa-solid fa-gas-pump mr-1" style="color: var(--other-color)"></i>${log.fuel_amount} L (${fuelTypeName})</span>` : ''}
             </div>
-            ${log.memo ? `<p class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-memo mr-1"></i>${log.memo}</p>` : ''}
+            ${memoText ? `<p class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-memo mr-1"></i>${memoText}</p>` : ''}
           </div>
-          <button onclick="deleteLogOther(${log.id})" class="text-gray-400 p-2 hover:text-red-500 transition-colors">
+          <button onclick="deleteLogOther('${log.id}')" class="text-gray-400 p-2 hover:text-red-500 transition-colors">
             <i class="fa-regular fa-trash-can text-lg"></i>
           </button>
         `;
@@ -10357,17 +11069,24 @@
         const card = document.createElement('div');
         card.className = 'card border-l-4 !mb-3 !py-3 flex justify-between items-center';
         card.style.borderColor = 'var(--other-color)';
+        
+        const machineName = (log.machines?.name || '不明').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const operatorName = (log.operator || '不明').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const taskName = (log.task || '不明').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const fuelTypeName = (log.fuel_types?.name || '不明').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const memoText = log.memo ? (log.memo.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;')) : '';
+        
         card.innerHTML = `
           <div>
-            <b class="text-sm">${log.date} - ${log.machines?.name || '不明'}</b>
-            <p class="text-xs opacity-70 mt-1">${log.operator || '不明'} | ${log.task || '不明'}</p>
+            <b class="text-sm">${log.date} - ${machineName}</b>
+            <p class="text-xs opacity-70 mt-1">${operatorName} | ${taskName}</p>
             <div class="flex gap-4 mt-2">
               <span class="text-[11px] font-bold log-badge px-2 py-1 rounded"><i class="fa-solid fa-clock mr-1" style="color: var(--other-color)"></i>${diff.toFixed(1)} h</span>
-              ${log.fuel_amount ? `<span class="text-[11px] font-bold log-badge px-2 py-1 rounded"><i class="fa-solid fa-gas-pump mr-1" style="color: var(--other-color)"></i>${log.fuel_amount} L (${log.fuel_types?.name || '不明'})</span>` : ''}
+              ${log.fuel_amount ? `<span class="text-[11px] font-bold log-badge px-2 py-1 rounded"><i class="fa-solid fa-gas-pump mr-1" style="color: var(--other-color)"></i>${log.fuel_amount} L (${fuelTypeName})</span>` : ''}
             </div>
-            ${log.memo ? `<p class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-memo mr-1"></i>${log.memo}</p>` : ''}
+            ${memoText ? `<p class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-memo mr-1"></i>${memoText}</p>` : ''}
           </div>
-          <button onclick="deleteLogOther(${log.id})" class="text-gray-400 p-2 hover:text-red-500 transition-colors">
+          <button onclick="deleteLogOther('${log.id}')" class="text-gray-400 p-2 hover:text-red-500 transition-colors">
             <i class="fa-regular fa-trash-can text-lg"></i>
           </button>
         `;
@@ -10452,7 +11171,20 @@
 
         // 関連データを取得
         const { data: workTypes } = await client.from("work_types").select("*");
-        const { data: operators } = await client.from("operators").select("*");
+        
+        // operatorテーブルを取得（単数形で試す）
+        let operators = null;
+        const { data: operatorsData, error: operatorError } = await client.from("operator").select("*");
+        if (operatorError) {
+          console.warn("⚠️ operatorテーブル取得エラー（単数形）:", operatorError);
+          // 複数形で再試行
+          const { data: operatorsDataPlural } = await client.from("operators").select("*");
+          operators = operatorsDataPlural;
+        } else {
+          operators = operatorsData;
+        }
+        console.log("🔍 取得したオペレーターデータ:", operators);
+        
         const { data: crops } = await client.from("crops").select("*");
 
         // データを結合
@@ -10462,6 +11194,15 @@
           operators: operators?.find(o => o.id === log.operator_id) || { name: '不明' },
           categories: crops?.find(c => c.id === log.crop_id) || { name: '不明' }
         }));
+        
+        console.log("🔍 enrichedDataサンプル:", enrichedData[0]);
+        
+        // operator_idがnullでないログを1つ表示（新規登録したログの構造を確認）
+        const newLog = plantingData.find(log => log.operator_id !== null);
+        if (newLog) {
+          console.log("🔍 operator_idがあるログの全データ:", newLog);
+          console.log("🔍 このログのカラム名一覧:", Object.keys(newLog));
+        }
 
         if (enrichedData.length === 0) {
           console.warn("⚠️ 田植え機データが見つかりません");
@@ -10495,7 +11236,7 @@
         let totalH = 0, totalF = 0;
         const daysSet = new Set();
         enrichedData.forEach(log => {
-          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
           totalH += (h > 0 ? h : 0);
           totalF += (parseFloat(log.fuel_amount) || 0);
           if (log.date) daysSet.add(log.date);
@@ -10547,33 +11288,33 @@
           return;
         }
 
-        // 各機械の最新メンテナンス完了日を取得
-        const machineCompletions = [];
+        const plantingIds = machines.map(m => m.id);
+        const plantingMap = {};
+        machines.forEach(m => plantingMap[m.id] = m.name);
+
+        // メンテナンス完了ログを取得
+        const { data: completionLogs } = await client
+          .from('maintenance_completion_logs')
+          .select('machine_id, machine_name, completion_date, status, created_at')
+          .in('machine_id', plantingIds)
+          .order('created_at', { ascending: false })
+          .limit(3);
         
-        for (const machine of machines) {
-          const { data: logs } = await client
-            .from('maintenance_status')
-            .select('updated_at')
-            .ilike('item_id', `${machine.id}_%`)
-            .eq('status', true)
-            .order('updated_at', { ascending: false })
-            .limit(1);
-          
-          if (logs && logs.length > 0) {
-            machineCompletions.push({
-              name: machine.name,
-              updated_at: logs[0].updated_at
-            });
-          }
-        }
+        // メンテナンス記録を取得
+        const { data: maintenanceRecords } = await client
+          .from('maintenance_records')
+          .select('machine_id, item_name, date, created_at')
+          .in('machine_id', plantingIds)
+          .order('created_at', { ascending: false })
+          .limit(5);
 
-        // 日付でソートして最新5件
-        machineCompletions.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-        const recentCompletions = machineCompletions.slice(0, 5);
+        let html = '';
 
-        if (recentCompletions.length > 0) {
-          logContainer.innerHTML = recentCompletions.map(completion => {
-            const date = new Date(completion.updated_at).toLocaleDateString('ja-JP', {
+        // 完了ログを表示
+        if (completionLogs && completionLogs.length > 0) {
+          html += completionLogs.map(log => {
+            const machineName = log.machine_name || plantingMap[log.machine_id] || '不明';
+            const date = new Date(log.completion_date || log.created_at).toLocaleDateString('ja-JP', {
               month: '2-digit',
               day: '2-digit'
             });
@@ -10581,15 +11322,42 @@
             return `
               <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
                 <div class="flex justify-between items-center">
-                  <span class="font-bold text-gray-700">${completion.name}</span>
+                  <span class="font-bold text-gray-700">${machineName}</span>
                   <span class="text-[9px] text-gray-400">${date}</span>
                 </div>
-                <div class="text-[#c9a961] flex items-center gap-1">
-                  <i class="fa-solid fa-check-circle"></i> メンテナンス完了
+                <div class="text-green-600 flex items-center gap-1">
+                  <i class="fa-solid fa-circle-check"></i> <strong>全項目完了</strong>
                 </div>
               </div>
             `;
           }).join('');
+        }
+
+        // 個別記録を表示
+        if (maintenanceRecords && maintenanceRecords.length > 0) {
+          html += maintenanceRecords.map(log => {
+            const machineName = plantingMap[log.machine_id] || '不明';
+            const date = new Date(log.date || log.created_at).toLocaleDateString('ja-JP', {
+              month: '2-digit',
+              day: '2-digit'
+            });
+
+            return `
+              <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-gray-700">${machineName}</span>
+                  <span class="text-[9px] text-gray-400">${date}</span>
+                </div>
+                <div class="text-[#c9a961] flex items-center gap-1">
+                  <i class="fa-solid fa-check-circle"></i> ${log.item_name} 完了
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        if (html) {
+          logContainer.innerHTML = html;
         } else {
           logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">履歴はありません</p>`;
         }
@@ -10643,10 +11411,12 @@
         });
       }
 
-      // === 2. 作業内容別稼働時間（横棒グラフ） ===
+      // === 2. 作業内容別稼働時間（縦棒グラフ） ===
       const taskData = {};
       data.forEach(log => {
-        const task = log.work_types?.name || '不明';
+        const task = log.task || '不明';
+        // 「選択」を除外
+        if (task === '選択') return;
         const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
         taskData[task] = (taskData[task] || 0) + (h > 0 ? h : 0);
       });
@@ -10669,17 +11439,16 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            indexAxis: 'y',
             plugins: {
               legend: { display: false },
               tooltip: {
                 callbacks: {
-                  label: (context) => `${context.parsed.x.toFixed(1)} h`
+                  label: (context) => `${context.parsed.y.toFixed(1)} h`
                 }
               }
             },
             scales: {
-              x: {
+              y: {
                 beginAtZero: true,
                 ticks: { callback: (value) => value + ' h' }
               }
@@ -10727,49 +11496,95 @@
       const operatorData = {};
       data.forEach(log => {
         const op = log.operators?.name || '不明';
-        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+        const start = parseFloat(log.start_hour);
+        const end = parseFloat(log.end_hour);
+        const h = (end || 0) - (start || 0);
+        console.log("オペレーター処理:", { 
+          op, 
+          operator_id: log.operator_id, 
+          start_hour: log.start_hour,
+          end_hour: log.end_hour,
+          calculated_hours: h,
+          operators: log.operators 
+        });
         operatorData[op] = (operatorData[op] || 0) + (h > 0 ? h : 0);
       });
 
+      console.log("🔍 オペレーターデータ:", operatorData);
+
+      // 0時間のオペレーターを除外し、降順でソート
+      const operatorEntries = Object.entries(operatorData)
+        .filter(([name, hours]) => hours > 0)
+        .sort((a, b) => b[1] - a[1]);
+      
+      if (operatorEntries.length === 0) {
+        console.warn("⚠️ オペレーター別比率: データがありません");
+      }
+      
+      const operatorLabels = operatorEntries.map(e => e[0]);
+      const operatorValues = operatorEntries.map(e => e[1]);
+      const operatorColors = ['#c9a961', '#b8985a', '#a08550', '#8f7448', '#7d6340', '#6d5838', '#5d4930'];
+      const operatorBgColors = operatorLabels.map((_, i) => operatorColors[i % operatorColors.length]);
+
+      console.log("🎨 ラベル順:", operatorLabels);
+      console.log("🎨 値順:", operatorValues);
+      console.log("🎨 色順:", operatorBgColors);
+
       const ctx4 = document.getElementById('operatorShareChartPlanting');
       if (ctx4) {
-        if (window.operatorShareChartPlantingInstance) window.operatorShareChartPlantingInstance.destroy();
-        window.operatorShareChartPlantingInstance = new Chart(ctx4, {
-          type: 'doughnut',
-          data: {
-            labels: Object.keys(operatorData),
-            datasets: [{
-              data: Object.values(operatorData),
-              backgroundColor: ['#c9a961', '#b8985a', '#a08550', '#8f7448', '#7d6340']
-            }]
-          },
-          options: {
-            cutout: '60%',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { 
-                position: 'right',
-                labels: {
-                  boxWidth: 10,
-                  font: { size: 9 },
-                  padding: 6
+        if (window.operatorShareChartPlantingInstance) {
+          window.operatorShareChartPlantingInstance.destroy();
+        }
+        
+        if (operatorEntries.length > 0) {
+          window.operatorShareChartPlantingInstance = new Chart(ctx4, {
+            type: 'doughnut',
+            data: {
+              labels: operatorLabels,
+              datasets: [{
+                data: operatorValues,
+                backgroundColor: operatorBgColors,
+                borderWidth: 2,
+                borderColor: '#fff'
+              }]
+            },
+            options: {
+              cutout: '60%',
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  left: 0,
+                  right: 10,
+                  top: 0,
+                  bottom: 0
                 }
               },
-              tooltip: {
-                callbacks: {
-                  label: (context) => {
-                    const label = context.label || '';
-                    const value = context.parsed;
-                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                    const percentage = ((value / total) * 100).toFixed(1);
-                    return `${label}: ${value.toFixed(1)} h (${percentage}%)`;
+              plugins: {
+                legend: { 
+                  position: 'right',
+                  align: 'center',
+                  labels: {
+                    boxWidth: 10,
+                    font: { size: 9 },
+                    padding: 4
+                  }
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (context) => {
+                      const label = context.label || '';
+                      const value = context.parsed;
+                      const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                      const percentage = ((value / total) * 100).toFixed(1);
+                      return `${label}: ${value.toFixed(1)} h (${percentage}%)`;
+                    }
                   }
                 }
               }
             }
-          }
-        });
+          });
+        }
       }
 
       // === 5. 燃費効率の計算と表示 ===
@@ -10828,12 +11643,12 @@
       machineTabs.innerHTML = tabsHTML;
 
       try {
-        // hour_logsデータを取得
+        // combine_logsデータを取得
         let query = client
-          .from("hour_logs")
+          .from("combine_logs")
           .select("*")
-          .gte("work_date", "2026-01-01")
-          .order("work_date", { ascending: false });
+          .gte("date", "2026-01-01")
+          .order("date", { ascending: false });
 
         if (machineId !== 'all') {
           query = query.eq("machine_id", machineId);
@@ -10871,7 +11686,7 @@
           let name = "不明";
           const m = combineMachines?.find(item => String(item.id) === String(log.machine_id));
           if (m) name = m.name;
-          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
           summary[name] = (summary[name] || 0) + (h > 0 ? h : 0);
         });
 
@@ -10891,7 +11706,7 @@
         let totalH = 0, totalF = 0;
         const daysSet = new Set();
         enrichedCombineData.forEach(log => {
-          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
           totalH += (h > 0 ? h : 0);
           totalF += (parseFloat(log.fuel_amount) || 0);
           if (log.date) daysSet.add(log.date);
@@ -10922,30 +11737,66 @@
       const categoryData = {};
       data.forEach(log => {
         const cat = log.categories?.name || '不明';
-        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
         categoryData[cat] = (categoryData[cat] || 0) + (h > 0 ? h : 0);
       });
 
       const ctx1 = document.getElementById('categoryShareChartCombine');
       if (ctx1) {
         if (window.categoryShareChartCombineInstance) window.categoryShareChartCombineInstance.destroy();
+        
+        // 機械別修理コストのダミーデータ
+        const rawData = [
+          { label: 'ER470', value: 80000 },
+          { label: '丸山1030', value: 30000 },
+          { label: 'WB1040YH', value: 7000 }
+        ];
+
+        // 金額が高い順に並べ替え
+        rawData.sort((a, b) => b.value - a.value);
+
+        const sortedLabels = rawData.map(d => d.label);
+        const sortedValues = rawData.map(d => d.value);
+
+        // グラデーション色の計算
+        const maxVal = sortedValues[0];
+        const backgroundColors = sortedValues.map(val => {
+          const opacity = 0.3 + (val / maxVal) * 0.7;
+          return `rgba(201, 124, 115, ${opacity})`;
+        });
+
         window.categoryShareChartCombineInstance = new Chart(ctx1, {
-          type: 'doughnut',
+          type: 'bar',
           data: {
-            labels: Object.keys(categoryData),
+            labels: sortedLabels,
             datasets: [{
-              data: Object.values(categoryData),
-              backgroundColor: ['#c97c73', '#b86b62', '#a75a51', '#964940']
+              label: 'コスト',
+              data: sortedValues,
+              backgroundColor: backgroundColors,
+              borderRadius: 4,
+              barThickness: 15
             }]
           },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { display: false },
+              y: {
+                grid: { display: false },
+                ticks: { font: { size: 11, weight: 'bold' } }
+              }
+            },
+            plugins: { legend: { display: false } }
+          }
         });
       }
 
       const taskData = {};
       data.forEach(log => {
-        const task = log.work_types?.name || '不明';
-        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        const task = log.task || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
         taskData[task] = (taskData[task] || 0) + (h > 0 ? h : 0);
       });
 
@@ -10961,14 +11812,27 @@
               backgroundColor: ['#c97c73', '#b86b62', '#a75a51', '#964940', '#854830']
             }]
           },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+          options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { 
+              legend: { 
+                position: 'right',
+                labels: {
+                  boxWidth: 10,
+                  font: { size: 9 },
+                  padding: 6
+                }
+              } 
+            } 
+          }
         });
       }
 
       const operatorData = {};
       data.forEach(log => {
         const op = log.operators?.name || '不明';
-        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
         operatorData[op] = (operatorData[op] || 0) + (h > 0 ? h : 0);
       });
 
@@ -10984,31 +11848,51 @@
               backgroundColor: ['#c97c73', '#b86b62', '#a75a51', '#964940']
             }]
           },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+          options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { 
+              legend: { 
+                position: 'right',
+                labels: {
+                  boxWidth: 10,
+                  font: { size: 9 },
+                  padding: 6
+                }
+              } 
+            } 
+          }
         });
       }
 
       const monthData = {};
       data.forEach(log => {
-        const month = log.date?.substring(0, 7) || '不明';
-        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        const month = log.date?.substring(5, 7) || '不明'; // MM形式で取得
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
         monthData[month] = (monthData[month] || 0) + (h > 0 ? h : 0);
       });
 
-      const sortedMonths = Object.keys(monthData).sort();
+      // 1～12月のラベルを作成
+      const monthLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+      const monthValues = monthLabels.map(m => {
+        const paddedMonth = m.padStart(2, '0');
+        return monthData[paddedMonth] || 0;
+      });
+
       const ctx4 = document.getElementById('detailChartCombine');
       if (ctx4) {
         if (window.detailChartCombineInstance) window.detailChartCombineInstance.destroy();
         window.detailChartCombineInstance = new Chart(ctx4, {
           type: 'line',
           data: {
-            labels: sortedMonths,
+            labels: monthLabels,
             datasets: [{
-              label: '稼働時間',
-              data: sortedMonths.map(m => monthData[m]),
+              label: 'h',
+              data: monthValues,
               borderColor: '#c97c73',
               backgroundColor: 'rgba(201, 124, 115, 0.1)',
-              tension: 0.4
+              tension: 0.4,
+              fill: true
             }]
           },
           options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
@@ -11018,17 +11902,27 @@
       const ctx5 = document.getElementById('gradientBarChartCombine');
       if (ctx5) {
         if (window.gradientBarChartCombineInstance) window.gradientBarChartCombineInstance.destroy();
+        
+        // 稼働時間が多い順にソート
+        const sorted = Object.entries(taskData).sort((a, b) => b[1] - a[1]);
+        
         window.gradientBarChartCombineInstance = new Chart(ctx5, {
           type: 'bar',
           data: {
-            labels: Object.keys(taskData),
+            labels: sorted.map(t => t[0]),
             datasets: [{
-              label: '稼働時間',
-              data: Object.values(taskData),
-              backgroundColor: '#c97c73'
+              label: 'h',
+              data: sorted.map(t => t[1]),
+              backgroundColor: sorted.map((_, i) => `rgba(201, 124, 115, ${Math.max(0.2, 1 - (i / 5))})`),
+              borderRadius: 4
             }]
           },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+          options: { 
+            indexAxis: 'y', 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            plugins: { legend: { display: false } } 
+          }
         });
       }
     }
@@ -11067,9 +11961,9 @@
       machineTabs.innerHTML = tabsHTML;
 
       try {
-        // hour_logsデータを取得
+        // other_machinery_logsデータを取得
         let query = client
-          .from("hour_logs")
+          .from("other_machinery_logs")
           .select("*")
           .gte("work_date", "2026-01-01")
           .order("work_date", { ascending: false });
