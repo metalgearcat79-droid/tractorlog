@@ -12,7 +12,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap"
     rel="stylesheet">
-  <title>和農日向 Tractor Log</title>
+  <title>和農日向 機械管理App</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
@@ -2027,35 +2027,18 @@
     </nav>
   </div>
 
-  <div id="customModal">
-    <div class="modal-content">
-      <div class="modal-header bg-[#2d4031] p-4 text-white text-center">
-        <h3 id="modalTitle" class="font-bold">CONFIRM</h3>
-      </div>
-      <div class="modal-body p-6 text-center font-bold" id="modalMessage">メッセージ</div>
-      <div class="modal-footer p-4 bg-gray-50 flex gap-2">
-        <button class="flex-1 p-2 bg-gray-200 rounded-lg" onclick="closeModal()">戻る</button>
-        <button id="modalOkBtn" class="flex-1 p-2 bg-[#6b8f71] text-white rounded-lg">実行する</button>
-      </div>
-    </div>
-  </div>
-
-
-
-  <div id="customModal">
-    <div class="modal-content">
-      <div class="modal-header bg-[#2d4031] p-4 text-white text-center">
-        <h3 id="modalTitle" class="font-bold">CONFIRM</h3>
-      </div>
-      <div class="modal-body p-6 text-center font-bold" id="modalMessage">メッセージ</div>
-      <div class="modal-footer p-4 bg-gray-50 flex gap-2">
-        <button class="flex-1 p-2 bg-gray-200 rounded-lg" onclick="closeModal()">戻る</button>
-        <button id="modalOkBtn" class="flex-1 p-2 bg-[#6b8f71] text-white rounded-lg">実行する</button>
+  <div id="customModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width: 300px; margin: 20vh auto; border-radius: 15px; overflow: hidden;">
+      <div class="modal-body p-6 text-center">
+        <p id="modalMessage" class="font-bold text-lg mb-4">メッセージ</p>
+        <div class="flex gap-2">
+          <button id="modalCancelBtn" class="flex-1 p-2 bg-gray-200 rounded-lg text-sm"
+            onclick="closeModal()">戻る</button>
+          <button id="modalOkBtn" class="flex-1 p-2 bg-[#6b8f71] text-white rounded-lg text-sm font-bold">実行する</button>
+        </div>
       </div>
     </div>
   </div>
-
-
 
   <div id="mainContainer">
     <!-- Portal View: entry hub -->
@@ -2224,7 +2207,7 @@
         <div class="bi-header">
           <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
               class="fa-solid fa-bars"></i></button>
-          <h1 class="text-lg md:text-4xl font-black tracking-widest flex items-center">
+          <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
             <i class="fa-solid fa-chart-column mr-3"></i> 2026 Transplanter data analysis
           </h1>
         </div>
@@ -2950,12 +2933,12 @@
       </div>
     </div>
 
-    <!-- コンバイン Dashboard (準備中) -->
+    <!-- コンバイン Dashboard -->
     <div id="dashboardCombine" class="view fullscreen-view">
       <div class="bi-header">
         <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
             class="fa-solid fa-bars"></i></button>
-        <h1 class="text-lg md:text-4xl font-black tracking-widest flex items-center">
+        <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
           <i class="fa-solid fa-chart-column mr-3"></i> 2026 Combine data analysis
         </h1>
       </div>
@@ -3086,7 +3069,7 @@
     <div class="bi-header">
       <button onclick="openMenu()" class="text-2xl hover:opacity-70 transition-opacity"><i
           class="fa-solid fa-bars"></i></button>
-      <h1 class="text-3xl md:text-4xl font-black tracking-widest flex items-center" style="margin-left: 50px;">
+      <h1 class="text-3xl md:text-2xl font-black tracking-widest flex items-center" style="margin-left: 50px;">
         <i class="fa-solid fa-chart-column mr-3"></i> 2026 Tractor data analysis
       </h1>
     </div>
@@ -4457,7 +4440,7 @@
       <div class="bi-header">
         <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
             class="fa-solid fa-bars"></i></button>
-        <h1 class="text-lg md:text-4xl font-black tracking-widest flex items-center">
+        <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
           <i class="fa-solid fa-chart-column mr-3"></i> 2026 Other Machinery Data Analysis
         </h1>
       </div>
@@ -4527,7 +4510,7 @@
             </div>
           </div>
         </div>
-                <div class="bi-main-col">
+        <div class="bi-main-col">
           <div class="lg:col-span-2 space-y-4">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
               <p class="chart-title" style="display: flex; align-items: center;">
@@ -5350,28 +5333,6 @@
       document.getElementById("overlay").style.display = "none";
     }
 
-    function showModal(title, message, onOk) {
-      console.log("📢 showModal呼び出し:", { title, message, hasCallback: !!onOk });
-      const modal = document.getElementById("customModal");
-      // invoiceOCRView用の保存モーダルテキストを差し替え
-      let newTitle = title;
-      let newMessage = message;
-      if (title === '保存完了' && message.includes('保存完了しました')) {
-        newTitle = '登録確認';
-        newMessage = '保存しますか？';
-      }
-      document.getElementById("modalTitle").innerText = newTitle;
-      document.getElementById("modalMessage").innerText = newMessage;
-      const okBtn = document.getElementById("modalOkBtn");
-      okBtn.onclick = () => {
-        console.log("✅ モーダルOKボタンクリック", { hasCallback: !!onOk });
-        closeModal();
-        if (onOk) onOk();
-      };
-      modal.classList.add("active");
-    }
-    function closeModal() { document.getElementById("customModal").classList.remove("active"); }
-
     async function switchView(id) {
       console.log("Switching to:", id);
 
@@ -5719,9 +5680,18 @@
         }
 
         // 入力フォーム側（種別）
+        // 入力フォーム側（種別）
         const iCat = document.getElementById("category");
         if (iCat) {
-          const categories = [...new Set(workTypes.map(w => w.category))];
+          // 💡 表示したいカテゴリを限定
+          const targetCategories = ["稲", "そば", "保全会", "小規模工事"];
+
+          const categories = [...new Set(
+            workTypes
+              .filter(w => w.category && targetCategories.includes(w.category))
+              .map(w => w.category)
+          )];
+
           iCat.innerHTML = '<option value="">種別を選択</option>' +
             categories.map(c => `<option value="${c}">${c}</option>`).join("");
 
@@ -6103,12 +6073,8 @@
           "修理ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
           "保存完了しました！🚜🌾";
 
-        if (typeof showCustomModal === 'function') {
-          showCustomModal("保存完了", message);
-        } else {
-          showModal("保存完了", message);
-        }
-
+        // 💡 どっちの名前か迷わずに、新しく作った showModal を呼ぶだけ！
+        showModal("保存完了", message);
         // 3. 自動的に履歴トップ画面に戻す
         setTimeout(() => {
           switchView('repairView');
@@ -10255,9 +10221,8 @@
         loadRepairDashboardPlanting();
 
         if (typeof showCustomModal === 'function') {
-          showCustomModal("保存完了", "修理履歴を記録しました。ダッシュボードを更新します。");
         } else {
-          showModal("保存完了", "保存完了しました！🌾");
+          showModal("保存完了", "保存完了しました🌾");
         }
 
         setTimeout(() => {
@@ -13123,7 +13088,51 @@
         alert('保存に失敗しました');
       }
     }
+    // モーダル本体の制御
+    function showModal(title, message, onOk) {
+      const modal = document.getElementById("customModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalMessage = document.getElementById("modalMessage");
+      const okBtn = document.getElementById("modalOkBtn");
 
+      // 「戻る」ボタンを、モーダル内のボタンの中から確実に探す
+      const allBtns = modal.querySelectorAll("button");
+      const cancelBtn = allBtns[0]; // 最初のボタン（左側）をキャンセル用とする
+
+      // テキストをセット
+      if (modalTitle) modalTitle.innerText = title;
+      modalMessage.innerText = message;
+
+      if (onOk) {
+        // 【確認モード】保存しますか？
+        okBtn.style.display = "block";
+        cancelBtn.innerText = "戻る";
+
+        // 実行ボタンの動作
+        okBtn.onclick = async () => {
+          okBtn.disabled = true; // 連打防止
+          await onOk();
+          okBtn.disabled = false;
+          closeModal();
+        };
+        // 戻るボタンの動作
+        cancelBtn.onclick = closeModal;
+      } else {
+        // 【完了モード】保存しました
+        okBtn.style.display = "none"; // 実行ボタンを隠す
+        cancelBtn.innerText = "OK";   // 左側のボタンをOKに変身
+        cancelBtn.onclick = closeModal;
+      }
+
+      modal.style.display = "block";
+      modal.classList.add("active");
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("customModal");
+      modal.style.display = "none";
+      modal.classList.remove("active");
+    }
   </script>
 </body>
 
