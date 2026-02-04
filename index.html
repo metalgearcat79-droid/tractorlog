@@ -169,6 +169,7 @@
         left: 0;
       }
 
+
       /* サイドバー表示時にコンテンツにマージンを適用 */
       body.show-sidebar #mainContainer {
         margin-left: 280px;
@@ -1009,8 +1010,9 @@
     }
 
     .bi-header {
-      height: 65px;
+      height: 80px;
       display: flex;
+      flex-direction: row;
       align-items: center;
       background: #2d4031;
       color: white;
@@ -1365,24 +1367,6 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-    }
-
-    .portal-sub {
-      opacity: 0.95;
-      margin-top: 8px;
-      color: rgba(255, 255, 255, 0.95);
-    }
-
-    /* Ensure title/sub are explicitly visible on all devices */
-    .portal-title,
-    .portal-sub {
-      color: rgba(234, 242, 234, 1);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-    }
-
-    .portal-hero>div {
-      position: relative;
-      z-index: 2;
     }
 
     /* ベントーグリッドレイアウト */
@@ -2026,33 +2010,7 @@
     </nav>
   </div>
 
-  <div id="customModal">
-    <div class="modal-content">
-      <div class="modal-header bg-[#2d4031] p-4 text-white text-center">
-        <h3 id="modalTitle" class="font-bold">CONFIRM</h3>
-      </div>
-      <div class="modal-body p-6 text-center font-bold" id="modalMessage">メッセージ</div>
-      <div class="modal-footer p-4 bg-gray-50 flex gap-2">
-        <button class="flex-1 p-2 bg-gray-200 rounded-lg" onclick="closeModal()">戻る</button>
-        <button id="modalOkBtn" class="flex-1 p-2 bg-[#6b8f71] text-white rounded-lg">実行する</button>
-      </div>
-    </div>
-  </div>
 
-
-
-  <div id="customModal">
-    <div class="modal-content">
-      <div class="modal-header bg-[#2d4031] p-4 text-white text-center">
-        <h3 id="modalTitle" class="font-bold">CONFIRM</h3>
-      </div>
-      <div class="modal-body p-6 text-center font-bold" id="modalMessage">メッセージ</div>
-      <div class="modal-footer p-4 bg-gray-50 flex gap-2">
-        <button class="flex-1 p-2 bg-gray-200 rounded-lg" onclick="closeModal()">戻る</button>
-        <button id="modalOkBtn" class="flex-1 p-2 bg-[#6b8f71] text-white rounded-lg">実行する</button>
-      </div>
-    </div>
-  </div>
 
 
 
@@ -2223,7 +2181,7 @@
         <div class="bi-header">
           <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
               class="fa-solid fa-bars"></i></button>
-          <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
+          <h1 class="text-lg md:text-4xl font-black tracking-widest flex items-center">
             <i class="fa-solid fa-chart-column mr-3"></i> 2026 Transplanter data analysis
           </h1>
         </div>
@@ -2954,7 +2912,7 @@
       <div class="bi-header">
         <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
             class="fa-solid fa-bars"></i></button>
-        <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
+        <h1 class="text-lg md:text-4xl font-black tracking-widest flex items-center">
           <i class="fa-solid fa-chart-column mr-3"></i> 2026 Combine data analysis
         </h1>
       </div>
@@ -3083,9 +3041,9 @@
 
   <div id="dashboard" class="view fullscreen-view">
     <div class="bi-header">
-      <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
+      <button onclick="openMenu()" class="text-2xl hover:opacity-70 transition-opacity"><i
           class="fa-solid fa-bars"></i></button>
-      <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
+      <h1 class="text-3xl md:text-4xl font-black tracking-widest flex items-center" style="margin-left: 50px;">
         <i class="fa-solid fa-chart-column mr-3"></i> 2026 Tractor data analysis
       </h1>
     </div>
@@ -4456,7 +4414,7 @@
       <div class="bi-header">
         <button onclick="openMenu()" class="text-2xl mr-6 hover:opacity-70 transition-opacity"><i
             class="fa-solid fa-bars"></i></button>
-        <h1 class="text-lg md:text-2xl font-black tracking-widest flex items-center">
+        <h1 class="text-lg md:text-4xl font-black tracking-widest flex items-center">
           <i class="fa-solid fa-chart-column mr-3"></i> 2026 Other Machinery Data Analysis
         </h1>
       </div>
@@ -4498,72 +4456,67 @@
         <div class="bi-left-col">
           <div class="card">
             <p class="chart-title" style="display: flex; align-items: center;">
-              <i class="fa-solid fa-tasks" style="margin-right: 8px; color: var(--other-color);"></i>
-              作業種別比率
+              <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px; color: var(--other-color);"></i>
+              機械別修理コスト
             </p>
             <div class="chart-wrapper relative">
               <canvas id="categoryShareChartOther"></canvas>
             </div>
           </div>
-
           <div class="card">
             <p class="chart-title" style="display: flex; align-items: center;">
-              <i class="fa-solid fa-tools" style="margin-right: 8px; color: var(--other-color);"></i>
-              作業内容比率
+              <i class="fa-solid fa-wheat-awn" style="margin-right: 8px; color: var(--other-color);"></i>
+              作物別比率
             </p>
             <div class="chart-wrapper relative">
               <canvas id="taskShareChartOther"></canvas>
             </div>
           </div>
-
-          <div class="card">
+          <div class="card operator-card">
             <p class="chart-title" style="display: flex; align-items: center;">
               <i class="fa-solid fa-user-check" style="margin-right: 8px; color: var(--other-color);"></i>
               オペレーター比率
             </p>
-            <div class="chart-wrapper relative">
-              <canvas id="operatorShareChartOther"></canvas>
+            <div class="flex items-center justify-center">
+              <div class="chart-container" style="width: 60%; min-width: 120px; height: 160px;">
+                <canvas id="operatorShareChartOther"></canvas>
+              </div>
             </div>
           </div>
         </div>
-        <div class="bi-main-col">
+                <div class="bi-main-col">
           <div class="lg:col-span-2 space-y-4">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
               <p class="chart-title" style="display: flex; align-items: center;">
                 <i class="fa-solid fa-calendar-days" style="margin-right: 8px; color: var(--other-color);"></i>
                 月別稼働推移
               </p>
-              <div class="relative h-40"> <canvas id="detailChartOther"></canvas></div>
+              <div class="relative" style="height: 140px;">
+                <canvas id="detailChartOther"></canvas>
+              </div>
             </div>
+
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
               <p class="chart-title" style="display: flex; align-items: center;">
                 <i class="fa-solid fa-list-check" style="margin-right: 8px; color: var(--other-color);"></i>
                 作業内容分析
               </p>
-              <div class="relative h-[480px]">
+              <div class="relative" style="height: 430px;">
                 <canvas id="gradientBarChartOther"></canvas>
               </div>
             </div>
           </div>
         </div>
-
         <div class="bi-right-col">
           <div class="card yoy-card text-center relative">
             <p class="chart-title" style="display: flex; align-items: center; justify-content: center;">
               <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: var(--other-color);"></i>
               前年実績比 (YoY)
             </p>
-            <div class="text-center py-6">
-              <p class="text-[13px] text-gray-500 mb-2">2025 年度</p>
-              <p class="text-5xl font-black tracking-wider mb-2" style="color: var(--other-color);"
-                id="yoy-last-year-other">0.0<span class="text-base ml-1">h</span></p>
-              <div class="my-3"><i class="fa-solid fa-arrow-down text-2xl" style="color: var(--other-color);"></i></div>
-              <p class="text-[13px] text-gray-500 mb-2">2026 年度</p>
-              <p class="text-5xl font-black tracking-wider" style="color: var(--other-color);" id="yoy-this-year-other">
-                0.0<span class="text-base ml-1">h</span></p>
-              <div class="mt-4 pt-3 border-t border-gray-100">
-                <p class="text-xs text-gray-400">前年比</p>
-                <p class="text-3xl font-black" style="color: var(--other-color);" id="yoy-change-other">--</p>
+            <div class="chart-wrapper relative">
+              <canvas id="yearComparisonGaugeOther"></canvas>
+              <div class="absolute inset-0 flex items-center justify-center pt-14">
+                <p id="detailCompareValueOther" class="text-2xl font-black" style="color: var(--other-color)">--%</p>
               </div>
             </div>
           </div>
@@ -4970,7 +4923,8 @@
     const SUPABASE_KEY = window.APP_CONFIG.SUPABASE_KEY;
     // Vision APIはそのまま（もしこれもテスト用があれば後でconfig.jsに）
     const GOOGLE_VISION_API_KEY = 'AIzaSyCdX_rYEeovClhxRAwAOhPxG4CPTX6fqlg';
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // window. をつけることで、アプリのどこからでもアクセスできるようにします
+    window.client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     let allMachines = []; let currentMachineId = 'all'; window.charts = {};
 
     // ==========================================
@@ -4980,6 +4934,7 @@
     // LocalStorageに未送信データを保存
     function saveToLocalStorage(type, data) {
       try {
+        console.log("--- 履歴取得開始 ---"); // これを追加
         const key = `unsyncedData_${type}`;
         const existing = JSON.parse(localStorage.getItem(key) || '[]');
         existing.push({
@@ -5355,8 +5310,15 @@
     function showModal(title, message, onOk) {
       console.log("📢 showModal呼び出し:", { title, message, hasCallback: !!onOk });
       const modal = document.getElementById("customModal");
-      document.getElementById("modalTitle").innerText = title;
-      document.getElementById("modalMessage").innerText = message;
+      // invoiceOCRView用の保存モーダルテキストを差し替え
+      let newTitle = title;
+      let newMessage = message;
+      if (title === '保存完了' && message.includes('保存完了しました')) {
+        newTitle = '登録確認';
+        newMessage = '保存しますか？';
+      }
+      document.getElementById("modalTitle").innerText = newTitle;
+      document.getElementById("modalMessage").innerText = newMessage;
       const okBtn = document.getElementById("modalOkBtn");
       okBtn.onclick = () => {
         console.log("✅ モーダルOKボタンクリック", { hasCallback: !!onOk });
@@ -5514,7 +5476,7 @@
         setTimeout(() => renderDashboardCombine('all'), 100);
       }
       if (id === 'dashboardOther') {
-        setTimeout(() => renderDashboardOther('all'), 100);
+        renderDashboardOther('all');
       }
       if (id === 'todayView') {
         console.log("本日ログ読込実行");
@@ -5846,18 +5808,35 @@
         // -----------------------------
         // ③ 機械ごとの修理費
         // -----------------------------
-        const machineTotals = {};
-
+        let machineTotals = {};
+        // ここでは全体用の集計を行う場合のみ利用（その他の機械用は下で再利用）
         logs.forEach(log => {
           if (!machineTotals[log.machine_id]) machineTotals[log.machine_id] = 0;
           machineTotals[log.machine_id] += log.cost || 0;
         });
 
-        // machines テーブルから名前を取得
-        const { data: machines } = await client.from('machines').select('*');
+        // machinesテーブルからmachine_typeが'other_machinery'のIDのみ取得
+        const { data: machines } = await client.from('machines').select('*').eq('machine_type', 'other_machinery');
+        console.log("other machinery machines:", machines);
+        const otherIds = machines ? machines.map(m => m.id) : [];
+        console.log("otherMachineIds:", otherIds);
+
+        // machine_idがotherIdsに含まれるrepair_logsのみ集計
+        console.log("全repair_logs件数:", logs.length);
+        console.log("repair_logsサンプル:", logs[0]);
+        const filteredLogs = logs.filter(log => otherIds.includes(log.machine_id));
+        console.log("other machinery用repair_logs件数:", filteredLogs.length);
+        console.log("filteredLogsサンプル:", filteredLogs[0]);
 
         const machineContainer = document.getElementById('machineRepairContainer');
         machineContainer.innerHTML = '';
+
+        // 機械ごとの修理費集計
+        machineTotals = {};
+        filteredLogs.forEach(log => {
+          if (!machineTotals[log.machine_id]) machineTotals[log.machine_id] = 0;
+          machineTotals[log.machine_id] += log.cost || 0;
+        });
 
         Object.keys(machineTotals).forEach(machineId => {
           const machine = machines.find(m => m.id === Number(machineId));
@@ -6301,7 +6280,7 @@
               <span class="text-[9px] text-gray-400">${date}</span>
             </div>
             <div class="text-green-600 flex items-center gap-1">
-              <i class="fa-solid fa-circle-check"></i> <strong>全項目完了</strong>
+              <i class="fa-solid fa-circle-check" style="color:#6b8f71"></i> <strong style="color:#6b8f71">ALL MAINTENANCE COMPLETE</strong>
             </div>
           </div>
         `;
@@ -6402,7 +6381,7 @@
               <span class="text-[9px] text-gray-400">${date}</span>
             </div>
             <div class="text-green-600 flex items-center gap-1">
-              <i class="fa-solid fa-circle-check"></i> <strong>全項目完了</strong>
+              <i class="fa-solid fa-circle-check" style="color:#6b8f71"></i> <strong style="color:#6b8f71">ALL MAINTENANCE COMPLETE</strong>
             </div>
           </div>
         `;
@@ -6447,6 +6426,7 @@
 
     // その他の機械のメンテナンス履歴をDBから取得して表示する関数
     async function loadMaintenanceLogsOther() {
+      const client = window.client;
       const logContainer = document.getElementById('maintenanceLogOther');
       if (!logContainer) return;
 
@@ -6455,11 +6435,11 @@
         const { data: otherMachines, error: machineError } = await client
           .from('machines')
           .select('id, name')
-          .eq('machine_type', 'other');
-
+          .eq('machine_type', 'other_machinery');
         if (machineError) throw machineError;
 
         const otherIds = otherMachines ? otherMachines.map(m => m.id) : [];
+        console.log("見つかったその他の機械のID:", otherIds); // 👈 これを追加！
         const otherMap = {};
         if (otherMachines) {
           otherMachines.forEach(m => otherMap[m.id] = m.name);
@@ -6480,7 +6460,6 @@
           .in('machine_id', otherIds)
           .order('created_at', { ascending: false })
           .limit(5);
-
         if (error) throw error;
 
         let html = '';
@@ -6493,7 +6472,6 @@
               month: '2-digit',
               day: '2-digit'
             });
-
             return `
           <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
             <div class="flex justify-between items-center">
@@ -6501,7 +6479,7 @@
               <span class="text-[9px] text-gray-400">${date}</span>
             </div>
             <div class="text-green-600 flex items-center gap-1">
-              <i class="fa-solid fa-circle-check"></i> <strong>全項目完了</strong>
+              <i class="fa-solid fa-circle-check" style="color:#6b8f71"></i> <strong style="color:#6b8f71">ALL MAINTENANCE COMPLETE</strong>
             </div>
           </div>
         `;
@@ -6516,7 +6494,6 @@
               month: '2-digit',
               day: '2-digit'
             });
-
             return `
           <div class="flex flex-col border-b border-gray-50 pb-1 mb-1 last:border-0">
             <div class="flex justify-between items-center">
@@ -6532,7 +6509,23 @@
         }
 
         if (html) {
+          // 1回目：とりあえず表示
           logContainer.innerHTML = html;
+          console.log("✅ 履歴を表示しました（1回目）");
+
+          // 2回目：0.5秒後、誰かに上書きされて空っぽになっていたら再注入
+          setTimeout(() => {
+            if (logContainer.innerHTML.includes('italic') || logContainer.innerHTML === "") {
+              logContainer.innerHTML = html;
+              console.log("♻️ 消されていたので再描画しました（0.5秒後）");
+            }
+          }, 500);
+
+          // 3回目：1.5秒後、ダメ押しの確認
+          setTimeout(() => {
+            logContainer.innerHTML = html;
+            console.log("📌 履歴を最終固定しました（1.5秒後）");
+          }, 1500);
         } else {
           logContainer.innerHTML = `<p class="italic text-gray-400 text-center py-4">直近の整備履歴はありません</p>`;
         }
@@ -6542,7 +6535,6 @@
       }
     }
 
-    loadMaintenanceLogsOther();
 
     // Mower (スパイダーモア・ウイングモア) メンテナンスリスト読み込み
     async function loadMachineListMower() {
@@ -8984,12 +8976,12 @@
 
       // 数値じゃない（"all"や空っぽ）場合はエラーを出す
       if (isNaN(numericMachineId)) {
-        showModal("エラー", "機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
+        showToast("エラー: 機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
         return;
       }
 
       if (!item) {
-        showModal("入力エラー", "交換部品・項目名を入力してくださいね🌸");
+        showToast("入力エラー: 交換部品・項目名を入力してくださいね🌸");
         return;
       }
 
@@ -9007,7 +8999,7 @@
 
         if (error) throw error;
 
-        showModal("保存完了", "メンテナンス情報を記録しました！✨");
+  showToast("保存完了: メンテナンス情報を記録しました！✨");
 
         // 入力欄をクリア
         document.getElementById('newMaintenanceItem').value = '';
@@ -9020,7 +9012,7 @@
 
       } catch (err) {
         console.error("Maint Save Error:", err);
-        showModal("保存エラー", "保存に失敗しました: " + (err.message || JSON.stringify(err)));
+        showToast("保存エラー: 保存に失敗しました: " + (err.message || JSON.stringify(err)));
       }
     }
 
@@ -9037,42 +9029,41 @@
       const memo = document.getElementById('memoInput')?.value;
 
       // バリデーション（入力チェック）
-      if (!machineId) return showModal("入力エラー", "機械を選択してください");
-      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
-      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
+      if (!machineId) return showToast("入力エラー: 機械を選択してください");
+      if (!workDate || !workName) return showToast("入力エラー: 「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showToast("入力エラー: 稼働後の数値が稼働前より小さくなっています。");
 
-      showModal("登録確認", "ログを登録しますか？", async () => {
-        try {
-          const logData = {
-            date: workDate,
-            operator: operator,
-            machine_id: parseInt(machineId),
-            start_hour: hourBefore,
-            end_hour: hourAfter,
-            category: category,
-            task: workName,
-            fuel_type_id: fuelType ? parseInt(fuelType) : null,
-            fuel_amount: fuel,
-            memo: memo,
-            created_at: new Date().toISOString()
-          };
+      // 確認モーダルを廃止し、即保存→トースト通知
+      try {
+        const logData = {
+          date: workDate,
+          operator: operator,
+          machine_id: parseInt(machineId),
+          start_hour: hourBefore,
+          end_hour: hourAfter,
+          category: category,
+          task: workName,
+          fuel_type_id: fuelType ? parseInt(fuelType) : null,
+          fuel_amount: fuel,
+          memo: memo,
+          created_at: new Date().toISOString()
+        };
 
-          const result = await saveData('hour_logs', logData, 'hour_logs');
+        const result = await saveData('hour_logs', logData, 'hour_logs');
 
-          const message = result.offline ?
-            "稼働ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
-            "稼働ログを保存しました";
+        const message = result.offline ?
+          "稼働ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
+          "稼働ログを保存しました";
 
-          showModal("保存完了", message, () => {
-            localStorage.setItem('currentView', 'tractorView');
-            location.reload();
-          });
+        showToast("保存完了: " + message, 2000, () => {
+          localStorage.setItem('currentView', 'tractorView');
+          location.reload();
+        });
 
-        } catch (err) {
-          console.error("Log Save Error:", err);
-          showModal("保存エラー", "保存に失敗しました: " + (err.message));
-        }
-      });
+      } catch (err) {
+        console.error("Log Save Error:", err);
+        showToast("保存に失敗しました: " + (err.message));
+      }
     }
 
     // --- Google Vision APIを使って画像から数字を読み取る関数 ---
@@ -9123,7 +9114,7 @@
 
         // OCR 実行
         const text = await performOCR(base64Image);
-        if (!text) return showModal('読み取り失敗', '読み取りに失敗しました。写真を変えて再試行してください。');
+        if (!text) return showToast('読み取り失敗: 読み取りに失敗しました。写真を変えて再試行してください。');
 
         // 数字（小数点含む）を抽出して input に反映
         const m = text.match(/\d+(?:\.\d+)?/);
@@ -9131,11 +9122,11 @@
           document.getElementById('hourAfter').value = m[0];
           calcDiff();
         } else {
-          showModal('検出失敗', '数字が検出されませんでした。読み取り結果:\n' + (text.substring(0, 200) || '-----'));
+          showToast('検出失敗: 数字が検出されませんでした。読み取り結果:\n' + (text.substring(0, 200) || '-----'));
         }
       } catch (err) {
         console.error('HourAfter OCR error', err);
-        showModal('エラー', '読み取り中にエラーが発生しました');
+        showToast('エラー: 読み取り中にエラーが発生しました');
       } finally {
         // ファイル入力をクリアして同じ画像を再選択できるようにする
         input.value = '';
@@ -9282,41 +9273,32 @@
       });
 
       if (!machineId) return showModal("入力エラー", "機械を選択してください");
-      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
-      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
+      if (!workDate || !workName) return showToast("入力エラー: 「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showToast("入力エラー: 稼働後の数値が稼働前より小さくなっています。");
 
-      showModal("登録確認", "ログを登録しますか？", async () => {
-        try {
-          const logData = {
-            date: workDate,
-            operator_id: operator ? parseInt(operator) : null,
-            machine_id: parseInt(machineId),
-            start_hour: hourBefore,
-            end_hour: hourAfter,
-            task: workName,
-            fuel_type_id: fuelType ? parseInt(fuelType) : null,
-            fuel_amount: fuel,
-            memo: memo,
-            created_at: new Date().toISOString()
-          };
-          console.log("🚀 Supabaseに送信するデータ:", logData);
-
-          const result = await saveData('planting_logs', logData, 'taue_logs');
-
-          const message = result.offline ?
-            "ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
-            "ログを保存しました";
-
-          showModal("保存完了", message, () => {
-            localStorage.setItem('currentView', 'plantingView');
-            location.reload();
-          });
-
-        } catch (err) {
-          console.error("Log Save Error:", err);
-          showModal("保存エラー", "保存に失敗しました: " + (err.message));
-        }
-      });
+      // モーダル確認を廃止し、即保存＋トースト通知
+      try {
+        const logData = {
+          date: workDate,
+          operator_id: operator ? parseInt(operator) : null,
+          machine_id: parseInt(machineId),
+          start_hour: hourBefore,
+          end_hour: hourAfter,
+          task: workName,
+          created_at: new Date().toISOString()
+        };
+        const result = await saveData('planting_logs', logData, 'planting_logs');
+        const message = result.offline ?
+          "ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
+          "ログを保存しました";
+        showToast("保存完了: " + message, 2000, () => {
+          localStorage.setItem('currentView', 'plantingView');
+          location.reload();
+        });
+      } catch (err) {
+        console.error("Log Save Error:", err);
+        showToast("保存エラー: 保存に失敗しました: " + (err.message));
+      }
     }
 
     async function taue_handleHourAfterImage(input) {
@@ -9479,40 +9461,35 @@
       const memo = document.getElementById('combine_memoInput')?.value;
 
       if (!machineId) return showModal("入力エラー", "機械を選択してください");
-      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
-      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
+      if (!workDate || !workName) return showToast("入力エラー: 「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showToast("入力エラー: 稼働後の数値が稼働前より小さくなっています。");
 
-      showModal("登録確認", "ログを登録しますか？", async () => {
-        try {
-          const logData = {
-            date: workDate,
-            operator_id: operator ? parseInt(operator) : null,
-            machine_id: parseInt(machineId),
-            start_hour: hourBefore,
-            end_hour: hourAfter,
-            task: workName,
-            fuel_type_id: fuelType ? parseInt(fuelType) : null,
-            fuel_amount: fuel,
-            memo: memo,
-            created_at: new Date().toISOString()
-          };
-
-          const result = await saveData('combine_logs', logData, 'combine_logs');
-
-          const message = result.offline ?
-            "ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
-            "ログを保存しました";
-
-          showModal("保存完了", message, () => {
-            localStorage.setItem('currentView', 'combineView');
-            location.reload();
-          });
-
-        } catch (err) {
-          console.error("Log Save Error:", err);
-          showModal("保存エラー", "保存に失敗しました: " + (err.message));
-        }
-      });
+      // モーダル確認を廃止し、即保存＋トースト通知
+      try {
+        const logData = {
+          date: workDate,
+          operator_id: operator ? parseInt(operator) : null,
+          machine_id: parseInt(machineId),
+          start_hour: hourBefore,
+          end_hour: hourAfter,
+          task: workName,
+          fuel_type_id: fuelType ? parseInt(fuelType) : null,
+          fuel_amount: fuel,
+          memo: memo,
+          created_at: new Date().toISOString()
+        };
+        const result = await saveData('combine_logs', logData, 'combine_logs');
+        const message = result.offline ?
+          "ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
+          "ログを保存しました";
+        showToast("保存完了: " + message, 2000, () => {
+          localStorage.setItem('currentView', 'combineView');
+          location.reload();
+        });
+      } catch (err) {
+        console.error("Log Save Error:", err);
+        showToast("保存エラー: 保存に失敗しました: " + (err.message));
+      }
     }
 
     async function combine_handleHourAfterImage(input) {
@@ -11769,7 +11746,7 @@
                   <span class="text-[9px] text-gray-400">${date}</span>
                 </div>
                 <div class="text-green-600 flex items-center gap-1">
-                  <i class="fa-solid fa-circle-check"></i> <strong>全項目完了</strong>
+                  <i class="fa-solid fa-circle-check"></i> <strong style="color:#6b8f71">ALL MAINTENANCE COMPLETE</strong>
                 </div>
               </div>
             `;
@@ -12176,7 +12153,6 @@
     }
 
     function drawChartsCombine(data) {
-      // 各種グラフ描画（田植え機と同様）
       const categoryData = {};
       data.forEach(log => {
         const cat = log.categories?.name || '不明';
@@ -12372,6 +12348,10 @@
 
     // その他の機械ダッシュボード描画関数
     async function renderDashboardOther(machineId = 'all') {
+      // その他の機械専用の修理コスト集計を呼び出す
+      if (typeof loadRepairDashboardOther === 'function') {
+        await loadRepairDashboardOther();
+      }
       const machineTabs = document.getElementById("machineTabsOther");
       if (!machineTabs) return;
 
@@ -12383,7 +12363,7 @@
       const { data: otherMachines } = await client
         .from("machines")
         .select("*")
-        .eq("machine_type", "other machinery")
+        .eq("machine_type", "other_machinery")
         .order("name");
 
       let tabsHTML = `
@@ -12408,8 +12388,8 @@
         let query = client
           .from("other_machinery_logs")
           .select("*")
-          .gte("work_date", "2026-01-01")
-          .order("work_date", { ascending: false });
+          .gte("date", "2026-01-01")
+          .order("date", { ascending: false });
 
         if (machineId !== 'all') {
           query = query.eq("machine_id", machineId);
@@ -12424,17 +12404,36 @@
         }) || [];
 
         // 関連データを取得
-        const { data: workTypes } = await client.from("work_types").select("*");
+        const { data: workTypes } = await client.from("work_types").select("*").eq("category", "その他機械");
+        // 1. その他の機械IDリストを作成
+        const otherMachineIds = otherMachines.map(m => m.id);
+        // 2. IDリストに含まれる修理ログだけを取得
+        const { data: repairLogs, error: repairError } = await client
+          .from("repair_logs")
+          .select("*")
+          .in("machine_id", otherMachineIds);
+        if (repairError) console.error("修理ログ取得失敗:", repairError);
         const { data: operators } = await client.from("operators").select("*");
-        const { data: categories } = await client.from("categories").select("*");
 
         // データを結合
         const enrichedOtherData = otherData.map(log => ({
           ...log,
           work_types: workTypes?.find(w => w.id === log.work_type_id) || { name: '不明' },
-          operators: operators?.find(o => o.id === log.operator_id) || { name: '不明' },
-          categories: categories?.find(c => c.id === log.category_id) || { name: '不明' }
         }));
+
+        // 機械別修理コスト集計用データ（金額）
+        const repairCostByMachine = {};
+        if (repairLogs && repairLogs.length > 0 && otherMachines) {
+          repairLogs.forEach(r => {
+            // 機械IDから機械名を取得
+            const machine = otherMachines.find(m => String(m.id) === String(r.machine_id));
+            const name = machine ? machine.name : '不明';
+            const cost = parseFloat(r.cost) || 0;
+            repairCostByMachine[name] = (repairCostByMachine[name] || 0) + cost;
+          });
+        }
+        // グローバル変数にセット
+        window.repairCostByMachine = repairCostByMachine;
 
         if (enrichedOtherData.length === 0) {
           console.warn("⚠️ その他の機械データが見つかりません");
@@ -12447,7 +12446,7 @@
           let name = "不明";
           const m = otherMachines?.find(item => String(item.id) === String(log.machine_id));
           if (m) name = m.name;
-          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          const h = (parseFloat(log.hour_end) || 0) - (parseFloat(log.hour_start) || 0);
           summary[name] = (summary[name] || 0) + (h > 0 ? h : 0);
         });
 
@@ -12466,8 +12465,9 @@
         // KPI集計
         let totalH = 0, totalF = 0;
         const daysSet = new Set();
+        console.log("KPI集計用データ:", enrichedOtherData);
         enrichedOtherData.forEach(log => {
-          const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
           totalH += (h > 0 ? h : 0);
           totalF += (parseFloat(log.fuel_amount) || 0);
           if (log.date) daysSet.add(log.date);
@@ -12485,7 +12485,12 @@
         if (kpiAvg) kpiAvg.innerText = fuelAvg;
         if (kpiDays) kpiDays.innerText = daysSet.size;
 
-        drawChartsOther(enrichedOtherData);
+        // 描画タイミングを遅らせてcanvas要素の存在を保証
+        setTimeout(() => {
+          drawChartsOther(enrichedOtherData);
+        }, 200);
+
+        // ...existing code...（maintenanceLogOtherの描画処理を削除）
 
       } catch (e) {
         console.error("❌ その他の機械ダッシュボード描画エラー:", e);
@@ -12493,62 +12498,116 @@
       }
     }
 
+    // 全ての処理が終わった最後に履歴を呼ぶ
+    loadMaintenanceLogsOther();
+
     function drawChartsOther(data) {
+      console.log("📊 グラフ描画開始！データ件数:", data.length);
+      console.log("📊 生データサンプル:", data[0]);
+      if (data.length === 0) {
+        console.warn("⚠️ データが0件なのでグラフは描画されません");
+        return;
+      }
       const categoryData = {};
       data.forEach(log => {
-        const cat = log.categories?.name || '不明';
-        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        const cat = log.work_types?.category || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
         categoryData[cat] = (categoryData[cat] || 0) + (h > 0 ? h : 0);
       });
+      console.log("カテゴリ別集計:", categoryData);
 
-      const ctx1 = document.getElementById('categoryShareChartOther');
-      if (ctx1) {
-        if (window.categoryShareChartOtherInstance) window.categoryShareChartOtherInstance.destroy();
-        window.categoryShareChartOtherInstance = new Chart(ctx1, {
-          type: 'doughnut',
-          data: {
-            labels: Object.keys(categoryData),
-            datasets: [{
-              data: Object.values(categoryData),
-              backgroundColor: ['#006888', '#005270', '#004158', '#003040']
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
-        });
+      // グローバル変数から修理コスト集計データを取得
+      if (window.repairCostByMachine) {
+        console.log("修理コスト集計データ:", window.repairCostByMachine);
+        const ctx1 = document.getElementById('categoryShareChartOther');
+        if (ctx1) {
+          console.log("categoryShareChartOther描画");
+          if (window.categoryShareChartOtherInstance) window.categoryShareChartOtherInstance.destroy();
+          window.categoryShareChartOtherInstance = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+              labels: Object.keys(window.repairCostByMachine),
+              datasets: [{
+                label: '修理コスト（円）',
+                data: Object.values(window.repairCostByMachine),
+                backgroundColor: [
+                  'rgba(120,0,0,1)',
+                  'rgba(150,20,20,0.85)',
+                  'rgba(180,40,40,0.7)',
+                  'rgba(210,60,60,0.55)'
+                ],
+                borderRadius: 5,
+                barPercentage: 0.7
+              }]
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } }
+            }
+          });
+          console.log("categoryShareChartOther描画完了");
+        }
       }
 
       const taskData = {};
       data.forEach(log => {
-        const task = log.work_types?.name || '不明';
-        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        const task = log.task || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
         taskData[task] = (taskData[task] || 0) + (h > 0 ? h : 0);
       });
+      console.log("作業種別集計:", taskData);
 
       const ctx2 = document.getElementById('taskShareChartOther');
       if (ctx2) {
+        console.log("taskShareChartOther描画");
         if (window.taskShareChartOtherInstance) window.taskShareChartOtherInstance.destroy();
+        console.trace("今、横棒を描画しようとしています！");
         window.taskShareChartOtherInstance = new Chart(ctx2, {
-          type: 'doughnut',
+          type: 'bar',
           data: {
             labels: Object.keys(taskData),
             datasets: [{
+              label: '作業内容別稼働時間',
               data: Object.values(taskData),
-              backgroundColor: ['#006888', '#005270', '#004158', '#003040', '#002028']
+              backgroundColor: [
+                '#006888',
+                'rgba(0, 104, 136, 0.7)',
+                'rgba(0, 104, 136, 0.5)',
+                'rgba(0, 104, 136, 0.3)',
+                'rgba(0, 104, 136, 0.15)'
+              ],
+              borderColor: '#006888',
+              borderWidth: 2,
+              borderRadius: 6
             }]
           },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+          options: {
+            indexAxis: 'y', // 横棒グラフに強制
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { beginAtZero: true },
+              y: { beginAtZero: true }
+            }
+          }
         });
+        console.log("taskShareChartOther描画完了");
       }
 
       const operatorData = {};
       data.forEach(log => {
-        const op = log.operators?.name || '不明';
-        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
+        const op = log.operator || '不明';
+        const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
         operatorData[op] = (operatorData[op] || 0) + (h > 0 ? h : 0);
       });
+      console.log("オペレーター別集計:", operatorData);
 
       const ctx3 = document.getElementById('operatorShareChartOther');
       if (ctx3) {
+        console.log("operatorShareChartOther描画");
         if (window.operatorShareChartOtherInstance) window.operatorShareChartOtherInstance.destroy();
         window.operatorShareChartOtherInstance = new Chart(ctx3, {
           type: 'doughnut',
@@ -12559,39 +12618,75 @@
               backgroundColor: ['#006888', '#005270', '#004158', '#003040']
             }]
           },
-          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+          options: {
+            cutout: '45%',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                padding: 50,
+                labels: {
+                  boxWidth: 10,
+                  font: { size: 9 },
+                  padding: 18
+                }
+              }
+            }
+          }
         });
+        console.log("operatorShareChartOther描画完了");
       }
 
       const monthData = {};
+      const monthlyCounts = Array(12).fill(0);
       data.forEach(log => {
-        const month = log.date?.substring(0, 7) || '不明';
-        const h = (parseFloat(log.hour_after) || 0) - (parseFloat(log.hour_before) || 0);
-        monthData[month] = (monthData[month] || 0) + (h > 0 ? h : 0);
+        console.log("月別集計データ確認:", log);
+        if (log.date) {
+          const dateObj = new Date(log.date);
+          const month = dateObj.getMonth(); // 0=1月, 1=2月...
+          // カラム名をスクショに合わせて修正
+          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+          if (month >= 0 && month < 12) {
+            monthlyCounts[month] += (h > 0 ? h : 0);
+          }
+        }
       });
+      console.log("月別集計:", monthlyCounts);
 
-      const sortedMonths = Object.keys(monthData).sort();
+      // 1～12月のラベルを作成
+      const monthLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+      const monthValues = monthlyCounts;
+      console.log("月別グラフラベル:", monthLabels);
+      console.log("月別グラフ値:", monthValues);
+
       const ctx4 = document.getElementById('detailChartOther');
       if (ctx4) {
+        console.log("detailChartOther描画");
         if (window.detailChartOtherInstance) window.detailChartOtherInstance.destroy();
         window.detailChartOtherInstance = new Chart(ctx4, {
           type: 'line',
           data: {
-            labels: sortedMonths,
+            labels: monthLabels.map(m => m + '月'),
             datasets: [{
               label: '稼働時間',
-              data: sortedMonths.map(m => monthData[m]),
+              data: monthValues,
               borderColor: '#006888',
-              backgroundColor: 'rgba(0, 104, 136, 0.1)',
-              tension: 0.4
+              backgroundColor: 'rgba(0, 104, 136, 0.15)',
+              pointBackgroundColor: '#006888',
+              pointBorderColor: '#006888',
+              tension: 0.4,
+              fill: true
             }]
           },
           options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
+        console.log("detailChartOther描画完了");
       }
 
       const ctx5 = document.getElementById('gradientBarChartOther');
       if (ctx5) {
+        console.log("gradientBarChartOther描画");
         if (window.gradientBarChartOtherInstance) window.gradientBarChartOtherInstance.destroy();
         window.gradientBarChartOtherInstance = new Chart(ctx5, {
           type: 'bar',
@@ -12600,11 +12695,24 @@
             datasets: [{
               label: '稼働時間',
               data: Object.values(taskData),
-              backgroundColor: '#006888'
+              backgroundColor: [
+                '#006888',
+                'rgba(0, 104, 136, 0.7)',
+                'rgba(0, 104, 136, 0.5)',
+                'rgba(0, 104, 136, 0.3)',
+                'rgba(0, 104, 136, 0.15)'
+              ],
+              borderRadius: 8
             }]
           },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } }
+          }
         });
+        console.log("gradientBarChartOther描画完了");
       }
     }
 
@@ -12959,7 +13067,11 @@
       }
     }
 
+
+  // ===== カスタムトースト通知 =====
+  // <div id="customToast"></div> がHTML内に必要です（なければbody直下に追加されます）
+
+
   </script>
 </body>
-
 </html>
