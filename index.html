@@ -169,7 +169,6 @@
         left: 0;
       }
 
-
       /* サイドバー表示時にコンテンツにマージンを適用 */
       body.show-sidebar #mainContainer {
         margin-left: 280px;
@@ -1369,6 +1368,24 @@
       justify-content: center;
     }
 
+    .portal-sub {
+      opacity: 0.95;
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    /* Ensure title/sub are explicitly visible on all devices */
+    .portal-title,
+    .portal-sub {
+      color: rgba(234, 242, 234, 1);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    }
+
+    .portal-hero>div {
+      position: relative;
+      z-index: 2;
+    }
+
     /* ベントーグリッドレイアウト */
     .portal-grid {
       position: relative;
@@ -2010,7 +2027,33 @@
     </nav>
   </div>
 
+  <div id="customModal">
+    <div class="modal-content">
+      <div class="modal-header bg-[#2d4031] p-4 text-white text-center">
+        <h3 id="modalTitle" class="font-bold">CONFIRM</h3>
+      </div>
+      <div class="modal-body p-6 text-center font-bold" id="modalMessage">メッセージ</div>
+      <div class="modal-footer p-4 bg-gray-50 flex gap-2">
+        <button class="flex-1 p-2 bg-gray-200 rounded-lg" onclick="closeModal()">戻る</button>
+        <button id="modalOkBtn" class="flex-1 p-2 bg-[#6b8f71] text-white rounded-lg">実行する</button>
+      </div>
+    </div>
+  </div>
 
+
+
+  <div id="customModal">
+    <div class="modal-content">
+      <div class="modal-header bg-[#2d4031] p-4 text-white text-center">
+        <h3 id="modalTitle" class="font-bold">CONFIRM</h3>
+      </div>
+      <div class="modal-body p-6 text-center font-bold" id="modalMessage">メッセージ</div>
+      <div class="modal-footer p-4 bg-gray-50 flex gap-2">
+        <button class="flex-1 p-2 bg-gray-200 rounded-lg" onclick="closeModal()">戻る</button>
+        <button id="modalOkBtn" class="flex-1 p-2 bg-[#6b8f71] text-white rounded-lg">実行する</button>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -8976,12 +9019,12 @@
 
       // 数値じゃない（"all"や空っぽ）場合はエラーを出す
       if (isNaN(numericMachineId)) {
-        showToast("エラー: 機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
+        showModal("エラー", "機械の情報を読み取れませんでした。一度一覧に戻って選び直してください🌸");
         return;
       }
 
       if (!item) {
-        showToast("入力エラー: 交換部品・項目名を入力してくださいね🌸");
+        showModal("入力エラー", "交換部品・項目名を入力してくださいね🌸");
         return;
       }
 
@@ -8999,7 +9042,7 @@
 
         if (error) throw error;
 
-  showToast("保存完了: メンテナンス情報を記録しました！✨");
+        showModal("保存完了", "メンテナンス情報を記録しました！✨");
 
         // 入力欄をクリア
         document.getElementById('newMaintenanceItem').value = '';
@@ -9012,7 +9055,7 @@
 
       } catch (err) {
         console.error("Maint Save Error:", err);
-        showToast("保存エラー: 保存に失敗しました: " + (err.message || JSON.stringify(err)));
+        showModal("保存エラー", "保存に失敗しました: " + (err.message || JSON.stringify(err)));
       }
     }
 
@@ -9029,41 +9072,42 @@
       const memo = document.getElementById('memoInput')?.value;
 
       // バリデーション（入力チェック）
-      if (!machineId) return showToast("入力エラー: 機械を選択してください");
-      if (!workDate || !workName) return showToast("入力エラー: 「作業日」「作業内容」は必須項目です");
-      if (hourAfter < hourBefore) return showToast("入力エラー: 稼働後の数値が稼働前より小さくなっています。");
+      if (!machineId) return showModal("入力エラー", "機械を選択してください");
+      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
 
-      // 確認モーダルを廃止し、即保存→トースト通知
-      try {
-        const logData = {
-          date: workDate,
-          operator: operator,
-          machine_id: parseInt(machineId),
-          start_hour: hourBefore,
-          end_hour: hourAfter,
-          category: category,
-          task: workName,
-          fuel_type_id: fuelType ? parseInt(fuelType) : null,
-          fuel_amount: fuel,
-          memo: memo,
-          created_at: new Date().toISOString()
-        };
+      showModal("登録確認", "ログを登録しますか？", async () => {
+        try {
+          const logData = {
+            date: workDate,
+            operator: operator,
+            machine_id: parseInt(machineId),
+            start_hour: hourBefore,
+            end_hour: hourAfter,
+            category: category,
+            task: workName,
+            fuel_type_id: fuelType ? parseInt(fuelType) : null,
+            fuel_amount: fuel,
+            memo: memo,
+            created_at: new Date().toISOString()
+          };
 
-        const result = await saveData('hour_logs', logData, 'hour_logs');
+          const result = await saveData('hour_logs', logData, 'hour_logs');
 
-        const message = result.offline ?
-          "稼働ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
-          "稼働ログを保存しました";
+          const message = result.offline ?
+            "稼働ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
+            "稼働ログを保存しました";
 
-        showToast("保存完了: " + message, 2000, () => {
-          localStorage.setItem('currentView', 'tractorView');
-          location.reload();
-        });
+          showModal("保存完了", message, () => {
+            localStorage.setItem('currentView', 'tractorView');
+            location.reload();
+          });
 
-      } catch (err) {
-        console.error("Log Save Error:", err);
-        showToast("保存に失敗しました: " + (err.message));
-      }
+        } catch (err) {
+          console.error("Log Save Error:", err);
+          showModal("保存エラー", "保存に失敗しました: " + (err.message));
+        }
+      });
     }
 
     // --- Google Vision APIを使って画像から数字を読み取る関数 ---
@@ -9114,7 +9158,7 @@
 
         // OCR 実行
         const text = await performOCR(base64Image);
-        if (!text) return showToast('読み取り失敗: 読み取りに失敗しました。写真を変えて再試行してください。');
+        if (!text) return showModal('読み取り失敗', '読み取りに失敗しました。写真を変えて再試行してください。');
 
         // 数字（小数点含む）を抽出して input に反映
         const m = text.match(/\d+(?:\.\d+)?/);
@@ -9122,11 +9166,11 @@
           document.getElementById('hourAfter').value = m[0];
           calcDiff();
         } else {
-          showToast('検出失敗: 数字が検出されませんでした。読み取り結果:\n' + (text.substring(0, 200) || '-----'));
+          showModal('検出失敗', '数字が検出されませんでした。読み取り結果:\n' + (text.substring(0, 200) || '-----'));
         }
       } catch (err) {
         console.error('HourAfter OCR error', err);
-        showToast('エラー: 読み取り中にエラーが発生しました');
+        showModal('エラー', '読み取り中にエラーが発生しました');
       } finally {
         // ファイル入力をクリアして同じ画像を再選択できるようにする
         input.value = '';
@@ -9273,32 +9317,41 @@
       });
 
       if (!machineId) return showModal("入力エラー", "機械を選択してください");
-      if (!workDate || !workName) return showToast("入力エラー: 「作業日」「作業内容」は必須項目です");
-      if (hourAfter < hourBefore) return showToast("入力エラー: 稼働後の数値が稼働前より小さくなっています。");
+      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
 
-      // モーダル確認を廃止し、即保存＋トースト通知
-      try {
-        const logData = {
-          date: workDate,
-          operator_id: operator ? parseInt(operator) : null,
-          machine_id: parseInt(machineId),
-          start_hour: hourBefore,
-          end_hour: hourAfter,
-          task: workName,
-          created_at: new Date().toISOString()
-        };
-        const result = await saveData('planting_logs', logData, 'planting_logs');
-        const message = result.offline ?
-          "ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
-          "ログを保存しました";
-        showToast("保存完了: " + message, 2000, () => {
-          localStorage.setItem('currentView', 'plantingView');
-          location.reload();
-        });
-      } catch (err) {
-        console.error("Log Save Error:", err);
-        showToast("保存エラー: 保存に失敗しました: " + (err.message));
-      }
+      showModal("登録確認", "ログを登録しますか？", async () => {
+        try {
+          const logData = {
+            date: workDate,
+            operator_id: operator ? parseInt(operator) : null,
+            machine_id: parseInt(machineId),
+            start_hour: hourBefore,
+            end_hour: hourAfter,
+            task: workName,
+            fuel_type_id: fuelType ? parseInt(fuelType) : null,
+            fuel_amount: fuel,
+            memo: memo,
+            created_at: new Date().toISOString()
+          };
+          console.log("🚀 Supabaseに送信するデータ:", logData);
+
+          const result = await saveData('planting_logs', logData, 'taue_logs');
+
+          const message = result.offline ?
+            "ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
+            "ログを保存しました";
+
+          showModal("保存完了", message, () => {
+            localStorage.setItem('currentView', 'plantingView');
+            location.reload();
+          });
+
+        } catch (err) {
+          console.error("Log Save Error:", err);
+          showModal("保存エラー", "保存に失敗しました: " + (err.message));
+        }
+      });
     }
 
     async function taue_handleHourAfterImage(input) {
@@ -9461,35 +9514,40 @@
       const memo = document.getElementById('combine_memoInput')?.value;
 
       if (!machineId) return showModal("入力エラー", "機械を選択してください");
-      if (!workDate || !workName) return showToast("入力エラー: 「作業日」「作業内容」は必須項目です");
-      if (hourAfter < hourBefore) return showToast("入力エラー: 稼働後の数値が稼働前より小さくなっています。");
+      if (!workDate || !workName) return showModal("入力エラー", "「作業日」「作業内容」は必須項目です");
+      if (hourAfter < hourBefore) return showModal("入力エラー", "稼働後の数値が稼働前より小さくなっています。");
 
-      // モーダル確認を廃止し、即保存＋トースト通知
-      try {
-        const logData = {
-          date: workDate,
-          operator_id: operator ? parseInt(operator) : null,
-          machine_id: parseInt(machineId),
-          start_hour: hourBefore,
-          end_hour: hourAfter,
-          task: workName,
-          fuel_type_id: fuelType ? parseInt(fuelType) : null,
-          fuel_amount: fuel,
-          memo: memo,
-          created_at: new Date().toISOString()
-        };
-        const result = await saveData('combine_logs', logData, 'combine_logs');
-        const message = result.offline ?
-          "ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
-          "ログを保存しました";
-        showToast("保存完了: " + message, 2000, () => {
-          localStorage.setItem('currentView', 'combineView');
-          location.reload();
-        });
-      } catch (err) {
-        console.error("Log Save Error:", err);
-        showToast("保存エラー: 保存に失敗しました: " + (err.message));
-      }
+      showModal("登録確認", "ログを登録しますか？", async () => {
+        try {
+          const logData = {
+            date: workDate,
+            operator_id: operator ? parseInt(operator) : null,
+            machine_id: parseInt(machineId),
+            start_hour: hourBefore,
+            end_hour: hourAfter,
+            task: workName,
+            fuel_type_id: fuelType ? parseInt(fuelType) : null,
+            fuel_amount: fuel,
+            memo: memo,
+            created_at: new Date().toISOString()
+          };
+
+          const result = await saveData('combine_logs', logData, 'combine_logs');
+
+          const message = result.offline ?
+            "ログをローカルに保存しました\n（オンライン時に自動同期されます）" :
+            "ログを保存しました";
+
+          showModal("保存完了", message, () => {
+            localStorage.setItem('currentView', 'combineView');
+            location.reload();
+          });
+
+        } catch (err) {
+          console.error("Log Save Error:", err);
+          showModal("保存エラー", "保存に失敗しました: " + (err.message));
+        }
+      });
     }
 
     async function combine_handleHourAfterImage(input) {
@@ -12465,9 +12523,8 @@
         // KPI集計
         let totalH = 0, totalF = 0;
         const daysSet = new Set();
-        console.log("KPI集計用データ:", enrichedOtherData);
         enrichedOtherData.forEach(log => {
-          const h = (parseFloat(log.end_hour) || 0) - (parseFloat(log.start_hour) || 0);
+          const h = (parseFloat(log.hour_end) || 0) - (parseFloat(log.hour_start) || 0);
           totalH += (h > 0 ? h : 0);
           totalF += (parseFloat(log.fuel_amount) || 0);
           if (log.date) daysSet.add(log.date);
@@ -13067,11 +13124,7 @@
       }
     }
 
-
-  // ===== カスタムトースト通知 =====
-  // <div id="customToast"></div> がHTML内に必要です（なければbody直下に追加されます）
-
-
   </script>
 </body>
+
 </html>
