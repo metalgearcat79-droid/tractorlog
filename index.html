@@ -2084,13 +2084,13 @@
 
           <div class="portal-card" onclick="switchView('exportView')" style="cursor:pointer;">
             <i class="fa-solid fa-file-export text-4xl"></i>
-            <div class="card-title">エクスポート/印刷</div>
+            <div class="card-title">Export</div>
           </div>
 
           <div class="portal-card version-card" onclick="switchView('versionView')" style="cursor:pointer;">
             <span class="version-badge" id="versionBadge"></span>
             <i class="fa-solid fa-info-circle text-5xl"></i>
-            <div class="card-title">バージョン情報</div>
+            <div class="card-title">Version Info</div>
           </div>
         </div>
       </div>
@@ -4912,24 +4912,24 @@
     </div>
 
     <div class="card text-sm leading-relaxed space-y-3">
-      <p><span class="font-bold">バージョン:</span> 1.0.0</p>
-      <p><span class="font-bold">最終更新日:</span> 2026-01-19</p>
+      <p class="font-bold" style="color: var(--version-color);">バージョン:</span> 1.0.0</p>
+      <p class="font-bold" style="color: var(--version-color);">最終更新日:</span> 2026-02-10</p>
 
       <div>
-        <p class="font-bold mb-1" style="color: var(--version-color);">更新内容</p>
+        <p class="font-bold" style="color: var(--version-color);">更新内容</p>
         <ul class="list-disc pl-5 space-y-1">
           <li>初期リリース</li>
         </ul>
       </div>
 
       <div>
-        <p class="font-bold mb-1" style="color: var(--version-color);">使用技術</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>HTML / CSS / JavaScript</li>
-          <li>Tailwind CSS</li>
-          <li>Supabase</li>
-          <li>Chart.js</li>
-          <li>GitHub Pages</li>
+        <p class="font-bold" style="color: var(--version-color);">システム基盤</p>
+        <ul class="list-disc pl-5 space-y-1 text-sm opacity-80">
+          <li>UI/UX: HTML5, CSS3 (Tailwind CSS)</li>
+          <li>Logic: Vanilla JavaScript (ES6+)</li>
+          <li>Database: Supabase (PostgreSQL)</li>
+          <li>Infrastructure: GitHub Pages / Google Apps Script</li>
+          <li>External Services: Google Cloud Vision API (OCR), Chart.js</li>
         </ul>
       </div>
     </div>
@@ -5229,7 +5229,7 @@
           type: 'doughnut',
           data: { labels: Object.keys(stats.cat), datasets: [{ data: Object.values(stats.cat), backgroundColor: colors }] },
           options: {
-            cutout: '45%', // 🔥 70%→45%に下げることで「肉厚」なドーナツになります
+            cutout: '45%',
             responsive: true,
             maintainAspectRatio: false,
             plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } }
@@ -5298,7 +5298,7 @@
       const tractorSection = document.querySelector('#tractor-section .view.active');
       const plantingSection = document.querySelector('#planting-section .view.active');
       const combineSection = document.querySelector('#combine-section .view.active');
-
+      const otherMachinerySection = document.querySelector('#other-machinery-section .view.active');
       let menuId = 'sideMenu'; // デフォルトはグローバルメニュー
 
       if (tractorSection) {
@@ -5307,6 +5307,8 @@
         menuId = 'plantingSideMenu';
       } else if (combineSection) {
         menuId = 'combineSideMenu';
+      } else if (otherMachinerySection) {
+        menuId = 'otherMachinerySideMenu';
       }
 
       document.getElementById(menuId).style.left = "0px";
@@ -5375,7 +5377,7 @@
         const maintenanceViews = ['maintenanceListView', 'maintenanceMachineListView', 'maintenanceDetailView', 'maintenanceMachineListViewBrushCutter', 'maintenanceDetailViewBrushCutter', 'maintenanceMachineListViewMower', 'maintenanceDetailViewSpiderMower', 'maintenanceDetailViewWingMower', 'maintenanceMachineListViewImplement', 'maintenanceDetailViewImplement', 'maintenanceMachineListViewSpreader', 'maintenanceDetailViewSpreader', 'maintenanceMachineListViewSprayer', 'maintenanceMachineListViewWrapper', 'maintenanceDetailViewWrapper', 'maintenanceMachineListViewOtherMachinery', 'maintenanceDetailViewOtherMachinery'];
         const versionViews = ['versionView'];
         const repairViews = ['repairView', 'invoiceOCRView'];
-        const otherMachineryViews = ['otherMachineryView', 'todayViewOther', 'historyViewOther'];
+        const otherMachineryViews = ['otherMachineryView', 'todayViewOthermachinery', 'historyViewOthermachinery', 'maintenanceMachineListViewOtherMachinery', 'maintenanceDetailViewOtherMachinery'];
         const dashboardViews = ['dashboard', 'dashboardPlanting', 'dashboardCombine', 'dashboardOther'];
 
         // body背景色を変更
@@ -5437,6 +5439,7 @@
           activeMenuId = 'repairSideMenu';
           document.getElementById("repairSideMenu").classList.add('active-menu');
         } else {
+          // その他の機械以外のみグローバルメニューを表示
           document.getElementById("sideMenu").classList.add('active-menu');
         }
 
